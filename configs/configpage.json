@@ -1,3 +1,15 @@
 {
-    
+    "paths": {
+        "background": ["./images/page2/background3.jpg"],
+        "titre": ["./images/page2/titre.PNG", 700, 200],
+        "titrenbrPlayers": ["./images/page2/nbrplayers.P", 320, 50],
+        "": [],
+        "": [],
+        "": [],
+        "": [],
+        "": [],
+        "": [],
+        "": [],
+        "": []
+    }
 }
