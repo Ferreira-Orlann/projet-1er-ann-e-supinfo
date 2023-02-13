@@ -26,6 +26,28 @@
         "Play": ["./images/page2/play.PNG",350,100]
     },
     "rects" : {
-        "titre": [4.7,65]
+        "titre": [4.7,65],
+        "titrenbrPlayers": [2.7,6],
+        "nbrPlayers2": [3.1,4.6],
+        "nbrPlayers4": [1.7,4.6],
+        "titretaillePlateau": [2.7,3.2],
+        "taillePlateau5": [22,2.5],
+        "taillePlateau7": [3.7,2.5],
+        "taillePlateau9": [2,2.5],
+        "taillePlateau11": [1.37,2.5],
+        "titrenbrbarriere": [2.5,2.5],
+        "nbrbarriere4": [30,1.8],
+        "nbrbarriere8": [8,1.8],
+        "nbrbarriere12": [4.6,1.8],
+        "nbrbarriere16": [3.25,1.8],
+        "nbrbarriere20": [2.5,1.8],
+        "nbrbarriere24": [2.05,1.8],
+        "nbrbarriere28": [1.73,1.8],
+        "nbrbarriere32": [1.48,1.8],
+        "nbrbarriere36": [1.3,1.8],
+        "nbrbarriere40": [1.17,1.8],
+        "jouerreseau": [2.1,1.55],
+        "reset": [1.475,17.5],
+        "Play": [4,1.55]
     }
 }
