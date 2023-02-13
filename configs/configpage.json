@@ -26,6 +26,6 @@
         "Play": ["./images/page2/play.PNG",350,100]
     },
     "rects" : {
-        
+        "titre": [4.7,65]
     }
 }
