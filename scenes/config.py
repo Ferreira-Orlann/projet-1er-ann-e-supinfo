@@ -1,10 +1,15 @@
 from scenes.scenebase import SceneBase
 from math import ceil
 import pygame
+import json
+from io import StringIO
 
 class SceneConfig(SceneBase):
     def __init__(self, screen, quoridor):
         SceneBase.__init__(self)
+        self.__file = open("../configs/configpage.json", "r")
+        self.__json = json.load(f)
+        print(self.__json.getvalue())
         self.__quoridor = quoridor
         self.__background = pygame.image.load('./images/page2/background3.jpg')
         # self.__banner_rect.x,self.__banner_rect.y = 2000,1000
@@ -131,53 +136,54 @@ class SceneConfig(SceneBase):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.__Play_rect.collidepoint(event.pos) and self.__nbrPlayers != 0 and self.__taillePlateau != 0 and self.__nbrBarriere != 0:
                     self.GamePage()
-                if self.__nbrPlayers2_rect.collidepoint(event.pos) and self.__nbrPlayers == 0:
-                    self.__nbrPlayers = 2
+                    self.__file.close()
+                if self.__nbrPlayers2_rect.collidepoint(event.pos):
+                    conf[0] = 2
                     self.__nbrPlayers2 = pygame.transform.scale(pygame.image.load('./images/page2/choix1ok.PNG'), (120, 120))
-                if self.__nbrPlayers4_rect.collidepoint(event.pos) and self.__nbrPlayers == 0:
-                    self.__nbrPlayers = 4
+                if self.__nbrPlayers4_rect.collidepoint(event.pos):
+                    conf[0] = 4
                     self.__nbrPlayers4 = pygame.transform.scale(pygame.image.load('./images/page2/choix2ok.PNG'), (120, 120))
                 if self.__taillePlateau5_rect.collidepoint(event.pos) and self.__taillePlateau == 0:
-                    self.__taillePlateau = 5 
+                    conf[1] = 5 
                     self.__taillePlateau5 = pygame.transform.scale(pygame.image.load('./images/page2/5x5ok.PNG'), (280, 70))
                 if self.__taillePlateau7_rect.collidepoint(event.pos) and self.__taillePlateau == 0:
-                    self.__taillePlateau = 7
+                    conf[1] = 7
                     self.__taillePlateau7 = pygame.transform.scale(pygame.image.load('./images/page2/7x7ok.PNG'), (280, 70))
                 if self.__taillePlateau9_rect.collidepoint(event.pos) and self.__taillePlateau == 0:
-                    self.__taillePlateau = 9
+                    conf[1] = 9
                     self.__taillePlateau9 = pygame.transform.scale(pygame.image.load('./images/page2/9x9ok.PNG'), (280, 70))
                 if self.__taillePlateau11_rect.collidepoint(event.pos) and self.__taillePlateau == 0:
-                    self.__taillePlateau = 11 
+                    conf[1] = 11
                     self.__taillePlateau11 = pygame.transform.scale(pygame.image.load('./images/page2/11x11ok.PNG'), (280, 70))
                 if self.__nbrbarriere4_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 4
+                    conf[2] = 4
                     self.__nbrbarriere4 = pygame.transform.scale(pygame.image.load('./images/page2/barriere4ok.PNG'), (120, 120))
                 if self.__nbrbarriere8_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 8
+                    conf[2] = 8
                     self.__nbrbarriere8 = pygame.transform.scale(pygame.image.load('./images/page2/barriere8ok.PNG'), (120, 120))
                 if self.__nbrbarriere12_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 12
+                    conf[2] = 12
                     self.__nbrbarriere12 = pygame.transform.scale(pygame.image.load('./images/page2/barriere12ok.PNG'), (120, 120))
                 if self.__nbrbarriere16_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 16
+                    conf[2] = 16
                     self.__nbrbarriere16 = pygame.transform.scale(pygame.image.load('./images/page2/barriere16ok.PNG'), (120, 120))
                 if self.__nbrbarriere20_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 20
+                    conf[2] = 20
                     self.__nbrbarriere20 = pygame.transform.scale(pygame.image.load('./images/page2/barriere20ok.PNG'), (120, 120))
                 if self.__nbrbarriere24_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 24
+                    conf[2] = 24
                     self.__nbrbarriere24 = pygame.transform.scale(pygame.image.load('./images/page2/barriere24ok.PNG'), (120, 120))
                 if self.__nbrbarriere28_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 28
+                    conf[2] = 28
                     self.__nbrbarriere28 = pygame.transform.scale(pygame.image.load('./images/page2/barriere28ok.PNG'), (120, 120))
                 if self.__nbrbarriere32_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 32
+                    conf[2] = 32
                     self.__nbrbarriere32 = pygame.transform.scale(pygame.image.load('./images/page2/barriere32ok.PNG'), (120, 120))
                 if self.__nbrbarriere36_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 36
+                    conf[2] = 36
                     self.__nbrbarriere36 = pygame.transform.scale(pygame.image.load('./images/page2/barriere36ok.PNG'), (120, 120))
                 if self.__nbrbarriere40_rect.collidepoint(event.pos) and self.__nbrBarriere == 0:
-                    self.__nbrBarriere= 40
+                    conf[2] = 40
                     self.__nbrbarriere40 = pygame.transform.scale(pygame.image.load('./images/page2/barriere40ok.PNG'), (120, 120))
                 if self.__jouerreseau_rect.collidepoint(event.pos):
                     self.__PlayInReseau = True
