@@ -12,6 +12,7 @@ class Quoridor():
         pass
     
     def Run(self):
+        clock = pygame.time.Clock()  
         while self.__active_scene != None:
             pressed_keys = pygame.key.get_pressed()
             filtered_events = []
@@ -27,6 +28,7 @@ class Quoridor():
             self.__active_scene.Render(self.__screen)
             self.__active_scene = self.__active_scene.Next()
             pygame.display.flip()
+            clock.tick(60)
 
 if __name__ == '__main__':
     QUORIDOR = Quoridor()

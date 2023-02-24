@@ -9,12 +9,12 @@ class SceneStart(SceneBase):
         SceneBase.__init__(self)
         self.__background = pygame.image.load('./images/page1/background1.jpg')
         
-        self.__banner = pygame.transform.scale(pygame.image.load('./images/page1/game.PNG'), (700, 150))
+        self.__banner = pygame.transform.scale(pygame.image.load('./images/page1/game.PNG').convert_alpha(), (700, 150))
         self.__banner_rect = self.__banner.get_rect()
         self.__banner_rect.x = ceil(screen.get_width() / 4.7)
         self.__banner_rect.y = ceil(screen.get_width() / 4)
 
-        self.__play_button = pygame.transform.scale(pygame.image.load('./images/page1/play.PNG'), (235, 90))
+        self.__play_button = pygame.transform.scale(pygame.image.load('./images/page1/play.PNG').convert_alpha(), (235, 90))
         self.__play_button_rect = self.__play_button.get_rect()
         self.__play_button_rect.x = ceil(screen.get_width() / 2.43)
         self.__play_button_rect.y = ceil(screen.get_height() / 1.635)

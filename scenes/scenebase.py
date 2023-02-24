@@ -1,3 +1,6 @@
+from pygame import quit
+from sys import exit
+
 class SceneBase:
     def __init__(self):
         self.__next = self
@@ -19,3 +22,8 @@ class SceneBase:
         
     def Next(self):
         return self.__next
+    
+    def Terminate(self):
+        print("Exit & Quit")
+        quit()
+        exit()

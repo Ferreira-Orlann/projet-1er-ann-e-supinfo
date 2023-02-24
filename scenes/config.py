@@ -1,4 +1,6 @@
 from scenes.scenebase import SceneBase
+from scenes.game import GameScene
+from game.game import Game
 from math import ceil
 import pygame
 from json import load as json_load
@@ -6,10 +8,11 @@ from json import load as json_load
 class SceneConfig(SceneBase):
     def __init__(self, screen, quoridor):
         SceneBase.__init__(self)
-        self.__file = open("configs/configpage.json", "r")
-        self.__json = json_load(self.__file)
-        self.__file.close()
+        file = open("configs/configpage.json", "r")
+        self.__json = json_load(file)
+        file.close()
         self.__quoridor = quoridor
+        self.__screen = screen
         self.__elements = {}
         self.__rects = {}
         
@@ -18,7 +21,7 @@ class SceneConfig(SceneBase):
         ### INIT CONFIGURATION ###
         # Images
         for name, data in self.__json["paths"].items():
-            self.__elements[name] = pygame.transform.scale(pygame.image.load(data[0]), (data[1], data[2]))
+            self.__elements[name] = pygame.transform.scale(pygame.image.load(data[0]).convert_alpha(), (data[1], data[2]))
         # Rects
         for name, data in self.__json["rects"].items():
             rect = self.__elements[name].get_rect()
@@ -27,6 +30,7 @@ class SceneConfig(SceneBase):
             self.__rects[name] = rect
             
         self.InitConfig()
+        self.CheckConfig("reset")
             
     def InitConfig(self):
         conf = list()
@@ -42,9 +46,9 @@ class SceneConfig(SceneBase):
         if conf[confidx] != 0:
             previous_name = ''.join([i for i in name if not i.isdigit()]) + str(conf[confidx])
             data = self.__json["paths"][previous_name]
-            self.__elements[previous_name] = pygame.transform.scale(pygame.image.load(data[0]), (data[1], data[2]))
+            self.__elements[previous_name] = pygame.transform.scale(pygame.image.load(data[0]).convert_alpha(), (data[1], data[2]))
         data = self.__json["paths"][name]
-        self.__elements[name] = pygame.transform.scale(pygame.image.load(data[0].replace(".PNG", "ok.PNG")), (data[1], data[2]))
+        self.__elements[name] = pygame.transform.scale(pygame.image.load(data[0].replace(".PNG", "ok.PNG")).convert_alpha(), (data[1], data[2]))
         conf[confidx] = val
         pass
     
@@ -52,15 +56,19 @@ class SceneConfig(SceneBase):
         conf = self.__config
         if name == "reset":
             self.CheckConfig("nbrPlayers2")
-            self.CheckConfig("taillePlateau5")
-            self.CheckConfig("nbrbarriere4")
+            self.CheckConfig("taillePlateau9")
+            self.CheckConfig("nbrbarriere20")
+        elif name == "Play":
+            scene = GameScene(self.__screen, self.__quoridor)
+            game = Game(self.__quoridor, self.__config, scene)
+            scene.SetGame(game)
+            self.SwitchToScene(scene)
         elif "nbrPlayers" in name:
             self.SelectElement(name, int(name.replace("nbrPlayers", "")), 0)
         elif "taillePlateau" in name:
             self.SelectElement(name, int(name.replace("taillePlateau", "")), 1)
         elif"nbrbarriere" in  name:
             self.SelectElement(name, int(name.replace("nbrbarriere", "")), 2)
-        
         
     def ProcessInput(self, events, keys, screen):
         for event in events:
