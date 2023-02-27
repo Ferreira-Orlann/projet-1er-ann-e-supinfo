@@ -33,10 +33,26 @@ class Game():
             nextpos = tuple(map(operator.sub, player.GetPos(), i))
             if nextpos[0] < 0 or nextpos[1] < 0:
                 continue
-            if self.CheckMove():
+            if self.CanMove(ppos, i, nextpos):
                 possibles_moves.append(nextpos)
         return possibles_moves
     
-    def CheckMove(pos, nextpos):
-        
-        pass
+    def CanMove(self, pos, movetype, nextpos):
+        quoridor = self.__quoridor
+        check = None
+        match movetype:
+            case quoridor.MOVE_TYPE_UP:
+                check = (pos[0] * 2 - 1, pos[1])
+                pass
+            case quoridor.MOVE_TYPE_DOWN:
+                check = (nextpos[0] * 2 - 1, nextpos[1])
+                pass
+            case quoridor.MOVE_TYPE_LEFT:
+                check = (pos[0]*2, nextpos[1] - 1)
+                pass
+            case quoridor.MOVE_TYPE_RIGHT:
+                check = (pos[0]*2, nextpos[1])
+                pass
+        if self.__barrers[check[0]][check[1]] != None:
+            return False
+        return True

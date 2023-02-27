@@ -1,6 +1,7 @@
 class Player():
     def __init__(self):
         self.__pos = (0,0)
+        self.__final_pos = (0,0)
         pass
     
     def SetPos(self, pos):
@@ -15,3 +16,6 @@ class Player():
         
     def GetBarrers(self):
         return self.__barrers
+    
+    def GetFinalPos(self):
+        return self.__final_pos
