@@ -1,8 +1,8 @@
 import pygame
 
 class Quoridor():
-    MOVE_TYPE_UP = (1,0)
-    MOVE_TYPE_DOWN = (-1,0)
+    MOVE_TYPE_UP = (-1,0)
+    MOVE_TYPE_DOWN = (1,0)
     MOVE_TYPE_LEFT = (0,-1)
     MOVE_TYPE_RIGHT = (0,1)
     

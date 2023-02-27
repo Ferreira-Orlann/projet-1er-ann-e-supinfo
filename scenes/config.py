@@ -59,7 +59,7 @@ class SceneConfig(SceneBase):
             self.CheckConfig("taillePlateau9")
             self.CheckConfig("nbrbarriere20")
         elif name == "Play":
-            scene = GameScene(self.__screen, self.__quoridor)
+            scene = GameScene(self.__screen, self.__quoridor, self)
             game = Game(self.__quoridor, self.__config, scene)
             scene.SetGame(game)
             self.SwitchToScene(scene)
@@ -67,8 +67,10 @@ class SceneConfig(SceneBase):
             self.SelectElement(name, int(name.replace("nbrPlayers", "")), 0)
         elif "taillePlateau" in name:
             self.SelectElement(name, int(name.replace("taillePlateau", "")), 1)
-        elif"nbrbarriere" in  name:
+        elif "nbrbarriere" in  name:
             self.SelectElement(name, int(name.replace("nbrbarriere", "")), 2)
+        elif name == "options":
+            pass
         
     def ProcessInput(self, events, keys, screen):
         for event in events:
