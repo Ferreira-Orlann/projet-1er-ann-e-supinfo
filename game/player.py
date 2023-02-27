@@ -6,5 +6,12 @@ class Player():
     def SetPos(self, pos):
         self.__pos = pos
         
+    # Tuple(x,y)
     def GetPos(self):
         return self.__pos
+    
+    def SetBarrers(self,barrers):
+        self.__barrers = barrers
+        
+    def GetBarrers(self):
+        return self.__barrers
