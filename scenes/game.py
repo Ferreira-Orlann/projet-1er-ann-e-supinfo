@@ -1,6 +1,5 @@
 from scenes.scenebase import SceneBase
-from math import ceil, floor
-from utils import RoundUP
+from math import floor
 import pygame
 
 class GameScene(SceneBase):
@@ -60,6 +59,11 @@ class GameScene(SceneBase):
                     # pygame.draw.rect(screen, (0,0,0), pygame.Rect(i * 70 + 5, 10 + i * 50,70,10))
                     pygame.draw.rect(screen, (0,0,255), pygame.Rect(y * 50 + 10 , b * 50 + 10 + 50,50,10))
                 b = b + 1
+                
+        list_players_pos = mapped_numbers = list(map(lambda player: player.GetPos(), game.GetPlayers()))
+        for i in range(len(list_players_pos)):
+            i = list_players_pos[i]
+            pygame.draw.circle(screen, (255,0,0), (i[1] * 50 + 10 + 25, i[0] * 50 + 10 + 25), 5)
                         
     def SetGame(self, game):
         self.__game = game
