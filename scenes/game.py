@@ -13,9 +13,11 @@ class GameScene(SceneBase):
     def ProcessInput(self, events, keys, screen):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                pos = event.pos
-                print((floor(pos[0]/50),floor(pos[1]/50)))
-                pass
+                guipos = event.pos
+                gridpos = (floor(guipos[1]/50),floor(guipos[0]/50))
+                if gridpos[0] == 9 or gridpos[1] == 9:
+                    return
+                self.__game.ProcessMove(gridpos,self.__game.GetCurrentPlayer())
             
     def PosEquals(posone, postwo):
         return True
@@ -28,14 +30,20 @@ class GameScene(SceneBase):
         if not self.__game: 
             self.__configscene.Render(screen)
             return
+        game = self.__game
         
         # Affichage des Position
+        
+        possibles_moves = game.GetPossiblesMoves()
         for i in range(0,9):
             for y in range(0,9):
-                pygame.draw.rect(screen, (255,0,255), pygame.Rect(y * 50 + 10 , i * 50 + 10,50,50))
+                if (i, y) in possibles_moves:
+                    pygame.draw.rect(screen, (255,0,255), pygame.Rect(y * 50 + 10 , i * 50 + 10,50,50))
+                else:
+                    pygame.draw.rect(screen, (0,255,0), pygame.Rect(y * 50 + 10 , i * 50 + 10,50,50))
         
         # Affichage des barrières
-        barrers = self.__game.GetBarrers()
+        barrers = game.GetBarrers()
         lenfirst = len(barrers[0])
         a = 0
         b = 0

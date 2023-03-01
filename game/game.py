@@ -20,7 +20,27 @@ class Game():
         # Ajout des joueurs
         self.__players = []
         for i in range(config[0]):
-            self.__players.append(HumanPlayer(self))
+            self.__players.append(HumanPlayer(i))
+        self.__players[1].SetPos((8,8))
+        self.__cplayer = 0
+        self.ProcessPossiblesMoves(self.__players[0])
+        
+    def ProcessMove(self,pos, player):
+        if not pos in self.__possibles_moves:
+            return
+        player.SetPos(pos)
+        print(self.__cplayer)
+        self.SwitchPlayer(player)
+        self.ProcessPossiblesMoves(self.__players[self.__cplayer])
+    
+    def SwitchPlayer(self, previous_player):
+        previous_player = previous_player.GetId()
+        if previous_player != self.__cplayer:
+            return
+        if previous_player == len(self.__players)-1:
+            self.__cplayer = 0
+            return
+        self.__cplayer = previous_player + 1
     
     def GetBarrers(self):
         return self.__barrers
@@ -28,7 +48,10 @@ class Game():
     def CheckPath(self, player):
         pass
     
-    def GetMoves(self, player):
+    def GetPossiblesMoves(self):
+        return self.__possibles_moves
+    
+    def ProcessPossiblesMoves(self, player):
         quoridor = self.__quoridor
         ppos = player.GetPos()
         possibles_moves = []
@@ -38,7 +61,8 @@ class Game():
                 continue
             if self.CanMove(ppos, i, nextpos):
                 possibles_moves.append(nextpos)
-        return possibles_moves
+        self.__possibles_moves = possibles_moves
+        print(self.__possibles_moves)
     
     def CanMove(self, pos, movetype, nextpos):
         quoridor = self.__quoridor
@@ -59,3 +83,9 @@ class Game():
         if self.__barrers[check[0]][check[1]] != None:
             return False
         return True
+    
+    def GetPlayers(self):
+        return self.__players
+    
+    def GetCurrentPlayer(self):
+        return self.__players[self.__cplayer]
