@@ -25,6 +25,14 @@ class Game():
         self.__cplayer = 0
         self.ProcessPossiblesMoves(self.__players[0])
         
+        self.__has_changed = True
+        
+    def HasChanged(self):
+        return self.__has_changed
+    
+    def SetChanged(self,val):
+        self.__has_changed = val
+        
     def ProcessMove(self,pos, player):
         if not pos in self.__possibles_moves:
             return
@@ -32,6 +40,7 @@ class Game():
         print(self.__cplayer)
         self.SwitchPlayer(player)
         self.ProcessPossiblesMoves(self.__players[self.__cplayer])
+        self.__has_changed = True
         
     def ProcessBarrer():
         pass

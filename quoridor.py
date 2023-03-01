@@ -30,9 +30,12 @@ class Quoridor():
             
             self.__active_scene.ProcessInput(filtered_events, pressed_keys, self.__screen)
             self.__active_scene.Update()
-            self.__active_scene.Render(self.__screen)
+            items = self.__active_scene.Render(self.__screen)
             self.__active_scene = self.__active_scene.Next()
-            pygame.display.flip()
+            if items == None:
+                pygame.display.flip()
+            else:
+                pygame.display.update(items)
             clock.tick(60)
 
 if __name__ == '__main__':
