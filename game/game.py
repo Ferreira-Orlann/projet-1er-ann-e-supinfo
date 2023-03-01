@@ -21,7 +21,10 @@ class Game():
         self.__players = []
         for i in range(config[0]):
             self.__players.append(HumanPlayer(self))
-            
+    
+    def GetBarrers(self):
+        return self.__barrers
+    
     def CheckPath(self, player):
         pass
     
