@@ -32,6 +32,9 @@ class Game():
         print(self.__cplayer)
         self.SwitchPlayer(player)
         self.ProcessPossiblesMoves(self.__players[self.__cplayer])
+        
+    def ProcessBarrer():
+        pass
     
     def SwitchPlayer(self, previous_player):
         previous_player = previous_player.GetId()
@@ -80,7 +83,10 @@ class Game():
             case quoridor.MOVE_TYPE_RIGHT:
                 check = (pos[0]*2, nextpos[1])
                 pass
-        if self.__barrers[check[0]][check[1]] != None:
+        try:
+            if self.__barrers[check[0]][check[1]] != None:
+                return False
+        except:
             return False
         return True
     
