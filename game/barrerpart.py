@@ -25,3 +25,10 @@ class BarrerPart(Rect):
     
     def SetPosed(self,val):
         self.__posed = val
+        
+    def SetPos(self,val):
+        self.__pos = val
+        return self
+    
+    def GetPos(self):
+        return self.__pos

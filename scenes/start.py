@@ -6,7 +6,7 @@ import pygame
 class SceneStart(SceneBase):
     def __init__(self, screen, quoridor):
         self.__quoridor = quoridor
-        SceneBase.__init__(self)
+        SceneBase.__init__(self,screen)
         self.__background = pygame.image.load('./images/page1/background1.jpg')
         
         self.__banner = pygame.transform.scale(pygame.image.load('./images/page1/game.PNG').convert_alpha(), (700, 150))
@@ -26,9 +26,9 @@ class SceneStart(SceneBase):
         
     def Update(self):
         pass
-
-    def Render(self, screen):
+    
+    def FirstRender(self, screen):
+        print("FirstRender")
         screen.blit(self.__background, (0,0))
         screen.blit(self.__play_button, self.__play_button_rect)
         screen.blit(self.__banner, self.__banner_rect)
-        pass

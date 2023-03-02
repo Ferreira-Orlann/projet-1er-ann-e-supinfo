@@ -12,6 +12,8 @@ class Quoridor():
         self.__active_scene = None
         self.__screen = pygame.display.set_mode(size=(1160, 920))
         self.__active_scene = SceneStart(self.__screen, self)
+        self.__active_scene.FirstRender(self.__screen)
+        pygame.display.flip()
         
         self.Run()
         pass
@@ -30,12 +32,17 @@ class Quoridor():
             
             self.__active_scene.ProcessInput(filtered_events, pressed_keys, self.__screen)
             self.__active_scene.Update()
-            items = self.__active_scene.Render(self.__screen)
+            temp = self.__active_scene.Next()
+            if temp != self.__active_scene:
+                temp.FirstRender(self.__screen)
+                pygame.display.flip()
             self.__active_scene = self.__active_scene.Next()
-            if items == None:
+            if self.__active_scene.ShouldRender():
+                self.__active_scene.Render(self.__screen)
+                self.__active_scene.StopFullRender()
                 pygame.display.flip()
             else:
-                pygame.display.update(items)
+                pygame.display.update(None)
             clock.tick(60)
 
 if __name__ == '__main__':

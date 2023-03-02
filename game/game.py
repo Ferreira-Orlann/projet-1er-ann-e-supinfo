@@ -19,8 +19,8 @@ class Game():
         
         # Ajout des joueurs
         self.__players = []
-        for i in range(config[0]):
-            self.__players.append(HumanPlayer(i))
+        for id in range(config[0]):
+            self.__players.append(HumanPlayer(id))
         self.__players[1].SetPos((8,8))
         self.__cplayer = 0
         self.ProcessPossiblesMoves(self.__players[0])
@@ -33,26 +33,29 @@ class Game():
     def SetChanged(self,val):
         self.__has_changed = val
         
-    def ProcessMove(self,pos, player):
+    def ProcessMove(self,pos):
+        player = self.GetCurrentPlayer()
         if not pos in self.__possibles_moves:
             return
         player.SetPos(pos)
-        print(self.__cplayer)
         self.SwitchPlayer(player)
-        self.ProcessPossiblesMoves(self.__players[self.__cplayer])
-        self.__has_changed = True
         
-    def ProcessBarrer():
+    def ProcessBarrer(self, pos):
+        print(pos)
+        self.__barrers[pos[0]][pos[1]] = True
+        self.SwitchPlayer(self.GetCurrentPlayer())
         pass
     
     def SwitchPlayer(self, previous_player):
         previous_player = previous_player.GetId()
         if previous_player != self.__cplayer:
             return
-        if previous_player == len(self.__players)-1:
+        if previous_player >= (len(self.__players)-1):
             self.__cplayer = 0
-            return
-        self.__cplayer = previous_player + 1
+        else:
+            self.__cplayer = previous_player + 1
+        self.ProcessPossiblesMoves(self.__players[self.__cplayer])
+        self.__has_changed = True
     
     def GetBarrers(self):
         return self.__barrers
