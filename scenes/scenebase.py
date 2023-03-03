@@ -35,7 +35,7 @@ class SceneBase:
     def FirstRender(self, scene):
         pass
     
-    def NextFullRender(self):
+    def FullRender(self):
         self.__full_render = True
         
     def StopFullRender(self):

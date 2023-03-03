@@ -1,12 +1,11 @@
 from scenes.scenebase import SceneBase
 from math import floor
-from utils import MergeTwoDictionaries
 from game.barrerpart import BarrerPart
 import pygame
 
 class GameScene(SceneBase):
     def __init__(self, screen, quoridor, configscene):
-        SceneBase.__init__(self)
+        SceneBase.__init__(self, screen)
         self.__screen = screen
         self.__quoridor = quoridor
         self.__configscene = configscene
@@ -37,8 +36,12 @@ class GameScene(SceneBase):
                 return
         self.__crbarrer = None
         pass
-
+    
     def Render(self, screen):
+        self.FirstRender(screen)
+        pass
+
+    def FirstRender(self, screen):
         screen.fill((255,255,255))
         if not self.__game: 
             self.__configscene.Render(screen)
@@ -75,6 +78,7 @@ class GameScene(SceneBase):
                         
     def SetGame(self, game):
         self.__game = game
+        self.Update()
         del self.__configscene
         
     def ProcessBarrersRectangles(self):
@@ -100,4 +104,5 @@ class GameScene(SceneBase):
                     rectangles.append(BarrerPart(y * 50 + 10 , b * 50 + 10 + 50,50,10).SetPos((i,y)))
                 b = b + 1
         self.__barrers_rectangles = rectangles
-        game.SetChanged(False)  
+        self.FullRender()
+        game.SetChanged(False)

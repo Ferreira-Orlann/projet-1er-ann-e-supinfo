@@ -4,7 +4,7 @@ from game.game import Game
 from math import ceil
 import pygame
 from json import load as json_load
-from utils import LocalRectToGlobalRect, CheckBiggerRect
+from utils import LocalRectToGlobalRect
 
 class SceneConfig(SceneBase):
     def __init__(self, screen, quoridor):
@@ -49,7 +49,7 @@ class SceneConfig(SceneBase):
         data = self.__json["paths"][name]
         self.__elements[name] = pygame.transform.scale(pygame.image.load(data[0].replace(".PNG", "ok.PNG")).convert_alpha(), (data[1], data[2]))
         conf[confidx] = val
-        self.NextFullRender()
+        self.FullRender()
         pass
     
     def CheckConfig(self, name):
