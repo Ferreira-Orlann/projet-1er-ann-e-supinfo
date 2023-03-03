@@ -27,6 +27,9 @@ class Game():
         
         self.__has_changed = True
         
+    def IsPathExist(self):
+        pass
+        
     def HasChanged(self):
         return self.__has_changed
     
@@ -66,7 +69,7 @@ class Game():
     def GetPossiblesMoves(self):
         return self.__possibles_moves
     
-    def ProcessPossiblesMoves(self, player):
+    def ProcessPossiblesMoves(self, player, recursifcall=False):
         quoridor = self.__quoridor
         ppos = player.GetPos()
         possibles_moves = []
@@ -75,9 +78,23 @@ class Game():
             if nextpos[0] < 0 or nextpos[1] < 0:
                 continue
             if self.CanMove(ppos, i, nextpos):
+                isplayerpos, playercheck = self.IsPlayerPos(nextpos)
+                if isplayerpos:
+                    if not recursifcall:
+                        possibles_moves.extend(self.ProcessPossiblesMoves(playercheck, True))
+                    continue
                 possibles_moves.append(nextpos)
-        self.__possibles_moves = possibles_moves
-        print(self.__possibles_moves)
+        if not recursifcall:
+            self.__possibles_moves = possibles_moves
+        else:
+            return possibles_moves
+        
+    def IsPlayerPos(self, pos):
+        for i in range(0, len(self.__players)):
+            player = self.__players[i]
+            if player.GetPos() == pos:
+                return True, player
+        return False, None
     
     def CanMove(self, pos, movetype, nextpos):
         quoridor = self.__quoridor

@@ -17,7 +17,7 @@ class SceneConfig(SceneBase):
         self.__elements = {}
         self.__rects = {}
         
-        self.__background = pygame.image.load('./images/page2/background3.jpg')
+        self.__background = pygame.image.load('./assets/page2/background3.jpg')
         
         ### INIT CONFIGURATION ###
         # Images

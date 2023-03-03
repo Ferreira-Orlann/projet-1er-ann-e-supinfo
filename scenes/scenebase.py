@@ -6,6 +6,13 @@ class SceneBase:
         self.__next = self
         self.__screen = screen
         self.__full_render = False
+        self.__render_change_rects = []
+    
+    def AddRefreshRectToNextFrame(self, rect):
+        self.__render_change_rects.append(rect)
+        
+    def GetNextFrameChanges(self):
+        return self.__render_change_rects
     
     def GetScreen(self):
         return self.__screen
