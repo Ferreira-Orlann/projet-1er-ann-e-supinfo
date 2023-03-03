@@ -5,6 +5,7 @@ class Quoridor():
     MOVE_TYPE_DOWN = (1,0)
     MOVE_TYPE_LEFT = (0,-1)
     MOVE_TYPE_RIGHT = (0,1)
+    START_CONFIGS = [(0,4,True,8), (8,4,True,0), (4,0,False,8), (4,8,False,0)]
     
     def __init__(self):
         from scenes.start import SceneStart

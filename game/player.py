@@ -1,7 +1,7 @@
 class Player():
-    def __init__(self, id):
-        self.__pos = (0,0)
-        self.__final_pos = (4,5)
+    def __init__(self, id, startconfig):
+        self.__pos = (startconfig[0], startconfig[1])
+        self.__final_pos = (startconfig[2], startconfig[3])
         self.__id = id
         pass
     

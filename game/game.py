@@ -1,5 +1,6 @@
 from game.humanplayer import HumanPlayer
 import operator
+from sys import exit
 
 class Game():
     def __init__(self, quoridor, config, scene):
@@ -20,12 +21,20 @@ class Game():
         # Ajout des joueurs
         self.__players = []
         for id in range(config[0]):
-            self.__players.append(HumanPlayer(id))
-        self.__players[1].SetPos((8,8))
+            self.__players.append(HumanPlayer(id,quoridor.START_CONFIGS[id]))
         self.__cplayer = 0
         self.ProcessPossiblesMoves(self.__players[0])
         
         self.__has_changed = True
+        
+    def CheckWin(self):
+        player = self.GetCurrentPlayer()
+        fpos = player.GetFinalPos()
+        if fpos[0] and player.GetPos()[0] == fpos[1] or fpos[0] and player.GetPos()[1] == fpos[1]:
+            print("Player",player.GetId(), "WIN")
+            exit()
+            return True
+        return False
         
     def IsPathExist(self):
         pass
@@ -41,6 +50,7 @@ class Game():
         if not pos in self.__possibles_moves:
             return
         player.SetPos(pos)
+        self.CheckWin()
         self.SwitchPlayer(player)
         
     def ProcessBarrer(self, pos):
