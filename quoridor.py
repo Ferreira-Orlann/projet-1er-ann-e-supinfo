@@ -36,13 +36,13 @@ class Quoridor():
             if temp != self.__active_scene:
                 temp.FirstRender(self.__screen)
                 pygame.display.flip()
-            self.__active_scene = self.__active_scene.Next()
             if self.__active_scene.ShouldRender():
                 self.__active_scene.Render(self.__screen)
                 self.__active_scene.StopFullRender()
                 pygame.display.flip()
             else:
                 pygame.display.update(None)
+            self.__active_scene = temp
             clock.tick(60)
 
 if __name__ == '__main__':

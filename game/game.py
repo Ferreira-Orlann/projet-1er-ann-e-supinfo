@@ -82,7 +82,6 @@ class Game():
     def CanMove(self, pos, movetype, nextpos):
         quoridor = self.__quoridor
         check = None
-        print(movetype)
         match movetype:
             case quoridor.MOVE_TYPE_UP:
                 check = (nextpos[0] * 2 - 1, nextpos[1])

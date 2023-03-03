@@ -1,6 +1,6 @@
 from scenes.scenebase import SceneBase
 from math import floor
-from game.barrerpart import BarrerPart
+from render.barrerpart import BarrerPart
 import pygame
 
 class GameScene(SceneBase):
@@ -16,7 +16,6 @@ class GameScene(SceneBase):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 barrer = self.__crbarrer
                 guipos = event.pos
-                print(barrer)
                 if barrer != None and barrer.collidepoint(guipos) and not barrer.IsPosed():
                     game.ProcessBarrer(barrer.GetPos())
                     barrer.SetPosed(True)
@@ -25,6 +24,35 @@ class GameScene(SceneBase):
                 if gridpos[0] == 9 or gridpos[1] == 9:
                     return
                 game.ProcessMove(gridpos)
+                
+    def PostGameInit(self):
+        game = self.__game
+        rectangles = []
+        barrers = game.GetBarrers()
+        lenfirst = len(barrers[0])
+        a = 0
+        b = 0
+        for i in range(0,len(barrers)):
+            if (i % 2 == 0):
+                for y in range(0,lenfirst):
+                # Vertical Barriers
+                    rectangles.append(BarrerPart(y * 50 + 50, a * 50 + 10 ,10,50).SetVertical(True).SetPos((i,y)))
+                a = a + 1
+            else:
+                # Barriers
+                # pygame.Rect(0,0,25,100)
+                for y in range(0,lenfirst+1):
+                    # pygame.draw.rect(screen, (0,0,0), pygame.Rect(i * 70 + 5, 10 + i * 50,70,10))
+                    rectangles.append(BarrerPart(y * 50 + 10 , b * 50 + 10 + 50,50,10).SetPos((i,y)))
+                b = b + 1
+        self.__barrers_rectangles = rectangles
+        pass   
+                         
+    def SetGame(self, game):
+        self.__game = game
+        self.PostGameInit()
+        self.Update()
+        del self.__configscene
 
     def Update(self):
         self.ProcessBarrersRectangles()
@@ -33,6 +61,7 @@ class GameScene(SceneBase):
             rect = self.__barrers_rectangles[i]
             if rect.collidepoint(pos):
                 self.__crbarrer = rect
+                self.FullRender()
                 return
         self.__crbarrer = None
         pass
@@ -61,12 +90,10 @@ class GameScene(SceneBase):
         for i in range(0,len(self.__barrers_rectangles)):
             barrer = self.__barrers_rectangles[i]
             color = (0,0,255)
+            print(barrer.IsPosed())
             if barrer.IsPosed():
                 color = (0,0,0)
-            if barrer.IsVertical():
-                pygame.draw.rect(screen, color, barrer)
-            else:
-                pygame.draw.rect(screen, color, barrer)
+            pygame.draw.rect(screen, color, barrer)
         if self.__crbarrer != None:
             pygame.draw.rect(screen, (100,100,100), self.__crbarrer)
             
@@ -75,34 +102,10 @@ class GameScene(SceneBase):
         for i in range(len(list_players_pos)):
             i = list_players_pos[i]
             pygame.draw.circle(screen, (255,0,0), (i[1] * 50 + 10 + 25, i[0] * 50 + 10 + 25), 5)
-                        
-    def SetGame(self, game):
-        self.__game = game
-        self.Update()
-        del self.__configscene
         
     def ProcessBarrersRectangles(self):
         game = self.__game
         if not game.HasChanged():
-            pass
-        rectangles = []
-        barrers = game.GetBarrers()
-        lenfirst = len(barrers[0])
-        a = 0
-        b = 0
-        for i in range(0,len(barrers)):
-            if (i % 2 == 0):
-                for y in range(0,lenfirst):
-                # Vertical Barriers
-                    rectangles.append(BarrerPart(y * 50 + 50, a * 50 + 10 ,10,50).SetVertical(True).SetPos((i,y)))
-                a = a + 1
-            else:
-                # Barriers
-                # pygame.Rect(0,0,25,100)
-                for y in range(0,lenfirst+1):
-                    # pygame.draw.rect(screen, (0,0,0), pygame.Rect(i * 70 + 5, 10 + i * 50,70,10))
-                    rectangles.append(BarrerPart(y * 50 + 10 , b * 50 + 10 + 50,50,10).SetPos((i,y)))
-                b = b + 1
-        self.__barrers_rectangles = rectangles
+            return
         self.FullRender()
         game.SetChanged(False)
