@@ -22,10 +22,14 @@ class Quoridor():
                     sys.exit(0)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.__active_scene.MouseDown()
+                if event.type == pygame.MOUSEBUTTONUP:
+                    self.__active_scene.MouseUp()
             self.__active_scene.Update()
             self.__active_scene.Input(pygame.key.get_pressed())
-            pygame.display.flip()
+            pygame.display.update(self.__active_scene.Render(self.__display_surface))
             self.__clock.tick(settings.MAX_TICKS)
-            
+            if self.__active_scene.Next() != False:
+                self.__active_scene = self.__active_scene.Next()
+
 if __name__ == "__main__":
     Quoridor()

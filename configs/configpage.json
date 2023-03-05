@@ -1,15 +1,11 @@
 {
-    "paths": {
-        "titre": ["./assets/page2/titre.PNG", 700, 200],
-        "titrenbr_Players": ["./assets/page2/nbrplayers.PNG", 320, 50],
+    "toggle-buttons": {
         "nbrPlayers2": ["./assets/page2/choix1.PNG",120,120],
         "nbrPlayers4": ["./assets/page2/choix2.PNG",120,120],
-        "titretaille_Plateau": ["./assets/page2/tailleplateau.PNG",320,50],
         "taillePlateau5": ["./assets/page2/5x5.PNG",280,70],
         "taillePlateau7": ["./assets/page2/7x7.PNG",280,70],
         "taillePlateau9": ["./assets/page2/9x9.PNG",280,70],
         "taillePlateau11": ["./assets/page2/11x11.PNG",280,70],
-        "titrenbr_barriere": ["./assets/page2/nbrBarriere.PNG",320,50],
         "nbrbarriere4": ["./assets/page2/barriere4.PNG",120,120],
         "nbrbarriere8": ["./assets/page2/barriere8.PNG",120,120],
         "nbrbarriere12": ["./assets/page2/barriere12.PNG",120,120],
@@ -19,12 +15,20 @@
         "nbrbarriere28": ["./assets/page2/barriere28.PNG",120,120],
         "nbrbarriere32": ["./assets/page2/barriere32.PNG",120,120],
         "nbrbarriere36": ["./assets/page2/barriere36.PNG",120,120],
-        "nbrbarriere40": ["./assets/page2/barriere40.PNG",120,120],
-        "jouerreseau": ["./assets/page2/reseau.PNG",350,100],
-        "reset": ["./assets/page2/reset.PNG",350,100],
-        "Play": ["./assets/page2/play.PNG",350,100]
+        "nbrbarriere40": ["./assets/page2/barriere40.PNG",120,120]
     },
-    "rects" : {
+    "buttons": {
+        "Reset": ["./assets/page2/reset.PNG",350,100],
+        "Player": ["./assets/page2/play.PNG",350,100],
+        "Jouerreseau": ["./assets/page2/reseau.PNG",350,100]
+    },
+    "sprites": {
+        "titre": ["./assets/page2/titre.PNG", 700, 200],
+        "titrenbr_Players": ["./assets/page2/nbrplayers.PNG", 320, 50],
+        "titretaille_Plateau": ["./assets/page2/tailleplateau.PNG",320,50],
+        "titrenbr_barriere": ["./assets/page2/nbrBarriere.PNG",320,50]
+    },
+    "rects-xy" : {
         "titre": [4.7,65],
         "titrenbr_Players": [2.7,6],
         "nbrPlayers2": [3.1,4.6],
@@ -48,5 +52,7 @@
         "jouerreseau": [2.1,1.55],
         "reset": [1.475,17.5],
         "Play": [4,1.55]
+    },
+    "rect-center": {
     }
 }
