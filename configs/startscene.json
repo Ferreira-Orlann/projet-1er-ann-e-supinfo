@@ -1,0 +1,12 @@
+{
+    "toggle-buttons": {
+    },
+    "buttons": {
+        "Play": {
+            "path": "./assets/page1/play.PNG",
+            "size": [235,90],
+            "pos": [2.43,1.635]
+        }
+    },
+    "sprites": {}
+}

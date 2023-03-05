@@ -1,0 +1,16 @@
+{
+    "toggle-buttons": {
+        "NbrPlayers2": {
+            "path": "",
+            "size": ["x", "y"],
+            "pos": ["x", "y"]
+        }
+    },
+    "sprites": {
+        "titre": {
+            "path": "./assets/page2/titre.PNG",
+            "size": [700,200],
+            "pos": [4.7,65]
+        }
+    }
+}

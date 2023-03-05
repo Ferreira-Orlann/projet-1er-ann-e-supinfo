@@ -1,16 +1,12 @@
-from pygame.sprite import DirtySprite
+from render.sprite import DirtySprite
 
 class Button(DirtySprite):
-    def __init__(self, scene, id, surface, action=None):
-        super().__init__()
-        self.id = id
+    def __init__(self, scene, id, surface, x, y, action=None):
+        super().__init__(id, surface, x, y)
         if hasattr(scene, id) and action == None:
             self.Action = getattr(scene, id)
         else:
             self.Action = action
-        self.image = surface
-        self.rect = surface.get_rect()
-        self.rect.center = (0,0)
         self.dirty = 1
         pass
     
@@ -18,15 +14,15 @@ class Button(DirtySprite):
         return
 
 class ToggleButton(Button):
-    def __init__(self, scene, id, surfaceone, surfacetwo, action=None):
-        super().__init__(scene, id, surfaceone, self.Toggle)
+    def __init__(self, scene, id, surfaceone, surfacetwo, x, y, action=None):
+        super().__init__(scene, id, surfaceone, x, y, self.Toggle)
         if action:
             self.ToggleAction = action
         else:
             self.ToggleAction = getattr(scene, id)
         self.__toggled = False
         
-    def Toggle(self):
+    def Toggle(self, this):
         self.__toggled = not self.__toggled
-        self.ToggleAction(self.__toggled)
+        self.ToggleAction(self, self.__toggled)
         pass

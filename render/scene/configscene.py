@@ -5,10 +5,13 @@ from render.buttons import Button, ToggleButton
 
 class ConfigScene(BaseScene):
     def __init__(self, display_surface):
-        file = open("configs/configpage.json", "r")
+        file = open("configs/configscene.json", "r")
         self.__json_config = json_load(file)
         file.close()
         super().__init__("./assets/page2/background3.jpg", display_surface, self.__json_config)
     
-    def Toggle(self):
+    def Toggle(self, button, toggle):
+        print(self)
+        
+    def Button(self, button):
         print(self)

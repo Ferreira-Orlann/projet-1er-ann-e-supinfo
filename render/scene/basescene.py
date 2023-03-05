@@ -1,5 +1,7 @@
 import pygame
 from render.buttons import Button, ToggleButton
+from render.sprite import DirtySprite
+from math import ceil
 
 class BaseScene():
     def __init__(self, background, display_surface, json=None):
@@ -16,28 +18,40 @@ class BaseScene():
             for name, data in json["buttons"].items():
                 self.RegisterButton(Button, name, data)
             for name, data in json["sprites"].items():
-                sprite = pygame.sprite.Sprite()
-                sprite.image = pygame.transform.scale(pygame.image.load(data[0]).convert_alpha(), (data[1], data[2]))
-                sprite.rect = sprite
-                self.RegisterSprite(Button, name, da)
+                pos = data["pos"]
+                size = data["size"]
+                x = pos[0]
+                y = pos[1]
+                surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
+                sprite = DirtySprite(name, surface, x, y)
+                self.RegisterSprite(sprite)
                 
     def RegisterButton(self, clazz, id, data):
         action = None
-        if data[3]:
-            action = data[3]
+        pos = data["pos"]
+        size = data["size"]
+        x = pos[0]
+        y = pos[1]
+        if action in data:
+            action = data["action"]
         if clazz == Button:
-            surface = pygame.transform.scale(pygame.image.load(data[0]).convert_alpha(), (data[1], data[2]))
-            self.RegisterSprite(Button(self, id, surface, action))
+            surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
+            self.RegisterSprite(Button(self, id, surface, x, y, action))
             pass
         elif clazz == ToggleButton:
-            surface_untoggled = pygame.transform.scale(pygame.image.load(data[0]).convert_alpha(), (data[1], data[2]))
-            surface_toggled = pygame.transform.scale(pygame.image.load(data[0].replace(".PNG", "ok.PNG")).convert_alpha(), (data[1], data[2]))
-            self.RegisterSprite(ToggleButton(self, id, surface_untoggled, surface_toggled, action))
+            surface_untoggled = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
+            surface_toggled = pygame.transform.scale(pygame.image.load(data["path"].replace(".PNG", "ok.PNG")).convert_alpha(), (size[0], size[1]))
+            self.RegisterSprite(ToggleButton(self, id, surface_untoggled, surface_toggled, x, y, action))
     
     def GetDisplaySurface(self):
         return self.__display_surface
     
     def RegisterSprite(self, sprite):
+        print(sprite.rect.x)
+        if isinstance(sprite.GetPos()[0], float):
+            sprite.rect.x = ceil(self.__display_surface.get_width() / sprite.GetPos()[0])
+            sprite.rect.y = ceil(self.__display_surface.get_height() / sprite.GetPos()[1])
+            print("Registering sprite")
         self.__sprites.add(sprite)
     
     def Render(self, display_surface):
@@ -64,7 +78,7 @@ class BaseScene():
         mouse_pos = pygame.mouse.get_pos()
         for button in buttons:
             if button.rect.collidepoint(mouse_pos) and button.Action:
-                button.Action()
+                button.Action(button)
 
     def GetMainGroup(self):
         return self.__sprites
