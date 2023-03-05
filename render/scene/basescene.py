@@ -32,7 +32,7 @@ class BaseScene():
         size = data["size"]
         x = pos[0]
         y = pos[1]
-        if action in data:
+        if "action" in data:
             action = data["action"]
         if clazz == Button:
             surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))

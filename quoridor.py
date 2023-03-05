@@ -16,6 +16,7 @@ class Quoridor():
     
     def Run(self):
         while 1:
+            update_rects = []
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -24,9 +25,13 @@ class Quoridor():
                     self.__active_scene.MouseDown()
                 if event.type == pygame.MOUSEBUTTONUP:
                     self.__active_scene.MouseUp()
+                if event.type == pygame.VIDEOEXPOSE or event.type == pygame.VIDEORESIZE:
+                    display_settings = settings.DISPLAY_SIZE
+                    update_rects.append(pygame.Rect(0,0,display_settings[0],display_settings[1]))
             self.__active_scene.Update()
             self.__active_scene.Input(pygame.key.get_pressed())
-            pygame.display.update(self.__active_scene.Render(self.__display_surface))
+            update_rects.extend(self.__active_scene.Render(self.__display_surface))
+            pygame.display.update(update_rects)
             self.__clock.tick(settings.MAX_TICKS)
             if self.__active_scene.Next() != False:
                 self.__active_scene = self.__active_scene.Next()

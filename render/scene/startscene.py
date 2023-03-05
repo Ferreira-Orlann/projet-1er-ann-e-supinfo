@@ -1,6 +1,5 @@
 from render.scene.basescene import BaseScene
 from render.scene.configscene import ConfigScene
-from render.buttons import Button
 from json import load as json_load
 
 class StartScene(BaseScene):

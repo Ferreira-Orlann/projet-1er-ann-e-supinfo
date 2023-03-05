@@ -5,8 +5,7 @@
         "Reset": {
             "path": "./assets/page2/reset.PNG",
             "size": [350,100],
-            "pos": [1.475,17.5],
-            "action": "Toggle"
+            "pos": [1.475,17.5]
         }
     },
     "sprites": {
@@ -14,12 +13,6 @@
             "path": "./assets/page2/titre.PNG",
             "size": [700,200],
             "pos": [4.7,65]
-        },
-        "Reset": {
-            "path": "./assets/page2/reset.PNG",
-            "size": [350,100],
-            "pos": [1.475,17.5],
-            "action": "Toggle"
         }
     }
 }

@@ -3,10 +3,13 @@ from render.sprite import DirtySprite
 class Button(DirtySprite):
     def __init__(self, scene, id, surface, x, y, action=None):
         super().__init__(id, surface, x, y)
-        if hasattr(scene, id) and action == None:
-            self.Action = getattr(scene, id)
+        if hasattr(scene, id):
+            if action == None:
+                self.Action = getattr(scene, id)
+            else:
+                self.Action = getattr(scene,action)
         else:
-            self.Action = action
+            self.Action = getattr(scene,action)
         self.dirty = 1
         pass
     
