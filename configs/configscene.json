@@ -1,5 +1,17 @@
 {
     "toggle-buttons": {
+        "BoardSize5": {
+            "path": "./assets/page2/5x5.PNG",
+            "size": [280,70],
+            "pos": [22.0,2.5],
+            "action": "BoardSize"
+        },
+        "BoardSize7": {
+            "path": "./assets/page2/7x7.PNG",
+            "size": [280,70],
+            "pos": [3.7,2.5],
+            "action": "BoardSize"
+        }
     },
     "buttons": {
         "Reset": {

@@ -2,6 +2,8 @@ import pygame
 from render.buttons import Button, ToggleButton
 from render.sprite import DirtySprite
 from math import ceil
+from json import load as json_load
+import settings
 
 class BaseScene():
     def __init__(self, background, display_surface, json=None):
@@ -13,6 +15,10 @@ class BaseScene():
         self.__next = False
     
         if json: 
+            file = open(json, "r")
+            json = json_load(file)
+            file.close()
+            
             for name, data in json["toggle-buttons"].items():
                 self.RegisterButton(ToggleButton, name, data)
             for name, data in json["buttons"].items():
@@ -37,11 +43,13 @@ class BaseScene():
         if clazz == Button:
             surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
             self.RegisterSprite(Button(self, id, surface, x, y, action))
-            pass
         elif clazz == ToggleButton:
             surface_untoggled = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
             surface_toggled = pygame.transform.scale(pygame.image.load(data["path"].replace(".PNG", "ok.PNG")).convert_alpha(), (size[0], size[1]))
-            self.RegisterSprite(ToggleButton(self, id, surface_untoggled, surface_toggled, x, y, action))
+            button = ToggleButton(self, id, surface_untoggled, surface_toggled, x, y, action)
+            self.RegisterSprite(button)
+            if "toggled" in data and data["toggled"] == True:
+                button.Toggle(button)
     
     def GetDisplaySurface(self):
         return self.__display_surface
