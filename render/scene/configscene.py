@@ -16,13 +16,13 @@ class ConfigScene(BaseScene):
         if self.__nbbarrers is not None and button != self.__nbbarrers:
             self.__nbbarrers.Toggle()
         self.__nbbarrers = button
-        settings.NB_BARRERS = int(button.GetId().replace("NbBarrers", ""))
+        settings.NB_BARRERS = int(button.GetId().replace("NbrBarriere", ""))
         
     def NbPlayers(self, button, toggle):
         if self.__nbplayers is not None and button != self.__nbplayers:
             self.__nbplayers.Toggle()
         self.__nbplayers = button
-        settings.NB_PLAYERS = int(button.GetId().replace("NbPlayers", ""))
+        settings.NB_PLAYERS = int(button.GetId().replace("NbrPlayers", ""))
     
     def BoardSize(self, button, toggle):
         if self.__board_size is not None and button != self.__board_size:

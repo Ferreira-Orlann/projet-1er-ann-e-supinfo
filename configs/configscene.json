@@ -60,7 +60,7 @@
             "pos": [358,640],
             "action": "NbBarrers"
         },
-        "nbrbarriere20": {
+        "NbrBarriere20": {
             "path": "./assets/page2/barriere20.PNG",
             "size": [120,120],
             "pos": [468,640],
