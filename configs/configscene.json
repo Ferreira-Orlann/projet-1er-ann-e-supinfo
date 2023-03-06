@@ -1,15 +1,99 @@
 {
     "toggle-buttons": {
+        "NbrPlayers2": {
+            "path": "./assets/page2/choix1.PNG",
+            "size": [120,120],
+            "pos": [380,250],
+            "action": "BoardSize"
+        },
+        "NbrPlayers4": {
+            "path": "./assets/page2/choix2.PNG",
+            "size": [120,120],
+            "pos": [620,250],
+            "action": "BoardSize"
+        },
         "BoardSize5": {
             "path": "./assets/page2/5x5.PNG",
             "size": [280,70],
-            "pos": [22.0,2.5],
+            "pos": [60,470],
             "action": "BoardSize"
         },
         "BoardSize7": {
             "path": "./assets/page2/7x7.PNG",
             "size": [280,70],
-            "pos": [3.7,2.5],
+            "pos": [310,470],
+            "action": "BoardSize"
+        },
+        "BoardSize9": {
+            "path": "./assets/page2/9x9.PNG",
+            "size": [280,70],
+            "pos": [560,470],
+            "action": "BoardSize"
+        },
+        "BoardSize11": {
+            "path": "./assets/page2/11x11.PNG",
+            "size": [280,70],
+            "pos": [820,470],
+            "action": "BoardSize"
+        },
+        "NbrBarriere4": {
+            "path": "./assets/page2/barriere4.PNG",
+            "size": [120,120],
+            "pos": [35,640],
+            "action": "BoardSize"
+        },
+        "NbrBarriere8": {
+            "path": "./assets/page2/barriere8.PNG",
+            "size": [120,120],
+            "pos": [143,640],
+            "action": "BoardSize"
+        },
+        "NbrBarriere12": {
+            "path": "./assets/page2/barriere12.PNG",
+            "size": [120,120],
+            "pos": [248,640],
+            "action": "BoardSize"
+        },
+        "NbrBarriere16": {
+            "path": "./assets/page2/barriere16.PNG",
+            "size": [120,120],
+            "pos": [358,640],
+            "action": "BoardSize"
+        },
+        "nbrbarriere20": {
+            "path": "./assets/page2/barriere20.PNG",
+            "size": [120,120],
+            "pos": [468,640],
+            "action": "BoardSize"
+        },
+        "NbrBarriere24": {
+            "path": "./assets/page2/barriere24.PNG",
+            "size": [120,120],
+            "pos": [578,640],
+            "action": "BoardSize"
+        },
+        "NbrBarriere28": {
+            "path": "./assets/page2/barriere28.PNG",
+            "size": [120,120],
+            "pos": [688,640],
+            "action": "BoardSize"
+        },
+        "NbrBarriere32": {
+            "path": "./assets/page2/barriere32.PNG",
+            "size": [120,120],
+            "pos": [798,640],
+            "action": "BoardSize"
+        },
+        "NbrBarriere36": {
+            "path": "./assets/page2/barriere36.PNG",
+            "size": [120,120],
+            "pos": [908,640],
+            "action": "BoardSize"
+        },
+        "NbrBarriere40": {
+            "path": "./assets/page2/barriere40.PNG",
+            "size": [120,120],
+            "pos": [1005,640],
             "action": "BoardSize"
         }
     },
