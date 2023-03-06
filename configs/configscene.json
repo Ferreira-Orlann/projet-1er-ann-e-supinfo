@@ -4,13 +4,13 @@
             "path": "./assets/page2/choix1.PNG",
             "size": [120,120],
             "pos": [380,250],
-            "action": "BoardSize"
+            "action": "NbPlayers"
         },
         "NbrPlayers4": {
             "path": "./assets/page2/choix2.PNG",
             "size": [120,120],
             "pos": [620,250],
-            "action": "BoardSize"
+            "action": "NbPlayers"
         },
         "BoardSize5": {
             "path": "./assets/page2/5x5.PNG",
@@ -40,61 +40,61 @@
             "path": "./assets/page2/barriere4.PNG",
             "size": [120,120],
             "pos": [35,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "NbrBarriere8": {
             "path": "./assets/page2/barriere8.PNG",
             "size": [120,120],
             "pos": [143,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "NbrBarriere12": {
             "path": "./assets/page2/barriere12.PNG",
             "size": [120,120],
             "pos": [248,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "NbrBarriere16": {
             "path": "./assets/page2/barriere16.PNG",
             "size": [120,120],
             "pos": [358,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "nbrbarriere20": {
             "path": "./assets/page2/barriere20.PNG",
             "size": [120,120],
             "pos": [468,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "NbrBarriere24": {
             "path": "./assets/page2/barriere24.PNG",
             "size": [120,120],
             "pos": [578,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "NbrBarriere28": {
             "path": "./assets/page2/barriere28.PNG",
             "size": [120,120],
             "pos": [688,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "NbrBarriere32": {
             "path": "./assets/page2/barriere32.PNG",
             "size": [120,120],
             "pos": [798,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "NbrBarriere36": {
             "path": "./assets/page2/barriere36.PNG",
             "size": [120,120],
             "pos": [908,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         },
         "NbrBarriere40": {
             "path": "./assets/page2/barriere40.PNG",
             "size": [120,120],
             "pos": [1005,640],
-            "action": "BoardSize"
+            "action": "NbBarrers"
         }
     },
     "buttons": {
