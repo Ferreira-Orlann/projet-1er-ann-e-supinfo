@@ -1,5 +1,4 @@
 from pygame.sprite import DirtySprite
-from math import ceil
 
 class DirtySprite(DirtySprite):
     def __init__(self, id, surface, x, y):

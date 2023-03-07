@@ -12,7 +12,7 @@ class BaseScene():
         self.__sprites.clear(display_surface,self.__background)
         display_surface.blit(self.__background, (0,0))
         self.__next = False
-        self.__cached_surfaces = []
+        self.__cached_surfaces = {}
     
         self.LoadBaseJson(json)
         
@@ -21,10 +21,11 @@ class BaseScene():
         if path in self.__cached_surfaces:
             return self.__cached_surfaces[path]
         else:
-            self.RegisterSurface(path, pygame.image.load("path").convert_alpha())
+            return self.RegisterSurface(path, pygame.image.load(path).convert_alpha())
         
     def RegisterSurface(self,id,surface):
         self.__cached_surfaces[id] = surface
+        return surface
         
     def LoadBaseJson(self, json):
         json = CheckJson(json)
@@ -38,7 +39,7 @@ class BaseScene():
             size = data["size"]
             x = pos[0]
             y = pos[1]
-            surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
+            surface = pygame.transform.scale(self.GetSurface(data["path"]), (size[0], size[1]))
             sprite = DirtySprite(name, surface, x, y)
             self.RegisterSprite(sprite)
                 
@@ -69,7 +70,6 @@ class BaseScene():
         if isinstance(sprite.GetPos()[0], float):
             sprite.rect.x = ceil(self.__display_surface.get_width() / sprite.GetPos()[0])
             sprite.rect.y = ceil(self.__display_surface.get_height() / sprite.GetPos()[1])
-            print("Registering sprite")
         self.__sprites.add(sprite)
     
     def Render(self, display_surface):
