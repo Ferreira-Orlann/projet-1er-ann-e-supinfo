@@ -105,6 +105,16 @@
             "path": "./assets/page2/reset.PNG",
             "size": [350,100],
             "pos": [1.475,17.5]
+        },
+        "Start": {
+            "path": "./assets/page2/play.PNG",
+            "size": [380,130],
+            "pos": [290,770]
+        },
+        "ServerList": {
+            "path": "./assets/page2/reseau.PNG",
+            "size": [380,130],
+            "pos": [510,770]
         }
     },
     "sprites": {

@@ -11,6 +11,13 @@ class ConfigScene(BaseScene):
     
     def Reset(self, button):
         pass
+
+    def ServerList(self, button):
+        pass
+
+    def Start(self, button):
+        pass
+
         
     def NbBarrers(self, button, toggle):
         if self.__nbbarrers is not None and button != self.__nbbarrers:
