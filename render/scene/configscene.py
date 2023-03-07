@@ -11,7 +11,7 @@ class ConfigScene(BaseScene):
         self.__reset_data = ["NbrBarriere20", "BoardSize9", "NbrPlayers2"]
     
     def Reset(self, button):
-        for b in filter(lambda b: (b.GetId() in self.__reset_data), self.GetMainGroup().sprites()): b.Action(b)
+        [b.Toggle() for b in filter(lambda b: (b.GetId() in self.__reset_data), self.GetMainGroup().sprites()) if not b.IsToggled()]
 
     def ServerList(self, button):
         pass

@@ -17,7 +17,7 @@ class Button(DirtySprite):
 
 class ToggleButton(Button):
     def __init__(self, scene, id, surfaceone, surfacetwo, x, y, action=None):
-        super().__init__(scene, id, surfaceone, x, y, self.Action)
+        super().__init__(scene, id, surfaceone, x, y, self.Toggle)
         self.__surfaceone = surfaceone
         self.__surfacetwo = surfacetwo
         if action:
@@ -26,10 +26,7 @@ class ToggleButton(Button):
             self.ToggleAction = getattr(scene, id)
         self.__toggled = False
         
-    def Action(self, this):
-        self.Toggle()
-        
-    def Toggle(self):
+    def Toggle(self, this=None):
         self.ToggleAction(self, self.__toggled)
         if self.__toggled:
             self.ChangeSurface(self.__surfaceone)
@@ -37,3 +34,6 @@ class ToggleButton(Button):
             self.ChangeSurface(self.__surfacetwo)
             print("Changed surface")
         self.__toggled = not self.__toggled
+        
+    def IsToggled(self):
+        return self.__toggled
