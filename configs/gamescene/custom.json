@@ -1,3 +1,10 @@
 {
-    "players": [[255,255,255], "./assets/jaune.png"]
+    "players": [
+        [[255,255,0], "./assets/page3/jaune.png"],
+        [[255,0,0], "./assets/page3/rouge.png"],
+        [[255,128,0], "./assets/page3/orange.png"],
+        [[0,153,0], "./assets/page3/vert.png"]
+    ],
+    "barrer": "./assets/page3/barrer.png",
+    "board_case": "./assets/page3/caseplateau.png"
 }
