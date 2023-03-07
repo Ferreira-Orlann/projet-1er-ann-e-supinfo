@@ -11,10 +11,7 @@ class ConfigScene(BaseScene):
         self.__reset_data = ["NbrBarriere20", "BoardSize9", "NbrPlayers2"]
     
     def Reset(self, button):
-        buttons = list(filter(lambda b: (b.GetId() in self.__reset_data), self.GetMainGroup().sprites()))
-        print(buttons)
-        map(lambda b: print(b), buttons)
-        pass 
+        for b in filter(lambda b: (b.GetId() in self.__reset_data), self.GetMainGroup().sprites()): b.Action(b)
 
     def ServerList(self, button):
         pass
