@@ -8,9 +8,13 @@ class ConfigScene(BaseScene):
         self.__nbplayers = None
         self.__nbbarrers = None
         super().__init__("./assets/page2/background3.jpg", display_surface, "configs/configscene.json")
+        self.__reset_data = ["NbrBarriere20", "BoardSize9", "NbrPlayers2"]
     
     def Reset(self, button):
-        pass
+        buttons = list(filter(lambda b: (b.GetId() in self.__reset_data), self.GetMainGroup().sprites()))
+        print(buttons)
+        map(lambda b: print(b), buttons)
+        pass 
 
     def ServerList(self, button):
         pass
