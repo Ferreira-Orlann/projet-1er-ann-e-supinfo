@@ -2,8 +2,7 @@ import pygame
 from render.buttons import Button, ToggleButton
 from render.sprite import DirtySprite
 from math import ceil
-from json import load as json_load
-import settings
+from utils import CheckJson
 
 class BaseScene():
     def __init__(self, background, display_surface, json=None):
@@ -14,23 +13,23 @@ class BaseScene():
         display_surface.blit(self.__background, (0,0))
         self.__next = False
     
-        if json: 
-            file = open(json, "r")
-            json = json_load(file)
-            file.close()
+        self.LoadBaseJson(json)
+        
+    def LoadBaseJson(self, json):
+        json = CheckJson(json)
             
-            for name, data in json["toggle-buttons"].items():
-                self.RegisterButton(ToggleButton, name, data)
-            for name, data in json["buttons"].items():
-                self.RegisterButton(Button, name, data)
-            for name, data in json["sprites"].items():
-                pos = data["pos"]
-                size = data["size"]
-                x = pos[0]
-                y = pos[1]
-                surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
-                sprite = DirtySprite(name, surface, x, y)
-                self.RegisterSprite(sprite)
+        for name, data in json["toggle-buttons"].items():
+            self.RegisterButton(ToggleButton, name, data)
+        for name, data in json["buttons"].items():
+            self.RegisterButton(Button, name, data)
+        for name, data in json["sprites"].items():
+            pos = data["pos"]
+            size = data["size"]
+            x = pos[0]
+            y = pos[1]
+            surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
+            sprite = DirtySprite(name, surface, x, y)
+            self.RegisterSprite(sprite)
                 
     def RegisterButton(self, clazz, id, data):
         action = None
@@ -49,7 +48,7 @@ class BaseScene():
             button = ToggleButton(self, id, surface_untoggled, surface_toggled, x, y, action)
             self.RegisterSprite(button)
             if "toggled" in data and data["toggled"] == True:
-                button.Toggle(button)
+                button.Action(button)
     
     def GetDisplaySurface(self):
         return self.__display_surface

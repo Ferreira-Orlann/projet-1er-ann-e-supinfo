@@ -4,13 +4,13 @@ import settings
 
 class ConfigScene(BaseScene):
     def __init__(self, display_surface):
-        super().__init__("./assets/page2/background3.jpg", display_surface, "configs/configscene.json")
         self.__board_size = None
         self.__nbplayers = None
         self.__nbbarrers = None
+        super().__init__("./assets/page2/background3.jpg", display_surface, "configs/configscene.json")
     
     def Reset(self, button):
-        print(button)
+        pass
         
     def NbBarrers(self, button, toggle):
         if self.__nbbarrers is not None and button != self.__nbbarrers:

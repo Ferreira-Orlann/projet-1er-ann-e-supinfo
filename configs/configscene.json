@@ -4,7 +4,8 @@
             "path": "./assets/page2/choix1.PNG",
             "size": [120,120],
             "pos": [380,250],
-            "action": "NbPlayers"
+            "action": "NbPlayers",
+            "toggled": true
         },
         "NbrPlayers4": {
             "path": "./assets/page2/choix2.PNG",
@@ -28,7 +29,8 @@
             "path": "./assets/page2/9x9.PNG",
             "size": [280,70],
             "pos": [560,470],
-            "action": "BoardSize"
+            "action": "BoardSize",
+            "toggled": true
         },
         "BoardSize11": {
             "path": "./assets/page2/11x11.PNG",
@@ -64,7 +66,8 @@
             "path": "./assets/page2/barriere20.PNG",
             "size": [120,120],
             "pos": [468,640],
-            "action": "NbBarrers"
+            "action": "NbBarrers",
+            "toggled": true
         },
         "NbrBarriere24": {
             "path": "./assets/page2/barriere24.PNG",
