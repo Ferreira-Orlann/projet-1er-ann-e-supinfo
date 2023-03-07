@@ -1,5 +1,7 @@
 from json import load as json_load
 from render.scene.basescene import BaseScene
+from render.scene.gamescene import GameScene
+from game.game import Game
 import settings
 
 class ConfigScene(BaseScene):
@@ -17,7 +19,7 @@ class ConfigScene(BaseScene):
         pass
 
     def Start(self, button):
-        pass
+        self.Next(GameScene(self.GetDisplaySurface(), Game(settings)))
 
         
     def NbBarrers(self, button, toggle):
