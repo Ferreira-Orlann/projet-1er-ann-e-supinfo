@@ -12,8 +12,19 @@ class BaseScene():
         self.__sprites.clear(display_surface,self.__background)
         display_surface.blit(self.__background, (0,0))
         self.__next = False
+        self.__cached_surfaces = []
     
         self.LoadBaseJson(json)
+        
+    # Path can also be an id
+    def GetSurface(self, path):
+        if path in self.__cached_surfaces:
+            return self.__cached_surfaces[path]
+        else:
+            self.RegisterSurface(path, pygame.image.load("path").convert_alpha())
+        
+    def RegisterSurface(self,id,surface):
+        self.__cached_surfaces[id] = surface
         
     def LoadBaseJson(self, json):
         json = CheckJson(json)
