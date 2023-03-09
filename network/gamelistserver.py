@@ -10,9 +10,6 @@ class GameListServer():
     def __init__(self):
         sel = selectors.DefaultSelector()
         
-        def accept_wrapper(sock):
-
-
         if len(sys.argv) != 3:
             print(f"Usage: {sys.argv[0]} <host> <port>")
             sys.exit(1)
