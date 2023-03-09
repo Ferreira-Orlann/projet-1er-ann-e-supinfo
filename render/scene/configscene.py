@@ -9,7 +9,7 @@ class ConfigScene(BaseScene):
         self.__board_size = None
         self.__nbplayers = None
         self.__nbbarrers = None
-        super().__init__("./assets/page2/background3.jpg", display_surface, "configs/configscene.json")
+        super().__init__(display_surface, "configs/configscene.json")
         self.__reset_data = ["NbrBarriere20", "BoardSize9", "NbrPlayers2"]
     
     def Reset(self, button):
@@ -20,7 +20,6 @@ class ConfigScene(BaseScene):
 
     def Start(self, button):
         self.Next(GameScene(self.GetDisplaySurface(), Game(settings)))
-
         
     def NbBarrers(self, button, toggle):
         if self.__nbbarrers is not None and button != self.__nbbarrers:

@@ -1,4 +1,5 @@
 {
+    "background": "./assets/page2/background3.jpg",
     "toggle-buttons": {
         "NbrPlayers2": {
             "path": "./assets/page2/choix1.PNG",

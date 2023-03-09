@@ -1,5 +1,6 @@
 import pygame, sys, settings
 from render.scene.startscene import StartScene
+from network.client import NetClientManager
 
 class Quoridor():
     def __init__(self):
@@ -10,6 +11,7 @@ class Quoridor():
         pygame.event.set_allowed(pygame.QUIT)
         self.__clock = pygame.time.Clock()
         self.__active_scene = StartScene(self.__display_surface)
+        self.__netclient = NetClientManager()
         
         self.Run()
         pass

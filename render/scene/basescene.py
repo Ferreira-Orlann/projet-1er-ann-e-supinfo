@@ -5,16 +5,17 @@ from math import ceil
 from utils import CheckJson
 
 class BaseScene():
-    def __init__(self, background, display_surface, json=None):
+    def __init__(self,display_surface, json=None, background=None):
+            
         self.__sprites = pygame.sprite.LayeredDirty()
         self.__display_surface = display_surface
-        self.__background = pygame.image.load(background).convert()
+        self.__background = background
         self.__sprites.clear(display_surface,self.__background)
-        display_surface.blit(self.__background, (0,0))
         self.__next = False
         self.__cached_surfaces = {}
-    
+
         self.LoadBaseJson(json)
+
         
     # Path can also be an id
     def GetSurface(self, path):
@@ -29,7 +30,17 @@ class BaseScene():
         
     def LoadBaseJson(self, json):
         json = CheckJson(json)
-            
+
+        if self.__background is not None and isinstance(self.__background,str):
+            self.__background = pygame.image.load(self.__background).convert()
+        else:
+            self.__background = pygame.Surface(self.__display_surface.get_size())
+            if "background" in json:
+                self.__background = pygame.image.load(json["background"]).convert()
+            else:
+                self.__background.fill(pygame.Color(255,255,255))
+        self.__display_surface.blit(self.__background, (0,0))
+        
         for name, data in json["toggle-buttons"].items():
             self.RegisterButton(ToggleButton, name, data)
         for name, data in json["buttons"].items():

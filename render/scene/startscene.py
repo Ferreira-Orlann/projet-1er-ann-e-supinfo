@@ -4,7 +4,7 @@ from json import load as json_load
 
 class StartScene(BaseScene):
     def __init__(self, display_surface):
-        super().__init__("./assets/page1/background1.jpg", display_surface, "configs/startscene.json")
+        super().__init__(display_surface, "configs/startscene.json")
         pass
     
     def Play(self, button):
