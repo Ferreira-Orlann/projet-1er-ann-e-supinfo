@@ -1,56 +1,46 @@
-import sys
 import socket
-import selectors
-import traceback
-
-from libs import libserver
+import libs.Stockings as Stockings
+import threading
+import json
 
 class GameListServer():
    
     def __init__(self):
-        sel = selectors.DefaultSelector()
-        
-        if len(sys.argv) != 3:
-            print(f"Usage: {sys.argv[0]} <host> <port>")
-            sys.exit(1)
-
-        host, port = sys.argv[1], int(sys.argv[2])
+        host, port = "127.0.0.1", 50000
         lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # Avoid bind() exception: OSError: [Errno 48] Address already in use
         lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         lsock.bind((host, port))
         lsock.listen()
         print(f"Listening on {(host, port)}")
-        lsock.setblocking(False)
-        sel.register(lsock, selectors.EVENT_READ, data=None)
+        self.__lsock = lsock
+        
+        self.__servers = []
+        self.__stockings = []
+        
+        self.__lsock_thread = threading.Thread(target=self.RunAcceptConnection)
+        self.__lsock_thread.start()
+        self.__conn_handler_thread = threading.Thread(target=self.ConnectionHandler)
+        self.__conn_handler_thread.start()
+        
+        
+    def ConnectionHandler(self):
+        while 1:
+            for stock in self.__stockings:
+                data = stock.read()
+                if data == None: continue
+                if data == "server": pass
 
-        try:
-            while True:
-                events = sel.select(timeout=None)
-                for key, mask in events:
-                    if key.data is None:
-                        conn, addr = key.fileobj.accept()  # Should be ready to read
-                        print(f"Accepted connection from {addr}")
-                        conn.setblocking(False)
-                        message = libserver.Message(sel, conn, addr)
-                        sel.register(conn, selectors.EVENT_READ, data=message)
-                    else:
-                        message = key.data
-                        try:
-                            request = message.process_events(mask)
-                            if request is not None:
-                                print(request)
-                        except Exception:
-                            print(
-                                f"Main: Error: Exception for {message.addr}:\n"
-                                f"{traceback.format_exc()}"
-                            )
-                            message.close()
-        except KeyboardInterrupt:
-            print("Caught keyboard interrupt, exiting")
-        finally:
-            sel.close()
+    def RunAcceptConnection(self):
+        while 1:
+            conn, addr = self.__lsock.accept()
+            self.__stockings.append(GameServerStocking(self, conn))
+
     pass
 
-if __name__ == '__main__':
-    GameListServer()
+class GameServerStocking(Stockings.Stocking):
+    def __init__(self, gameserver, conn):
+        super().__init__(conn)
+        self.__gameserver = gameserver
+    
+    def close(self):
+        super().close()
