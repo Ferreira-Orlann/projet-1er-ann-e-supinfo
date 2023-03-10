@@ -5,6 +5,7 @@ from os import getpid
 from signal import SIGTERM
 from rich import print as rprint
 from rich.console import Console as RConsole
+from rich.table import Table
 
 class Console(RConsole):
     def __init__(self):
@@ -13,17 +14,17 @@ class Console(RConsole):
         self.__thread = threading.Thread(target=self.Run)
         self.__thread.daemon = True
         self.__thread.start()
-        self.RegisterCommand("exit", lambda: kill(getpid(), SIGTERM))
-        self.RegisterCommand("help", lambda: rprint(self.__commands))
+        self.RegisterCommand("help", self.HelpCommand, "Afficher la liste des commandes disponibles")
+        self.RegisterCommand("exit", lambda: kill(getpid(), SIGTERM), "Permet de quiter le processus en cour")
         
-    def RegisterCommand(self,command, func):
-        self.__commands[command] = func
+    def RegisterCommand(self,command, func, desc):
+        self.__commands[command] = [func, desc]
         
     def Call(self, command):
-        func = self.__commands.get(command, None)
-        if func is not None:
+        data = self.__commands.get(command, None)
+        if data is not None:
             self.log("[green]Execution: " + command + "[/green]")
-            func()
+            data[0]()
         else:
             self.log("[red]Erreur: Commande inconnue")
             
@@ -34,3 +35,11 @@ class Console(RConsole):
             except:
                 self.log("[red]Interuption => CTRL + C")
                 kill(getpid(), SIGTERM)
+                
+    def HelpCommand(self):
+        table = Table()
+        table.add_column("Commande", justify="right", style="cyan", no_wrap=True)
+        table.add_column("Desciption", style="magenta")
+        for cmd, cmddata in self.__commands.items():
+            table.add_row(cmd, cmddata[1])
+        self.print(table)

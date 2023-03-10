@@ -24,14 +24,14 @@ class GameListServer():
         self.__lsock_thread = threading.Thread(target=self.RunAcceptConnection)
         self.__lsock_thread.daemon = True
         self.__lsock_thread.start()
-        self.__conn_handler_thread = threading.Thread(target=self.ConnectionHandler)
+        self.__conn_handler_thread = threading.Thread(target=self.ReadHandler)
         self.__conn_handler_thread.daemon = True
         self.__conn_handler_thread.start()
         
         self.__conn_handler_thread.join()
         self.__lsock_thread.join()
         
-    def ConnectionHandler(self):
+    def ReadHandler(self):
         while 1:
             for stock in self.__stockings:
                 string = stock.read()
@@ -41,6 +41,7 @@ class GameListServer():
                 match (data.get("action")):
                     case "retreive_servers":
                         stock.write(json.dumps({
+                            "action": "retreive_servers",
                             "servers": [server.addr for server in self.__servers]
                         }))
                         pass

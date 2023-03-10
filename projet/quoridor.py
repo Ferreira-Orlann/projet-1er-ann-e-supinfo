@@ -9,7 +9,7 @@ from time import sleep
 class Quoridor():
     def __init__(self):
         self.__console = Console()
-        self.__console.RegisterCommand("exit", lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
+        self.__console.RegisterCommand("exit", lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)), "Permet de quiter le processus en cour")
         self.__console.log("[green]Starting[/green]")
         self.__console.log("Init PyGame", style="#af00ff")
         pygame.init()
@@ -24,6 +24,9 @@ class Quoridor():
         
     
         self.Run()
+        
+    def GetNetClient(self):
+        return self.__netclient
     
     def GetCmdsManager(self):
         return self.__cmdsmanager
