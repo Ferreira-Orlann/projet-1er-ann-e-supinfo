@@ -30,7 +30,7 @@ class Console(RConsole):
     def Run(self):
         while 1:
             try:
-                self.Call(str(input()))
+                self.Call(str(self.input()))
             except:
-                self.log("[red]Interuption")
+                self.log("[red]Interuption => CTRL + C")
                 kill(getpid(), SIGTERM)

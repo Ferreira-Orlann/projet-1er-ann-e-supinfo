@@ -1,11 +1,17 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame, sys, settings
 from render.scene.startscene import StartScene
 from network.client import NetClientManager
-from libs.console import Console
+from console import Console
 from time import sleep
 
 class Quoridor():
     def __init__(self):
+        self.__console = Console()
+        self.__console.RegisterCommand("exit", lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
+        self.__console.log("[green]Starting[/green]")
+        self.__console.log("Init PyGame", style="#af00ff")
         pygame.init()
         self.__display_surface = pygame.display.set_mode(settings.DISPLAY_SIZE)
         pygame.display.set_caption(settings.CAPTION)
@@ -13,10 +19,8 @@ class Quoridor():
         pygame.event.set_allowed(pygame.QUIT)
         self.__clock = pygame.time.Clock()
         self.__active_scene = StartScene(self.__display_surface)
+        self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
         self.__netclient = NetClientManager()
-        self.__console = Console()
-        self.__console.RegisterCommand("exit", lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
-        self.__console.log("[green]Starting[/green]")
         self.Run()
         pass
     

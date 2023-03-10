@@ -19,6 +19,6 @@ Démarer un serveur de jeu
 
 | Commande | Description | Realm
 | :---: | :---: | :---: |
-| help | Afficher la liste des commands disponibles | ALL |
-| exit | Permet de quiter le processeur en cour | ALL |
-| listservers | Permet d'afficher la list des serveurs qui sont enregistés | GameListServer
+| help | Afficher la liste des commandes disponibles | ALL |
+| exit | Permet de quiter le processus en cour | ALL |
+| listservers | Permet d'afficher la liste des serveurs qui sont enregistés | GameListServer

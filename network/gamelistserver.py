@@ -3,7 +3,7 @@ import libs.Stockings as Stockings
 import threading
 import json
 import time
-from libs.console import Console
+from console import Console
 
 class GameListServer():
     
