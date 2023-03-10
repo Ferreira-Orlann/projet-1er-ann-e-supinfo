@@ -1,10 +1,12 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pygame, sys, projet.settings as settings
+import pygame, sys, settings as settings
 from render.scene.startscene import StartScene
 from network.client import NetClientManager
-from projet.console import Console
+from console import Console
 from time import sleep
+from rich.traceback import install
+install(show_locals=True)
 
 class Quoridor():
     def __init__(self):
@@ -21,8 +23,9 @@ class Quoridor():
         self.__active_scene = StartScene(self.__display_surface)
         self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
         self.__netclient = NetClientManager()
+        
+    
         self.Run()
-        pass
     
     def GetCmdsManager(self):
         return self.__cmdsmanager

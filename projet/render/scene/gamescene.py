@@ -1,5 +1,5 @@
 from render.scene.basescene import BaseScene
-from projet.utils import CheckJson
+from utils import CheckJson
 
 class GameScene(BaseScene):
     def __init__(self, display_surface, game):
