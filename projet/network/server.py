@@ -2,6 +2,7 @@ from network.quoridorstoking import QuoridorStocking
 import libs.richthread as threading
 import socket
 from json import dumps
+from time import sleep
 from rich.table import Table
 
 class Server():
@@ -23,7 +24,11 @@ class Server():
         
     def RemoveStocking(self, stock):
         self.__stockings.remove(stock)
-        
+        self.GetConsole().log("Client disconnect \n    Id: " + str(stock.GetId()) + " \n    Addresse: " + self.AddrToString(stock.addr), style="light_salmon3", markup=False)
+        if stock.IsFatal():
+            self.GetConsole().log("[red]Fatal Client Disconnect")
+            self.GetConsole().Quit()
+            
     def GetStockings(self):
         return self.__stockings
     
@@ -61,12 +66,14 @@ class Server():
         if len(args) < 1 or not args[0].isnumeric():
             self.GetConsole().log("[red]Erreur: kick {id}")
             return
-        stock = self.GetStockingById(args[0])
-        if stock is not None:   
+        stock = self.GetStockingById(int(args[0]))
+        if stock is None:   
             return
-        stock.stock.write(dumps({
+        stock.write(dumps({
             "action": "kick"
         }))
+        while stock.writeDataQueued() == True:
+            sleep(0.1)
         stock.close()
     
     def GetStockingById(self, id):
@@ -76,3 +83,6 @@ class Server():
             if stock.GetId() == id:
                 return stock
         return None
+    
+    def AddrToString(self, addr):
+        return addr[0] + ":" + str(addr[1])

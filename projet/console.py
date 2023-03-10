@@ -16,6 +16,7 @@ class Console(RConsole):
         self.__thread.start()
         self.RegisterCommand("help", self.HelpCommand, "Afficher la liste des commandes disponibles")
         self.RegisterCommand("exit", self.Exit, "Permet de quiter le processus en cour")
+        self.log("[green3][link=https://github.com/Ferreira-Orlann/projet-1er-ann-e-supinfo]Lien Github du projet[/link]")
         
     def Exit(self, args):
         self.log("[red]EXIT[/red]")

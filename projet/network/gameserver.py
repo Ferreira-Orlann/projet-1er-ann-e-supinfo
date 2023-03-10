@@ -22,14 +22,13 @@ class GameServer(Server):
         except ConnectionRefusedError as err:
             self.GetConsole().log("[red]Fatal Erreur: Le serveur n'a pas réussi à se connecter au GameListServer")
             self.GetConsole().Quit()
-        self.__serverlist_stocking = QuoridorStocking(self, sock, 0)
+        self.__serverlist_stocking = QuoridorStocking(self, sock, 0, True)
         self.GetStockings().append(self.__serverlist_stocking)
         while self.__serverlist_stocking.handshakeComplete is not True:
             sleep(0.1)
         self.__serverlist_stocking.write(json.dumps({
             "action": "register"
         }))
-        
         
         self.__conn_handler_thread.join()
         
@@ -43,5 +42,9 @@ class GameServer(Server):
                 data = json.loads(string)
                 match (data.get("action")):
                     case "register":
-                        self.GetConsole().log(data)
+                        pass
+                    case "kick":
+                        self.GetConsole().log("[red]Vous avez été kick de: " + self.AddrToString(stock.addr))
+                        if stock == self.__serverlist_stocking:
+                            self.GetConsole().Quit()
             sleep(0.1)

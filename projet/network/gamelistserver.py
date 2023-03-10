@@ -38,6 +38,6 @@ class GameListServer(Server):
                         }))
                         
     def RemoveStocking(self, stock):
-        self.GetStockings().remove(stock)
         if stock in self.__servers:
             self.__servers.remove(stock)
+        super().RemoveStocking(stock)

@@ -55,7 +55,7 @@ class _Stocking(richthread.Thread):
         Inputs: conn - A connected socket.
         """
 
-        threading.Thread.__init__(self)
+        richthread.Thread.__init__(self)
         self.sock = conn
         self.addr = self.sock.getpeername()
         self._messageHeaders = MessageHeaders.MessageHeaders()
@@ -137,9 +137,10 @@ class _Stocking(richthread.Thread):
 
     def writeDataQueued(self):
         """ Returns a boolean indicating whether or not there is data waiting to be sent to the endpoint."""
-
-        return self._usIn.poll() or len(self._oBuffer)
-
+        try:
+            return self._usIn.poll() or len(self._oBuffer)
+        except:
+            return False
 
     # Subclassable functions
     def handshake(self):
@@ -336,7 +337,7 @@ class _Stocking(richthread.Thread):
 
         except socket.error as e:
             # Only mask EAGAIN errors
-            if e.errno != errno.EAGAIN:
+            if e.errno != errno.EAGAIN and self.active == True:
                 raise
 
         return retval
