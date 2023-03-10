@@ -19,6 +19,7 @@ class DirtySprite(DirtySprite):
         self.rect.x = x
         self.rect.y = y
         self.dirty = 1
+        self.rect.update(self.rect.left, self.rect.top, self.rect.width + 10, self.rect.height + 10)
         
     def GetId(self):
         return self.__id

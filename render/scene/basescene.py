@@ -53,6 +53,9 @@ class BaseScene():
             surface = pygame.transform.scale(self.GetSurface(data["path"]), (size[0], size[1]))
             sprite = DirtySprite(name, surface, x, y)
             self.RegisterSprite(sprite)
+    
+    def GetBackGroundSurface(self):
+        return self.__background
                 
     def RegisterButton(self, clazz, id, data):
         action = None
@@ -77,7 +80,6 @@ class BaseScene():
         return self.__display_surface
     
     def RegisterSprite(self, sprite):
-        print(sprite.rect.x)
         if isinstance(sprite.GetPos()[0], float):
             sprite.rect.x = ceil(self.__display_surface.get_width() / sprite.GetPos()[0])
             sprite.rect.y = ceil(self.__display_surface.get_height() / sprite.GetPos()[1])
@@ -116,3 +118,6 @@ class BaseScene():
         if nextsene:
             self.__next = nextsene
         return self.__next
+    
+    def __str__(self):
+        return type(self).__name__
