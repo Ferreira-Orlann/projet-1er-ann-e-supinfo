@@ -1,0 +1,8 @@
+[build-system]
+requires = ["pygame >=2.1.3", "rich >= 13.3.2"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "Quoridor"
+authors = [{name = "Orlann FERREIRA"}, {name = "Tommy BRISSET"}, {name = "Thibault CHOUBRY"}, {name = "Yann GELLNER"}]
+dynamic = ["version", "description"]
