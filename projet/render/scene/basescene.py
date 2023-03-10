@@ -35,11 +35,14 @@ class BaseScene():
             self.__background = pygame.image.load(self.__background).convert()
         else:
             self.__background = pygame.Surface(self.__display_surface.get_size())
-            if "background" in json:
+            if json is not None and "background" in json:
                 self.__background = pygame.image.load(json["background"]).convert()
             else:
                 self.__background.fill(pygame.Color(255,255,255))
         self.__display_surface.blit(self.__background, (0,0))
+
+        if json is None:
+            return
         
         for name, data in json["toggle-buttons"].items():
             self.RegisterButton(ToggleButton, name, data)
