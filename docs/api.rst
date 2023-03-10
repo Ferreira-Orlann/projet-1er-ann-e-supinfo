@@ -5,3 +5,4 @@ API
    :toctree: generated
 
    lumache
+   project.launcher
