@@ -43,12 +43,12 @@ class BaseScene():
         
     def LoadBaseJson(self, json):
         json = CheckJson(json)
+        
+        if json is None:
+            return
 
         if "background" in json:
             self.LoadBackground(json["background"])
-
-        if json is None:
-            return
         
         if "toggle-buttons" in json:
             for name, data in json["toggle-buttons"].items():
