@@ -3,7 +3,6 @@ import threading
 from os import kill
 from os import getpid
 from signal import SIGTERM
-from rich import print as rprint
 from rich.console import Console as RConsole
 from rich.table import Table
 
@@ -18,7 +17,7 @@ class Console(RConsole):
         self.RegisterCommand("exit", self.Exit, "Permet de quiter le processus en cour")
         
     def Exit(self):
-        self.log("[red]EXIT[/red]") 
+        self.log("[red]EXIT[/red]")
         kill(getpid(), SIGTERM)
     
     def RegisterCommand(self,command, func, desc):
@@ -37,6 +36,8 @@ class Console(RConsole):
             try:
                 self.Call(str(self.input()))
             except:
+                for thread in threading.enumerate():
+                    print(thread)
                 self.log("[red]Interuption => CTRL + C")
                 kill(getpid(), SIGTERM)
                 

@@ -16,8 +16,8 @@ class BaseScene():
         self.__next = False
         self.__cached_surfaces = {}
 
+        self.LoadBackground(background)
         self.LoadBaseJson(json)
-        self.LoadBackground(background)        
 
     def GetQuoridor(self):
         return self.__quoridor

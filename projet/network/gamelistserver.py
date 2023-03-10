@@ -8,7 +8,6 @@ class GameListServer(Server):
     
     def __init__(self):
         super().__init__(Console(), '127.0.0.1', 50000)
-        self.GetConsole().log("[green]Server initialisé")
         
         self.__servers = []
         
@@ -17,15 +16,13 @@ class GameListServer(Server):
         self.__conn_handler_thread.start()
         
         self.__conn_handler_thread.join()
-        self.__lsock_thread.join()
         
     def ReadHandler(self):
         while 1:
             for stock in self.GetStockings():
-                string = stock.read()
+                string = self.ReadStock(stock)
                 if string == None: continue
                 data = json.loads(string)
-                print(data)
                 match (data.get("action")):
                     case "retreive_servers":
                         stock.write(json.dumps({
@@ -35,6 +32,10 @@ class GameListServer(Server):
                         pass
                     case "register":
                         self.__servers.append(stock)
+                        stock.write(json.dumps({
+                            "action": "register",
+                            "result": "OK"
+                        }))
                         
     def RemoveStocking(self, stock):
         self.GetStockings().remove(stock)

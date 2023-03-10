@@ -15,6 +15,7 @@ class Server():
         
         self.__console = console
         self.__stockings = []
+        self.GetConsole().log("[green]Server initialisé")
         
     def RemoveStocking(self, stock):
         self.__stockings.remove(stock)
@@ -22,11 +23,23 @@ class Server():
     def GetStockings(self):
         return self.__stockings
     
+    def GetStock(self):
+        return self.__lsock
+    
     def RunAcceptConnection(self):
         while 1:
             conn, addr = self.__lsock.accept()
-            self.__console.log("[blue] Joueur connecté: " + addr)
+            self.__console.log("[blue]Client connecté: " + addr[0] + ":" + str(addr[1]))
             self.__stockings.append(QuoridorStocking(self, conn))
 
     def GetConsole(self):
         return self.__console
+    
+    def ReadStock(self, stock):
+        try:
+            return stock.read()
+        except BrokenPipeError as err:
+            self.RemoveStocking(stock)
+        except ConnectionResetError as err:
+            self.RemoveStocking(stock)
+            return None
