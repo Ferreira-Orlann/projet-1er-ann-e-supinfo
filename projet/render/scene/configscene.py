@@ -1,6 +1,7 @@
 from json import load as json_load
 from render.scene.basescene import BaseScene
 from render.scene.gamescene import GameScene
+from render.scene.gamelistscene import GameListScene
 from game.game import Game
 import settings as settings
 
@@ -16,7 +17,7 @@ class ConfigScene(BaseScene):
         [b.Toggle() for b in filter(lambda b: (b.GetId() in self.__reset_data), self.GetMainGroup().sprites()) if not b.IsToggled()]
 
     def ServerList(self, button):
-        pass
+        self.Next(GameListScene(self.GetDisplaySurface()))
 
     def Start(self, button):
         self.Next(GameScene(self.GetDisplaySurface(), Game(settings)))
