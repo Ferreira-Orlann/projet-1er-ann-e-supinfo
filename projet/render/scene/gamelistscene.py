@@ -1,6 +1,7 @@
 from render.scene.basescene import BaseScene
 
 class GameListScene(BaseScene):
-    def __init__(self, display_surface):
-        super().__init__(display_surface)
+    def __init__(self, quoridor):
+        super().__init__(quoridor)
+        
     pass

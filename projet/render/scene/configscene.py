@@ -6,21 +6,22 @@ from game.game import Game
 import settings as settings
 
 class ConfigScene(BaseScene):
-    def __init__(self, display_surface):
+    def __init__(self, quoridor):
         self.__board_size = None
         self.__nbplayers = None
         self.__nbbarrers = None
-        super().__init__(display_surface, "configs/configscene.json")
+        self.__quoridor = quoridor
+        super().__init__(quoridor, "configs/configscene.json")
         self.__reset_data = ["NbrBarriere20", "BoardSize9", "NbrPlayers2"]
     
     def Reset(self, button):
         [b.Toggle() for b in filter(lambda b: (b.GetId() in self.__reset_data), self.GetMainGroup().sprites()) if not b.IsToggled()]
 
     def ServerList(self, button):
-        self.Next(GameListScene(self.GetDisplaySurface()))
+        self.Next(GameListScene(self.GetQuoridor()))
 
     def Start(self, button):
-        self.Next(GameScene(self.GetDisplaySurface(), Game(settings)))
+        self.Next(GameScene(self.GetQuoridor(), Game(settings)))
         
     def NbBarrers(self, button, toggle):
         if self.__nbbarrers is not None and button != self.__nbbarrers:

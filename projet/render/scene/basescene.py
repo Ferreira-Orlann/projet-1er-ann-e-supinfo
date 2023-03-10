@@ -2,20 +2,25 @@ import pygame
 from render.buttons import Button, ToggleButton
 from render.sprite import DirtySprite
 from math import ceil
+import settings
 from utils import CheckJson
 
 class BaseScene():
-    def __init__(self,display_surface, json=None, background=None):
+    def __init__(self,quoridor, json=None, background=None):
             
         self.__sprites = pygame.sprite.LayeredDirty()
-        self.__display_surface = display_surface
+        self.__quoridor = quoridor
+        self.__display_surface = quoridor.GetDisplaySurface()
         self.__background = background
-        self.__sprites.clear(display_surface,self.__background)
+        self.__sprites.clear(self.__display_surface,self.__background)
         self.__next = False
         self.__cached_surfaces = {}
 
         self.LoadBaseJson(json)
+        self.LoadBackground(background)        
 
+    def GetQuoridor(self):
+        return self.__quoridor
         
     # Path can also be an id
     def GetSurface(self, path):
@@ -27,35 +32,39 @@ class BaseScene():
     def RegisterSurface(self,id,surface):
         self.__cached_surfaces[id] = surface
         return surface
-        
+    
+    def LoadBackground(self,background):
+        if isinstance(background,str):
+            self.__background = pygame.image.load(background).convert()
+        elif self.__background is None:
+            self.__background = pygame.surface.Surface(settings.DISPLAY_SIZE)
+            self.__background.fill(pygame.Color(255,255,255))
+        self.__display_surface.blit(self.__background, (0,0))
+        print(background)
     def LoadBaseJson(self, json):
         json = CheckJson(json)
 
-        if self.__background is not None and isinstance(self.__background,str):
-            self.__background = pygame.image.load(self.__background).convert()
-        else:
-            self.__background = pygame.Surface(self.__display_surface.get_size())
-            if json is not None and "background" in json:
-                self.__background = pygame.image.load(json["background"]).convert()
-            else:
-                self.__background.fill(pygame.Color(255,255,255))
-        self.__display_surface.blit(self.__background, (0,0))
+        if "background" in json:
+            self.LoadBackground(json["background"])
 
         if json is None:
             return
         
-        for name, data in json["toggle-buttons"].items():
-            self.RegisterButton(ToggleButton, name, data)
-        for name, data in json["buttons"].items():
-            self.RegisterButton(Button, name, data)
-        for name, data in json["sprites"].items():
-            pos = data["pos"]
-            size = data["size"]
-            x = pos[0]
-            y = pos[1]
-            surface = pygame.transform.scale(self.GetSurface(data["path"]), (size[0], size[1]))
-            sprite = DirtySprite(name, surface, x, y)
-            self.RegisterSprite(sprite)
+        if "toggle-buttons" in json:
+            for name, data in json["toggle-buttons"].items():
+                self.RegisterButton(ToggleButton, name, data)
+        if "buttons" in json:
+            for name, data in json["buttons"].items():
+                self.RegisterButton(Button, name, data)
+        if "sprites" in json:
+            for name, data in json["sprites"].items():
+                pos = data["pos"]
+                size = data["size"]
+                x = pos[0]
+                y = pos[1]
+                surface = pygame.transform.scale(self.GetSurface(data["path"]), (size[0], size[1]))
+                sprite = DirtySprite(name, surface, x, y)
+                self.RegisterSprite(sprite)
     
     def GetBackGroundSurface(self):
         return self.__background

@@ -5,7 +5,7 @@ class Button(DirtySprite):
         super().__init__(id, surface, x, y)
         if callable(action):
             self.Action = action
-        elif hasattr(scene, id):
+        elif hasattr(scene, id) or hasattr(scene, action):
             if action == None:
                 self.Action = getattr(scene, id)
             else:
@@ -13,7 +13,6 @@ class Button(DirtySprite):
         else:
             self.Action = getattr(scene,action)
         self.dirty = 1
-        pass
 
 class ToggleButton(Button):
     def __init__(self, scene, id, surfaceone, surfacetwo, x, y, action=None):

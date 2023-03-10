@@ -29,6 +29,8 @@ class Client():
                         case "retreive_servers":
                             self.__rserver_receiver(json.load(data.get("servers", [])))
                             self.__rserver_receiver = None
+                            self.__stocking.socs.shutdown()
+                            self.__stocking = None
                             pass
             
             time.sleep(.5)

@@ -18,7 +18,7 @@ class Quoridor():
         pygame.display.set_icon(pygame.image.load(settings.ICON_PATH).convert_alpha())
         pygame.event.set_allowed(pygame.QUIT)
         self.__clock = pygame.time.Clock()
-        self.__active_scene = StartScene(self.__display_surface)
+        self.__active_scene = StartScene(self)
         self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
         self.__netclient = NetClientManager()
         
@@ -61,6 +61,9 @@ class Quoridor():
 
     def GetConsole(self):
         return self.__console
+    
+    def GetDisplaySurface(self):
+        return self.__display_surface
 
 if __name__ == "__main__":
     QUORIDOR = Quoridor()
