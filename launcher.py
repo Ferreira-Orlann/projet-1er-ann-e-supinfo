@@ -14,20 +14,20 @@ Module de lancement du jeu et des serveur
     python launcher.py serverlist
     
 """
-from rich.traceback import install
-install(show_locals=True)
-import sys
-import quoridor as quoridor
-import network.gamelistserver as gamelist
-import network.gameserver as gameserver
+# from rich.traceback import install
+# install(show_locals=True)
+# import sys
+# import quoridor as quoridor
+# import network.gamelistserver as gamelist
+# import network.gameserver as gameserver
 
-if len(sys.argv) <= 1:
-    quoridor.Quoridor()
+# if len(sys.argv) <= 1:
+#     quoridor.Quoridor()
     
-match(sys.argv[1]):
-    case "game":
-        QUORIDOR = quoridor.Quoridor()
-    case "serverlist":
-        gamelist.GameListServer()
-    case "gameserver":
-        gameserver.GameServer()
+# match(sys.argv[1]):
+#     case "game":
+#         QUORIDOR = quoridor.Quoridor()
+#     case "serverlist":
+#         gamelist.GameListServer()
+#     case "gameserver":
+#         gameserver.GameServer()
