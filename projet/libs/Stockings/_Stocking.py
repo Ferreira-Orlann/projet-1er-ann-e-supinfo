@@ -21,12 +21,13 @@
 
 # Standard imports
 import socket, errno, threading, multiprocessing
+import libs.richthread as richthread
 
 # Project imports
 from .utils import MessageHeaders, eintr
 from .exceptions import notReady
 
-class _Stocking(threading.Thread):
+class _Stocking(richthread.Thread):
     """ Base class for a Stocking. """
 
     # Publically visible attributes

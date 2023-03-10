@@ -1,3 +1,4 @@
+import libs.richthread as richthread
 import threading
 from os import kill
 from os import getpid
@@ -10,7 +11,7 @@ class Console(RConsole):
     def __init__(self):
         super().__init__()
         self.__commands = {}
-        self.__thread = threading.Thread(target=self.Run)
+        self.__thread = richthread.Thread(target=self.Run)
         self.__thread.daemon = True
         self.__thread.start()
         self.RegisterCommand("help", self.HelpCommand, "Afficher la liste des commandes disponibles")

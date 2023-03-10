@@ -1,7 +1,7 @@
 import socket
 import libs.Stockings as Stockings
 import json
-import threading
+import libs.richthread as threading
 import time
 
 class NetClientManager():

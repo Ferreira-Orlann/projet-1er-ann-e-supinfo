@@ -1,5 +1,5 @@
 import socket
-import threading
+import libs.richthread as threading
 import json
 from console import Console
 from network.server import Server
@@ -17,7 +17,11 @@ class GameServer(Server):
         self.__conn_handler_thread.start()
         
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(("127.0.0.1", 50000))
+        try:
+            sock.connect(("127.0.0.1", 50000))
+        except ConnectionRefusedError as err:
+            self.GetConsole().log("[red]Fatal Erreur: Le serveur n'a pas réussi à se connecter au GameListServer")
+            self.GetConsole().Quit()
         self.__serverlist_stocking = QuoridorStocking(self, sock, 0)
         self.GetStockings().append(self.__serverlist_stocking)
         while self.__serverlist_stocking.handshakeComplete is not True:

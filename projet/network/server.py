@@ -1,5 +1,5 @@
 from network.quoridorstoking import QuoridorStocking
-import threading
+import libs.richthread as threading
 import socket
 from json import dumps
 from rich.table import Table

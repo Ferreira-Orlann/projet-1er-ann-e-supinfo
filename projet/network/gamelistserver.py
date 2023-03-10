@@ -1,5 +1,5 @@
 import socket
-import threading
+import libs.richthread as threading
 import json
 from console import Console
 from network.server import Server
@@ -11,7 +11,7 @@ class GameListServer(Server):
         
         self.__servers = []
         
-        self.__conn_handler_thread = threading.Thread(target=self.ReadHandler)
+        self.__conn_handler_thread = threading.Thread(self.ReadHandler)
         self.__conn_handler_thread.daemon = True
         self.__conn_handler_thread.start()
         
