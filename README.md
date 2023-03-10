@@ -21,4 +21,5 @@ Démarer un serveur de jeu
 | :---: | :---: | :---: |
 | help | Afficher la liste des commandes disponibles | ALL |
 | exit | Permet de quiter le processus en cour | ALL |
-| listservers | Permet d'afficher la liste des serveurs qui sont enregistés | GameListServer
+| clients | Voir la liste de tout les clients/joueurs | GameListServer & GameServer
+| kick | Permet d'expulser un client/joueur par son id | GameListServer & GameServer

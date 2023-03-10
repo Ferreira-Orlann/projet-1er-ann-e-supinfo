@@ -22,10 +22,16 @@ class Server():
         self.__stockings = []
         self.GetConsole().log("[green]Server initialisé")
         
+        self.__quit = False
+        
     def RemoveStocking(self, stock):
-        self.__stockings.remove(stock)
-        self.GetConsole().log("Client disconnect \n    Id: " + str(stock.GetId()) + " \n    Addresse: " + self.AddrToString(stock.addr), style="light_salmon3", markup=False)
-        if stock.IsFatal():
+        if stock in self.__stockings:
+            self.__stockings.remove(stock)
+        if not stock.IsDisconnected():
+            self.GetConsole().log("Client disconnect \n    Id: " + str(stock.GetId()) + " \n    Addresse: " + self.AddrToString(stock.addr), style="light_salmon3", markup=False)
+            stock.Disconnect()
+        if stock.IsFatal() and self.__quit == False:
+            self.__quit = True
             self.GetConsole().log("[red]Fatal Client Disconnect")
             self.GetConsole().Quit()
             

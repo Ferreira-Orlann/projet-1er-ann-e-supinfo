@@ -6,6 +6,7 @@ class QuoridorStocking(Stockings.Stocking):
         self.__server = server
         self.__id = id
         self.__fatal = fatal
+        self.__disconnect = False
     
     def close(self):
         self.__server.RemoveStocking(self)
@@ -16,3 +17,9 @@ class QuoridorStocking(Stockings.Stocking):
     
     def IsFatal(self):
         return self.__fatal
+    
+    def IsDisconnected(self):
+        return self.__disconnect
+    
+    def Disconnect(self):
+        self.__disconnect = True

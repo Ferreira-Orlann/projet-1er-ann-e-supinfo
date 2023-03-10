@@ -22,6 +22,7 @@
 # Standard imports
 import socket, errno, threading, multiprocessing
 import libs.richthread as richthread
+from rich.traceback import install
 
 # Project imports
 from .utils import MessageHeaders, eintr
@@ -29,6 +30,7 @@ from .exceptions import notReady
 
 class _Stocking(richthread.Thread):
     """ Base class for a Stocking. """
+    install(show_locals=True)
 
     # Publically visible attributes
     sock = None               # The connection to the remote
