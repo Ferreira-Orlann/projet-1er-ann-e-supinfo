@@ -15,8 +15,12 @@ class Console(RConsole):
         self.__thread.daemon = True
         self.__thread.start()
         self.RegisterCommand("help", self.HelpCommand, "Afficher la liste des commandes disponibles")
-        self.RegisterCommand("exit", lambda: kill(getpid(), SIGTERM), "Permet de quiter le processus en cour")
+        self.RegisterCommand("exit", self.Exit, "Permet de quiter le processus en cour")
         
+    def Exit(self):
+        self.log("[red]EXIT[/red]") 
+        kill(getpid(), SIGTERM)
+    
     def RegisterCommand(self,command, func, desc):
         self.__commands[command] = [func, desc]
         

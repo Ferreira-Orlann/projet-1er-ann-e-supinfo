@@ -40,7 +40,7 @@ class BaseScene():
             self.__background = pygame.surface.Surface(settings.DISPLAY_SIZE)
             self.__background.fill(pygame.Color(255,255,255))
         self.__display_surface.blit(self.__background, (0,0))
-        print(background)
+        
     def LoadBaseJson(self, json):
         json = CheckJson(json)
 
