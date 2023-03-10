@@ -15,12 +15,9 @@ class Console(RConsole):
         self.__thread.daemon = True
         self.__thread.start()
         self.RegisterCommand("help", self.HelpCommand, "Afficher la liste des commandes disponibles")
-        self.RegisterCommand("exit", self.Exit, "Permet de quiter le processus en cour")
+        self.RegisterCommand("exit", self.Quit, "Permet de quiter le processus en cour")
         self.log("[green3][link=https://github.com/Ferreira-Orlann/projet-1er-ann-e-supinfo]Lien Github du projet[/link]")
         
-    def Exit(self, args):
-        self.log("[red]EXIT[/red]")
-        self.Quit()
     
     def RegisterCommand(self,command, func, desc):
         self.__commands[command] = [func, desc]
@@ -46,10 +43,11 @@ class Console(RConsole):
                 self.log("[red]Interuption => CTRL + C")
                 self.Quit()
             
-    def Quit(self):
+    def Quit(self, args=None):
             for thread in threading.enumerate():
                 if isinstance(thread, Stockings.Stocking):
                     thread.close()
+            self.log("[red]EXIT[/red]")
             kill(getpid(), SIGTERM)
             
     def HelpCommand(self, args):

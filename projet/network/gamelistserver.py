@@ -20,6 +20,8 @@ class GameListServer(Server):
     def ReadHandler(self):
         while 1:
             for stock in self.GetStockings():
+                if not stock.handshakeComplete:
+                    continue
                 string = self.ReadStock(stock)
                 if string == None: continue
                 data = json.loads(string)
