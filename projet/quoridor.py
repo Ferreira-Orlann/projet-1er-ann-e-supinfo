@@ -5,8 +5,6 @@ from render.scene.startscene import StartScene
 from network.client import NetClientManager
 from console import Console
 from time import sleep
-from rich.traceback import install
-install(show_locals=True)
 
 class Quoridor():
     def __init__(self):

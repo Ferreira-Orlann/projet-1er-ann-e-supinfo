@@ -1,3 +1,5 @@
+from rich.traceback import install
+install(show_locals=True)
 import sys
 import quoridor as quoridor
 import network.gamelistserver as gamelist
