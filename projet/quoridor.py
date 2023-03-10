@@ -1,9 +1,9 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pygame, sys, settings
+import pygame, sys, projet.settings as settings
 from render.scene.startscene import StartScene
 from network.client import NetClientManager
-from console import Console
+from projet.console import Console
 from time import sleep
 
 class Quoridor():

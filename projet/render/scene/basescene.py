@@ -2,7 +2,7 @@ import pygame
 from render.buttons import Button, ToggleButton
 from render.sprite import DirtySprite
 from math import ceil
-from utils import CheckJson
+from projet.utils import CheckJson
 
 class BaseScene():
     def __init__(self,display_surface, json=None, background=None):

@@ -2,7 +2,7 @@ from json import load as json_load
 from render.scene.basescene import BaseScene
 from render.scene.gamescene import GameScene
 from game.game import Game
-import settings
+import projet.settings as settings
 
 class ConfigScene(BaseScene):
     def __init__(self, display_surface):

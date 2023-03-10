@@ -1,5 +1,5 @@
 import sys
-import quoridor
+import projet.quoridor as quoridor
 import network.gamelistserver as gamelist
 import network.gameserver as gameserver
 
