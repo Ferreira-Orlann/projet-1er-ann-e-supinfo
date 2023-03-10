@@ -31,3 +31,6 @@ Module de lancement du jeu et des serveur
 #         gamelist.GameListServer()
 #     case "gameserver":
 #         gameserver.GameServer()
+
+def test():
+    print("Testing")
