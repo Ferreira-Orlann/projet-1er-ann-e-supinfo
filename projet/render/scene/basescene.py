@@ -11,7 +11,7 @@ class BaseScene():
         self.__sprites = pygame.sprite.LayeredDirty()
         self.__quoridor = quoridor
         self.__display_surface = quoridor.GetDisplaySurface()
-        self.__background = background
+        self.__background = None
         self.__sprites.clear(self.__display_surface,self.__background)
         self.__next = False
         self.__cached_surfaces = {}
