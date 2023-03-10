@@ -4,12 +4,11 @@ import pygame, sys, settings as settings
 from render.scene.startscene import StartScene
 from network.client import NetClientManager
 from console import Console
-from time import sleep
 
 class Quoridor():
     def __init__(self):
         self.__console = Console()
-        self.__console.RegisterCommand("exit", lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)), "Permet de quiter le processus en cour")
+        self.__console.RegisterCommand("exit", lambda args: pygame.event.post(pygame.event.Event(pygame.QUIT)), "Permet de quiter le processus en cour")
         self.__console.log("[green]Starting[/green]")
         self.__console.log("Init PyGame", style="#af00ff")
         pygame.init()
@@ -22,7 +21,6 @@ class Quoridor():
         self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
         self.__netclient = NetClientManager()
         
-    
         self.Run()
         
     def GetNetClient(self):

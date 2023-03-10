@@ -21,13 +21,16 @@
 
 # Standard imports
 import socket, errno, threading, multiprocessing
+import libs.richthread as richthread
+from rich.traceback import install
 
 # Project imports
 from .utils import MessageHeaders, eintr
 from .exceptions import notReady
 
-class _Stocking(threading.Thread):
+class _Stocking(richthread.Thread):
     """ Base class for a Stocking. """
+    install(show_locals=True)
 
     # Publically visible attributes
     sock = None               # The connection to the remote
@@ -54,7 +57,7 @@ class _Stocking(threading.Thread):
         Inputs: conn - A connected socket.
         """
 
-        threading.Thread.__init__(self)
+        richthread.Thread.__init__(self)
         self.sock = conn
         self.addr = self.sock.getpeername()
         self._messageHeaders = MessageHeaders.MessageHeaders()
@@ -136,9 +139,10 @@ class _Stocking(threading.Thread):
 
     def writeDataQueued(self):
         """ Returns a boolean indicating whether or not there is data waiting to be sent to the endpoint."""
-
-        return self._usIn.poll() or len(self._oBuffer)
-
+        try:
+            return self._usIn.poll() or len(self._oBuffer)
+        except:
+            return False
 
     # Subclassable functions
     def handshake(self):
@@ -335,7 +339,7 @@ class _Stocking(threading.Thread):
 
         except socket.error as e:
             # Only mask EAGAIN errors
-            if e.errno != errno.EAGAIN:
+            if e.errno != errno.EAGAIN and self.active == True:
                 raise
 
         return retval
