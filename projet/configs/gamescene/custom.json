@@ -1,4 +1,5 @@
 {
+    "info": "Player IMG Size: 48px * 48px",
     "players": [
         [[255,255,0], "./assets/page3/jaune.png"],
         [[255,0,0], "./assets/page3/rouge.png"],

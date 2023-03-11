@@ -1,17 +1,17 @@
 from game.humanplayer import HumanPlayer
 import operator
-from sys import exit
+import settings
 
 class Game():
-    def __init__(self, config):
-        self.__config = config
+    def __init__(self, quoridor):
         self.__START_CONFIGS = [(0,4,True,8), (8,4,True,0), (4,0,False,8), (4,8,False,0)]
+        self.__quoridor = quoridor
     
-    # Création des barrières, dans une grille 2d
+        # Création des barrières, dans une grille 2d
         # Chaque entrée sera un int => BarrerID
         self.__barrers = []
         
-        lenboard = config[1]
+        lenboard = settings.BOARD_SIZE
         for i in range(1,lenboard*2):
             if (i % 2 == 0):
                 self.__barrers.append([None]*lenboard)
@@ -20,16 +20,17 @@ class Game():
         
         # Ajout des joueurs
         self.__players = []
-        for id in range(config[0]):
+        for id in range(settings.NB_PLAYERS):
             self.__players.append(HumanPlayer(id,self.__START_CONFIGS[id]))
         self.__cplayer = 0
-        self.ProcessPossiblesMoves(self.__players[0])
         
         self.__has_changed = True
         self.__MOVE_TYPE_UP = (-1,0)
         self.__MOVE_TYPE_DOWN = (1,0)
         self.__MOVE_TYPE_LEFT = (0,-1)
         self.__MOVE_TYPE_RIGHT = (0,1)
+        
+        self.ProcessPossiblesMoves(self.__players[0])
         pass
 
     def CheckWin(self):
@@ -37,11 +38,12 @@ class Game():
         fpos = player.GetFinalPos()
         if fpos[0] and player.GetPos()[0] == fpos[1] or fpos[0] and player.GetPos()[1] == fpos[1]:
             print("Player",player.GetId(), "WIN")
-            exit()
+            self.__quoridor.GetConsole().Quit()
             return True
         return False
         
-    def IsPathExist(self):
+    def IsPathExist(self, barrerpone, barrerptwo):
+        
         pass
         
     def HasChanged(self):

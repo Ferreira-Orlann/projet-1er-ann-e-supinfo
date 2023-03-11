@@ -3,6 +3,7 @@ import libs.richthread as threading
 import json
 from console import Console
 from network.server import Server
+from time import sleep
 
 class GameListServer(Server):
     
@@ -38,6 +39,8 @@ class GameListServer(Server):
                             "action": "register",
                             "result": "OK"
                         }))
+                        self.GetConsole().log("[blue]Client " + str(stock.GetId()) + " détecté comme GameServer")
+            sleep(0.5)
                         
     def RemoveStocking(self, stock):
         if stock in self.__servers:
