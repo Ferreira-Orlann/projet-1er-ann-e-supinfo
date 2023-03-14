@@ -141,7 +141,7 @@ class Game():
         return self.__players
     
     def GetCurrentPlayer(self):
-        return self.__players[self.__cplayer]
+        return self.__players[self.__cplayer], self.__cplayer
     
     def GetConfig(self):
         return self.__config

@@ -16,7 +16,7 @@ class GameServer(Server):
         super().__init__(Console(), '127.0.0.1', 50001)
         self.ProcessArgs(sys.argv)
         self.__game = Game(self)
-        self.__servers = []
+        self.__players = []
         
         self.__conn_handler_thread = threading.Thread(target=self.ReadHandler)
         self.__conn_handler_thread.daemon = True
@@ -47,13 +47,25 @@ class GameServer(Server):
                 if string == None: continue
                 data = json.loads(string)
                 match (data.get("action")):
-                    case "register":
-                        pass
+                    case "register-client":
+                        if len(self.__players) == settings.NB_BARRERS:
+                            self.Kick(stock)
+                        # Send game data
                     case "kick":
                         self.GetConsole().log("[red]Vous avez été kick de: " + self.AddrToString(stock.addr))
                         if stock == self.__serverlist_stocking:
                             self.GetConsole().Quit()
+                    case "move":
+                        if self.__players[self.__game.GetCurrentPlayer()[1]] == stock:
+                            pass
+                        pass
             sleep(0.1)
+            
+    def CheckClient(self, stock):
+        if stock not in self.__players:
+            return False
+        else:
+            return True
     
     def ProcessArgs(self, args):
         while (len(args) > 0):

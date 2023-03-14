@@ -1,4 +1,3 @@
-import socket
 import libs.richthread as threading
 import json
 from console import Console
