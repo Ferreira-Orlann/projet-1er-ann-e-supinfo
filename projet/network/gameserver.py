@@ -52,7 +52,7 @@ class GameServer(Server):
                             self.Kick(stock)
                         # Send game data
                     case "kick":
-                        self.GetConsole().log("[red]Vous avez été kick de: " + self.AddrToString(stock.addr))
+                        self.GetConsole().log("[red]Vous avez été kick de: " + self.AddrToString(stock.addr) + "\nMessage: " + data.get("message"))
                         if stock == self.__serverlist_stocking:
                             self.GetConsole().Quit()
                     case "move":

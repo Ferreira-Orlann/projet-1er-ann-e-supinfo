@@ -68,7 +68,7 @@ class Server():
         table.add_column("Addresse", style="magenta")
         for stock in self.GetStockings():
             addr = stock.addr
-            table.add_row(str(stock.GetId()), addr[0] + ":" + str(addr[1]))
+            table.add_row(str(stock.GetId()), self.AddrToString(stock.addr))
         self.__console.print(table)
     
     def Kick(self, args):
@@ -78,8 +78,10 @@ class Server():
         stock = self.GetStockingById(int(args[0]))
         if stock is None:   
             return
+        del args[0]
         stock.write(dumps({
-            "action": "kick"
+            "action": "kick",
+            "message": " ".join(args)
         }))
         while stock.writeDataQueued() == True:
             sleep(0.1)
