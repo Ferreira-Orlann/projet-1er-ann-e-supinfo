@@ -45,7 +45,10 @@ class Server():
         while 1:
             conn, addr = self.__lsock.accept()
             self.__console.log("[blue]Client connecté: " + addr[0] + ":" + str(addr[1]))
-            self.__stockings.append(QuoridorStocking(self, conn, len(self.__stockings) + 1))
+            if len(self.__stockings) == 0:
+                self.__stockings.append(QuoridorStocking(self, conn, 1))
+            else:
+                self.__stockings.append(QuoridorStocking(self, conn, self.__stockings[-1].GetId() + 1))
 
     def GetConsole(self):
         return self.__console
@@ -62,7 +65,7 @@ class Server():
     def ClientsList(self, args):        
         table = Table()
         table.add_column("Id", justify="right", style="cyan", no_wrap=True)
-        table.add_column("Address", style="magenta")
+        table.add_column("Addresse", style="magenta")
         for stock in self.GetStockings():
             addr = stock.addr
             table.add_row(str(stock.GetId()), addr[0] + ":" + str(addr[1]))

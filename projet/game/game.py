@@ -32,6 +32,9 @@ class Game():
         
         self.ProcessPossiblesMoves(self.__players[0])
         pass
+    
+    def CheckSetting():
+        pass
 
     def CheckWin(self):
         player = self.GetCurrentPlayer()

@@ -30,7 +30,7 @@ class GameListServer(Server):
                     case "retreive_servers":
                         stock.write(json.dumps({
                             "action": "retreive_servers",
-                            "servers": [server.addr for server in self.__servers]
+                            "servers": [self.AddrToString(server.addr) for server in self.__servers]
                         }))
                         pass
                     case "register":

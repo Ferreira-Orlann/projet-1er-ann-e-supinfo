@@ -1,15 +1,21 @@
 import socket
 import libs.richthread as threading
 import json
+import sys
+import settings
 from console import Console
 from network.server import Server
 from network.quoridorstoking import QuoridorStocking
 from time import sleep
+from game.game import Game
+from rich.table import Table
 
 class GameServer(Server):
     
     def __init__(self):
         super().__init__(Console(), '127.0.0.1', 50001)
+        self.ProcessArgs(sys.argv)
+        self.__game = Game(self)
         self.__servers = []
         
         self.__conn_handler_thread = threading.Thread(target=self.ReadHandler)
@@ -48,3 +54,27 @@ class GameServer(Server):
                         if stock == self.__serverlist_stocking:
                             self.GetConsole().Quit()
             sleep(0.1)
+    
+    def ProcessArgs(self, args):
+        while (len(args) > 0):
+            if len(args) == 1:
+                self.PrintArgsHelp()
+                break
+            match(args[0]):
+                case "-b":
+                    settings.NB_BARRERS = int(args[1])
+                case "-p":
+                    settings.NB_PLAYERS = int(args[1])
+                case "-s":
+                    settings.BOARD_SIZE = int(args[1])
+            del args[0]
+            del args[0]
+            
+    def PrintArgsHelp(self):
+        table = Table()
+        table.add_column("Argument", justify="right", style="cyan", no_wrap=True)
+        table.add_column("Usage", style="magenta")
+        table.add_row("","-p 'nombre de joueurs'")
+        table.add_row("","-b 'nombre de barrières'")
+        table.add_row("","-s 'taille du plateau'")
+        self.GetConsole().print(table)

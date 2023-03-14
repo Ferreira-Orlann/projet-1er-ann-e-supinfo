@@ -9,13 +9,14 @@ class NetClientManager():
         pass
         
 class Client():
-   
     def __init__(self):
+        self.__stocking = None
+        self.__rserver_receiver = None
         self.__thread = threading.Thread(target=self.ReadHandler)
         self.__thread.daemon = True
         self.__thread.start()
-        self.__stocking = None
-        self.__rserver_receiver = None
+        self.RequestServerList(lambda x:print(x))
+        self.__thread.join()
         
     def ReadHandler(self):
         while 1:
@@ -27,9 +28,9 @@ class Client():
                     print(data)
                     match (data.get("action")):
                         case "retreive_servers":
-                            self.__rserver_receiver(json.load(data.get("servers", [])))
+                            self.__rserver_receiver(data.get("servers", []))
                             self.__rserver_receiver = None
-                            self.__stocking.socs.shutdown()
+                            self.__stocking.close()
                             self.__stocking = None
                             pass
             
@@ -42,6 +43,8 @@ class Client():
         lsock.connect((host, port))
         self.__lsock = lsock
         self.__stocking = Stockings.Stocking(self.__lsock)
+        while self.__stocking.handshakeComplete is not True:
+            time.sleep(0.1)
         self.__stocking.write(json.dumps({
             "action": "retreive_servers"
         }))

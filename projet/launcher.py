@@ -20,6 +20,7 @@ import sys
 import quoridor as quoridor
 import network.gamelistserver as gamelist
 import network.gameserver as gameserver
+import network.client as client
 
 if len(sys.argv) <= 1:
     quoridor.Quoridor()
@@ -31,4 +32,6 @@ match(sys.argv[1]):
         gamelist.GameListServer()
     case "gameserver":
         gameserver.GameServer()
+    case "netclient":
+        client.Client()
 print("game, serverlist, gameserver")
