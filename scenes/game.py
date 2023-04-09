@@ -99,9 +99,12 @@ class GameScene(SceneBase):
             
         # Affichage positions des joueurs
         list_players_pos = list(map(lambda player: player.GetPos(), game.GetPlayers()))
+        colors = [(255, 0, 0), (117,59,97), (249, 255, 77), (255, 147, 0)] # liste de couleurs
         for i in range(len(list_players_pos)):
-            i = list_players_pos[i]
-            pygame.draw.circle(screen, (255,0,0), (i[1] * 50 + 10 + 25, i[0] * 50 + 10 + 25), 5)
+            pos = list_players_pos[i]
+            color = colors[i % len(colors)] 
+            pygame.draw.circle(screen, color, (pos[1] * 50 + 10 + 25, pos[0] * 50 + 10 + 25), 5)
+
         
     def ProcessBarrersRectangles(self):
         game = self.__game
