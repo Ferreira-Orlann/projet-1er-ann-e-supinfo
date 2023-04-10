@@ -9,6 +9,8 @@ class GameScene(SceneBase):
         self.__screen = screen
         self.__quoridor = quoridor
         self.__configscene = configscene
+
+        
         
     def ProcessInput(self, events, keys, screen):
         for event in events:
@@ -79,8 +81,9 @@ class GameScene(SceneBase):
         
         # Affichage des Position
         possibles_moves = game.GetPossiblesMoves()
-        for i in range(0,9):
-            for y in range(0,9):
+        LenMatrix=self.KnowLenMatrix()
+        for i in range(0,LenMatrix):
+            for y in range(0,LenMatrix):
                 if (i, y) in possibles_moves:
                     pygame.draw.rect(screen, (255,0,255), pygame.Rect(y * 50 + 10 , i * 50 + 10,50,50))
                 else:
@@ -90,7 +93,7 @@ class GameScene(SceneBase):
         for i in range(0,len(self.__barrers_rectangles)):
             barrer = self.__barrers_rectangles[i]
             color = (0,0,255)
-            print(barrer.IsPosed())
+            #print(barrer.IsPosed()) test barrer 
             if barrer.IsPosed():
                 color = (0,0,0)
             pygame.draw.rect(screen, color, barrer)
@@ -103,7 +106,11 @@ class GameScene(SceneBase):
         for i in range(len(list_players_pos)):
             pos = list_players_pos[i]
             color = colors[i % len(colors)] 
-            pygame.draw.circle(screen, color, (pos[1] * 50 + 10 + 25, pos[0] * 50 + 10 + 25), 5)
+            LenMatrix=self.KnowLenMatrix()
+            if LenMatrix == 9:
+                pygame.draw.circle(screen, color, (pos[1] * 50 + 30, pos[0] * 50 + 35), 10)
+            if LenMatrix == 5:
+                pygame.draw.circle(screen, color, (pos[1] * 25 +30, pos[0] * 25 + 35 ), 10)
 
         
     def ProcessBarrersRectangles(self):
@@ -112,3 +119,8 @@ class GameScene(SceneBase):
             return
         self.FullRender()
         game.SetChanged(False)
+
+    def KnowLenMatrix(self):
+        game = self.__game
+        self.__lenMatrix = game.GetLenMatrix()
+        return self.__lenMatrix

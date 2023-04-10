@@ -12,6 +12,16 @@ class Game():
         # Chaque entrée sera un int => BarrerID
         self.__barrers = []
         lenboard = config[1]
+        if config[1] == 5:
+            self.__lenMatrix = 5
+        if config[1] == 7:
+            self.__lenMatrix = 7
+        if config[1] == 9:
+            self.__lenMatrix = 9
+        if config[1] == 11:
+            self.__lenMatrix = 11
+
+        print ("taille plateau ",config[1])
         for i in range(1,lenboard*2):
             if (i % 2 == 0):
                 self.__barrers.append([None]*lenboard)
@@ -134,3 +144,6 @@ class Game():
     
     def GetCurrentPlayer(self):
         return self.__players[self.__cplayer]
+    
+    def GetLenMatrix(self):
+        return self.__lenMatrix
