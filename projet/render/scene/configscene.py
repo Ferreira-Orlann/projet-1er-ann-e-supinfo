@@ -14,6 +14,9 @@ class ConfigScene(BaseScene):
         super().__init__(quoridor, "configs/configscene.json")
         self.__reset_data = ["NbrBarriere20", "BoardSize9", "NbrPlayers2"]
 
+    def getBoardSize(self):
+        return self.__board_size
+
     def InitConfig(self):
         conf = list()
         conf.append(settings.NB_PLAYERS) # nb Joueurs

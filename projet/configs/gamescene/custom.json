@@ -1,11 +1,24 @@
 {
     "info": "Player IMG Size: 48px * 48px",
-    "players": [
-        [[255,255,0], "./assets/page3/jaune.png"],
-        [[255,0,0], "./assets/page3/rouge.png"],
-        [[255,128,0], "./assets/page3/orange.png"],
+    "playersjaune": [
+        [[255,255,0], "./assets/page3/jaune.png"]
+    ],
+    "playersrouge": [
+        [[255,0,0], "./assets/page3/rouge.png"]
+    ],
+    "playersorange": [
+        [[255,128,0], "./assets/page3/orange.png"]
+    ],
+    "playersvert": [
         [[0,153,0], "./assets/page3/vert.png"]
     ],
-    "barrer": "./assets/page3/barrer.png",
-    "board_case": "./assets/page3/caseplateau.png"
+    "barrer": [
+        [[255,255,0], "./assets/page3/barrer.png"]
+    ],
+    "barrerup": [
+        [[255,255,0], "./assets/page3/barrerup.png"]
+    ],
+    "board_case": [
+        [[255,255,0], "./assets/page3/caseplateau.png"]
+    ]
 }

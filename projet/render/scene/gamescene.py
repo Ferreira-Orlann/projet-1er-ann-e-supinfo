@@ -4,29 +4,126 @@ from math import floor
 from utils import CheckJson
 from rich import inspect
 from render.buttons import Button
+import settings
 
 class GameScene(BaseScene):
     def __init__(self, quoridor, game):
         super().__init__(quoridor, "configs/gamescene/gamescene.json")
         inspect(obj=game, methods=True)
-        self.LoadCustomJson("configs/gamescene/custom.json")
-        
-    def LoadCustomJson(self, json):
+        self.LoadGameMapJson("configs/gamescene/custom.json")
+        self.LoadGameJson("configs/gamescene/custom.json")
+        self.LoadGameUpJson("configs/gamescene/custom.json")
+        self.LoadCustomPlayerJson("configs/gamescene/custom.json")
+
+
+    def LoadCustomPlayerJson(self, json):
         json = CheckJson(json)
-        x = 1
-        for id in range(0,len(json["players"])):
-            pdata=json["players"][id]
+        player = settings.NB_PLAYERS
+        if player == 2:
+            self.LoadCustomJauneJson("configs/gamescene/custom.json")
+            self.LoadCustomRougeJson("configs/gamescene/custom.json")
+        if player == 4:
+            self.LoadCustomJauneJson("configs/gamescene/custom.json")
+            self.LoadCustomRougeJson("configs/gamescene/custom.json")
+            self.LoadCustomOrangeJson("configs/gamescene/custom.json")
+            self.LoadCustomVertJson("configs/gamescene/custom.json")
+
+    def LoadCustomJauneJson(self, json):
+        json = CheckJson(json)
+        x = 130
+        for id in range(0,1,1):
+            pdata=json["playersjaune"][id]
             self.RegisterButton(Button, str(id),{
                 "path": pdata[1],
-                "size": [48,48],
-                "pos": [100*x,100*x],
+                "size": [45,45],
+                "pos": [100+x+((settings.BOARD_SIZE//2)*60),100+x+((settings.BOARD_SIZE-1)*60)],
+                "action": "PlayerClick"
+            })
+            x = x + 1
+    def LoadCustomRougeJson(self, json):
+        json = CheckJson(json)
+        x = 130
+        for id in range(0,1,1):
+            pdata=json["playersrouge"][id]
+            self.RegisterButton(Button, str(id),{
+                "path": pdata[1],
+                "size": [45,45],
+                "pos": [100+x+((settings.BOARD_SIZE//2)*60),100+x],
+                "action": "PlayerClick"
+            })
+            x = x + 1
+
+    def LoadCustomOrangeJson(self, json):
+        json = CheckJson(json)
+        x = 130
+        for id in range(0,1,1):
+            pdata=json["playersorange"][id]
+            self.RegisterButton(Button, str(id),{
+                "path": pdata[1],
+                "size": [45,45],
+                "pos": [100+x,100+x+((settings.BOARD_SIZE//2)*60)],
+                "action": "PlayerClick"
+            })
+            x = x + 1
+
+    def LoadCustomVertJson(self, json):
+        json = CheckJson(json)
+        x = 130
+        for id in range(0,1,1):
+            pdata=json["playersvert"][id]
+            self.RegisterButton(Button, str(id),{
+                "path": pdata[1],
+                "size": [45,45],
+                "pos": [100+x+((settings.BOARD_SIZE-1)*60),100+x+((settings.BOARD_SIZE//2)*60)],
                 "action": "PlayerClick"
             })
             x = x + 1
         
     def PlayerClick(self, button):
         self.GetQuoridor().GetConsole().log("PlayerClick " + button.GetId())
-    
+
+    def LoadGameJson(self, json):
+        json = CheckJson(json)
+        x=225
+        for i in range(0,settings.BOARD_SIZE,1):
+            for j in range(1,settings.BOARD_SIZE,1):
+                for id in range(0,len(json["barrer"])):
+                    pdata=json["barrer"][id]
+                    self.RegisterButton(Button, str(id),{
+                        "path": pdata[1],
+                        "size": [50,10],
+                        "pos": [60*i+x+5,60*j+x-5],
+                        "action": "PlayerClick"
+                })
+                    
+    def LoadGameUpJson(self, json):
+        json = CheckJson(json)
+        x=230
+        for i in range(1,settings.BOARD_SIZE,1):
+            for j in range(0,settings.BOARD_SIZE,1):
+                for id in range(0,len(json["barrerup"])):
+                    pdata=json["barrerup"][id]
+                    self.RegisterButton(Button, str(id),{
+                        "path": pdata[1],
+                        "size": [10,50],
+                        "pos": [60*i+x-10,60*j+x],
+                        "action": "PlayerClick"
+                })
+                    
+    def LoadGameMapJson(self, json):
+        json = CheckJson(json)
+        x=230
+        for i in range(0,settings.BOARD_SIZE,1):
+            for j in range(0,settings.BOARD_SIZE,1):
+                for id in range(0,len(json["board_case"])):
+                    pdata=json["board_case"][id]
+                    self.RegisterButton(Button, str(id),{
+                        "path": pdata[1],
+                        "size": [50,50],
+                        "pos": [60*i+x,60*j+x],
+                        "action": "PlayerClick"
+                })
+
     # def LoadCustomConfig(self, json):
     #     json = CheckJson(json)
         
