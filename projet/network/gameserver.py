@@ -9,6 +9,7 @@ from network.quoridorstoking import QuoridorStocking
 from time import sleep
 from game.game import Game
 from rich.table import Table
+import copy
 
 class GameServer(Server):
     
@@ -67,7 +68,8 @@ class GameServer(Server):
         else:
             return True
     
-    def ProcessArgs(self, args):
+    def ProcessArgs(self, sysargs):
+        args = copy.copy(sysargs)
         while (len(args) > 0):
             if len(args) == 1:
                 self.PrintArgsHelp()

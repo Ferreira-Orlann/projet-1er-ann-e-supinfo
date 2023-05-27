@@ -26,9 +26,6 @@ class Quoridor():
     def GetNetClient(self):
         return self.__netclient
     
-    def GetCmdsManager(self):
-        return self.__cmdsmanager
-    
     def Run(self):
         while 1:
             update_rects = []
