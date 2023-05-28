@@ -7,9 +7,11 @@ class DirtySprite(DirtySprite):
         self.ChangeSurface(surface, x, y)
         
     def GetPos(self):
+        """Return the position of the sprite"""
         return self.__pos
     
     def ChangeSurface(self, surface, x=None, y=None):
+        """Change the surface of the sprite"""
         if x == None and y == None:
             x = self.rect.x
             y = self.rect.y
@@ -22,4 +24,5 @@ class DirtySprite(DirtySprite):
         self.rect.update(self.rect.left, self.rect.top, self.rect.width + 10, self.rect.height + 10)
         
     def GetId(self):
+        """Return the id of the sprite"""
         return self.__id

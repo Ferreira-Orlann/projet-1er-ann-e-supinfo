@@ -9,7 +9,7 @@ class GameListServer(Server):
     def __init__(self):
         super().__init__(Console(), '127.0.0.1', 50000)
         
-        self.__servers = []
+        self.__servers = []  # List of servers connected to the master server
         
         self.__conn_handler_thread = threading.Thread(self.ReadHandler)
         self.__conn_handler_thread.daemon = True
@@ -18,6 +18,7 @@ class GameListServer(Server):
         self.__conn_handler_thread.join()
         
     def ReadHandler(self):
+        """Read the data from the server"""
         while 1:
             for stock in self.GetStockings():
                 if not stock.handshakeComplete:
@@ -42,6 +43,7 @@ class GameListServer(Server):
             sleep(0.5)
                         
     def RemoveStocking(self, stock):
+        """Remove a stocking from the server"""
         if stock in self.__servers:
             self.__servers.remove(stock)
         super().RemoveStocking(stock)

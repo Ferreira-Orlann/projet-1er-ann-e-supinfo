@@ -40,6 +40,7 @@ class GameServer(Server):
         self.__conn_handler_thread.join()
         
     def ReadHandler(self):
+        """Read the data from the server"""
         while 1:
             for stock in self.GetStockings():
                 if self.__serverlist_stocking.handshakeComplete is not True:
@@ -63,12 +64,14 @@ class GameServer(Server):
             sleep(0.1)
             
     def CheckClient(self, stock):
+        """Check if the client is a valid client"""
         if stock not in self.__players:
             return False
         else:
             return True
     
     def ProcessArgs(self, sysargs):
+        """Process the arguments"""
         args = copy.copy(sysargs)
         while (len(args) > 0):
             if len(args) == 1:
@@ -85,6 +88,7 @@ class GameServer(Server):
             del args[0]
             
     def PrintArgsHelp(self):
+        """Print the help for the arguments"""
         table = Table()
         table.add_column("Argument", justify="right", style="cyan", no_wrap=True)
         table.add_column("Usage", style="magenta")

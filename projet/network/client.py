@@ -20,6 +20,7 @@ class Client():
         self.__thread.join()
         
     def ReadHandler(self):
+        """Read the data from the server"""
         while 1:
             if self .__stocking is not None:
                 string = self.__stocking.read()
@@ -44,6 +45,7 @@ class Client():
             pass
         
     def RequestServerList(self, receiver):
+        """Request the server list from the master server"""
         host, port = "127.0.0.1", 50000
         self.Connect(host, port)
         while self.__stocking.handshakeComplete is not True:
@@ -54,6 +56,7 @@ class Client():
         self.__rserver_receiver = receiver
     
     def Connect(self, host, port):
+        """Connect to the server"""
         lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         lsock.connect((host, port))
         self.__lsock = lsock
