@@ -86,7 +86,9 @@ class BaseScene():
             action = data["action"]
         if clazz == Button:
             surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
-            self.RegisterSprite(Button(self, id, surface, x, y, action))
+            button = Button(self, id, surface, x, y, action)
+            self.RegisterSprite(button)
+            return button
         elif clazz == ToggleButton:
             surface_untoggled = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
             surface_toggled = pygame.transform.scale(pygame.image.load(data["path"].replace(".PNG", "ok.PNG")).convert_alpha(), (size[0], size[1]))
@@ -94,6 +96,7 @@ class BaseScene():
             self.RegisterSprite(button)
             if "toggled" in data and data["toggled"] == True:
                 button.Action(button)
+            return button
     
     def GetDisplaySurface(self):
         """Return the display surface"""

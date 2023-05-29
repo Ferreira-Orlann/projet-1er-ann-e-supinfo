@@ -13,18 +13,11 @@ class ConfigScene(BaseScene):
         self.__quoridor = quoridor
         super().__init__(quoridor, "configs/configscene.json")
         self.__reset_data = ["NbrBarriere20", "BoardSize9", "NbrPlayers2"]
+        self.Reset(None)
 
     def getBoardSize(self):
         """Return the board size"""
         return self.__board_size
-
-    def InitConfig(self):
-        """Init the config"""
-        conf = list()
-        conf.append(settings.NB_PLAYERS)  # number of players
-        conf.append(settings.BOARD_SIZE)  # size of the board
-        conf.append(settings.NB_BARRERS)  # number of barriers
-        self.__config = conf
     
     def Reset(self, button):
         """Reset the config"""
@@ -36,27 +29,32 @@ class ConfigScene(BaseScene):
 
     def Start(self, button):
         """Start the game"""
-        self.InitConfig()
-        self.Next(GameScene(self.GetQuoridor(), Game(self.__config)))
+        q = self.GetQuoridor()
+        self.Next(GameScene(q, Game(q)))
         
-    def NbBarrers(self, button, toggle):
+    def NbBarrers(self, button):
         """Set the number of barriers"""
+        if (button.IsToggled()): return
         if self.__nbbarrers is not None and button != self.__nbbarrers:
             self.__nbbarrers.Toggle()
         self.__nbbarrers = button
         settings.NB_BARRERS = int(button.GetId().replace("NbrBarriere", ""))
-        print(settings.NB_BARRERS)
+        button.Toggle()
         
-    def NbPlayers(self, button, toggle):
+    def NbPlayers(self, button):
         """Set the number of players"""
+        if (button.IsToggled()): return
         if self.__nbplayers is not None and button != self.__nbplayers:
             self.__nbplayers.Toggle()
         self.__nbplayers = button
         settings.NB_PLAYERS = int(button.GetId().replace("NbrPlayers", ""))
+        button.Toggle()
     
-    def BoardSize(self, button, toggle):
+    def BoardSize(self, button):
         """Set the board size"""
+        if (button.IsToggled()): return
         if self.__board_size is not None and button != self.__board_size:
             self.__board_size.Toggle()
         self.__board_size = button
         settings.BOARD_SIZE = int(button.GetId().replace("BoardSize", ""))
+        button.Toggle()
