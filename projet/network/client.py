@@ -27,7 +27,6 @@ class Client():
                 if string is not None:
                     if string == None: continue
                     data = json.loads(string)
-                    print(data)
                     match (data.get("action")):
                         case "retreive_servers":
                             self.__rserver_receiver(data.get("servers", []))

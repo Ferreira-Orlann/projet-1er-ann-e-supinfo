@@ -38,13 +38,22 @@ class Quoridor():
                     sys.exit(0)
                 if event.type == pygame.MOUSEBUTTONDOWN:  # If mouse down event
                     self.__active_scene.MouseDown()
+                    continue
                 if event.type == pygame.MOUSEBUTTONUP:  # If mouse up event
                     self.__active_scene.MouseUp()
+                    continue
                 if event.type == pygame.VIDEOEXPOSE or event.type == pygame.VIDEORESIZE:
                     display_settings = settings.DISPLAY_SIZE
                     rect = pygame.Rect(0, 0, display_settings[0], display_settings[1])
                     update_rects.append(rect)
                     self.__active_scene.GetMainGroup().repaint_rect(rect)
+                    continue
+                if (event.type == pygame.KEYDOWN):
+                    self.__active_scene.InputPressed(event.key)
+                    continue
+                if (event.type == pygame.KEYUP):
+                    self.__active_scene.InputReleased(event.key)
+                    continue
             self.__display_surface.blit(self.__active_scene.GetBackGroundSurface(), (0, 0))
             self.__active_scene.Update()
             self.__active_scene.Input(pygame.key.get_pressed())

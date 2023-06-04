@@ -113,15 +113,27 @@ class BaseScene():
         """Render the scene"""
         return self.__sprites.draw(display_surface)
         
+    def SpriteHover(self, sprite):
+        pass    
+    
     def Update(self):
         """Update the scene"""
         self.__sprites.update()
-        pass
+        mouse_pos = pygame.mouse.get_pos()
+        for sprite in self.__sprites:
+            if sprite.rect.collidepoint(mouse_pos):
+                self.SpriteHover(sprite)
     
     def ProcessEvents(self, events):
         pass
     
     def Input(self, keys):
+        pass
+    
+    def InputPressed(self, key):
+        pass
+    
+    def InputReleased(self, key):
         pass
     
     def Terminate(self):

@@ -45,7 +45,7 @@ class Game():
             return True
         return False
         
-    def IsPathExist(self, barrerpone, barrerptwo):
+    def IsPathExist(self, ):
         
         pass
         
@@ -64,10 +64,11 @@ class Game():
         self.SwitchPlayer(player)
         
     def ProcessBarrer(self, pos):
-        print(pos)
+        if (self.__barrers[pos[0]][pos[1]]):
+            return False
         self.__barrers[pos[0]][pos[1]] = True
         self.SwitchPlayer(self.GetCurrentPlayer())
-        pass
+        return True
     
     def SwitchPlayer(self, previous_player):
         previous_player = previous_player.GetId()
