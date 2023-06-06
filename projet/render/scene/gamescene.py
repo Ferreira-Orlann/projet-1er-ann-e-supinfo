@@ -6,21 +6,25 @@ from rich import inspect
 from render.buttons import Button
 import settings
 
+
 class GameScene(BaseScene):
-    def __init__(self, quoridor, game):
+    def __init__(self, quoridor, game, background=None):
         self.__game = game
         self.__hovered_barrers = (None, None)
-        ## False => Haut && Droite
-        ## True => Bas && Gauche
         self.__direction = False
-        super().__init__(quoridor, "configs/gamescene/gamescene.json")
+        self.__quoridor = quoridor
+        self.__display_surface = quoridor.GetDisplaySurface()
+        self.__background = background
+        super().__init__(quoridor, "configs/gamescene/custom.json")
         self.LoadGameMapJson("configs/gamescene/custom.json")
         self.LoadGameJson("configs/gamescene/custom.json")
         self.LoadGameUpJson("configs/gamescene/custom.json")
         self.LoadCustomPlayerJson("configs/gamescene/custom.json")
-        
-    def Input(self, keys):
-        if (K_R in keys):
+        super().LoadBackground(self.__background)
+
+    def Input(self, keys, K_R=None):
+        if K_R in keys:
+            pass
             ...
 
     def LoadCustomPlayerJson(self, json):
