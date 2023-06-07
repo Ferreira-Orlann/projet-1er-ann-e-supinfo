@@ -18,10 +18,19 @@
     "barrer": [
         [[255,255,0], "./assets/page3/barrer.png"]
     ],
+    "barrer_posed": [
+        [[0,255,255], "./assets/page3/barrerposed.png"]
+    ],
     "barrerup": [
         [[255,255,0], "./assets/page3/barrerup.png"]
     ],
+    "barrerup_posed": [
+        [[0,255,255], "./assets/page3/barrerup.png"]
+    ],
     "board_case": [
         [[255,255,0], "./assets/page3/caseplateau.png"]
+    ],
+    "board_case_possible": [
+        [[255,255,255], "./assets/page3/casepossible.png"]
     ]
 }
