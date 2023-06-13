@@ -31,8 +31,7 @@ class Game():
         self.__MOVE_TYPE_RIGHT = (0,1)
         
         self.ProcessPossiblesMoves(self.__players[0])
-        pass
-    
+
     def CheckSetting():
         pass
 
@@ -58,10 +57,11 @@ class Game():
     def ProcessMove(self,pos):
         player = self.GetCurrentPlayer()
         if not pos in self.__possibles_moves:
-            return
+            return False
         player.SetPos(pos)
         self.CheckWin()
         self.SwitchPlayer(player)
+        return True
         
     def ProcessBarrer(self, pos):
         if (self.__barrers[pos[0]][pos[1]]):
@@ -70,8 +70,8 @@ class Game():
         self.SwitchPlayer(self.GetCurrentPlayer())
         return True
     
-    def SwitchPlayer(self, previous_player):
-        previous_player = previous_player.GetId()
+    def SwitchPlayer(self, pplayer):
+        previous_player = pplayer.GetId()
         if previous_player != self.__cplayer:
             return
         if previous_player >= (len(self.__players)-1):
@@ -142,7 +142,7 @@ class Game():
         return self.__players
     
     def GetCurrentPlayer(self):
-        return self.__players[self.__cplayer], self.__cplayer
+        return self.__players[self.__cplayer]
     
     def GetConfig(self):
         return self.__config

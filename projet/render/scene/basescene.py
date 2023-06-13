@@ -15,9 +15,19 @@ class BaseScene():
         self.__sprites.clear(self.__display_surface,self.__background)
         self.__next = False
         self.__cached_surfaces = {}
-
-        self.LoadBackground(background)
+        self.__custom_groups = {}
+        self.__custom_groups["default"] = self.__sprites
+        
+        json = CheckJson(json)
         self.LoadBaseJson(json)
+        self.LoadBackground(background)
+
+    def AddSpriteGroup(self, name):
+        self.__custom_groups[name] = pygame.sprite.LayeredDirty()
+        
+    def GetSpriteGroup(self, name):
+        if name not in self.__custom_groups.keys: return False
+        return self.__custom_groups[name]
 
     def GetQuoridor(self):
         """Return the quoridor instance"""
@@ -47,14 +57,10 @@ class BaseScene():
         
     def LoadBaseJson(self, json):
         """Load the base json"""
-        json = CheckJson(json)
-        
         if json is None:
             return
-
         if "background" in json:  # Load the background
             self.LoadBackground(json["background"])
-        
         if "toggle-buttons" in json:  # Load the toggle buttons
             for name, data in json["toggle-buttons"].items():
                 self.RegisterButton(ToggleButton, name, data)
@@ -102,27 +108,39 @@ class BaseScene():
         """Return the display surface"""
         return self.__display_surface
     
-    def RegisterSprite(self, sprite):
+    def RegisterSprite(self, sprite, group = None):
         """Register a sprite"""
         if isinstance(sprite.GetPos()[0], float):
             sprite.rect.x = ceil(self.__display_surface.get_width() / sprite.GetPos()[0])
             sprite.rect.y = ceil(self.__display_surface.get_height() / sprite.GetPos()[1])
+        if sprite is not None:
+            gr = self.GetSpriteGroup(group)
+            if gr:
+                gr.add(sprite)
+                return sprite
         self.__sprites.add(sprite)
+        return sprite
     
     def Render(self, display_surface):
         """Render the scene"""
-        return self.__sprites.draw(display_surface)
+        rects = []
+        for group in self.__custom_groups:
+            rects.append(group.draw(display_surface))
+        return 
         
     def SpriteHover(self, sprite):
         pass    
     
     def Update(self):
         """Update the scene"""
+        for group in self.__custom_groups:
+            group.update()
         self.__sprites.update()
         mouse_pos = pygame.mouse.get_pos()
-        for sprite in self.__sprites:
-            if sprite.rect.collidepoint(mouse_pos):
-                self.SpriteHover(sprite)
+        for group in self.__custom_groups.values():
+            for sprite in group:
+                if sprite.rect.collidepoint(mouse_pos):
+                    self.SpriteHover(sprite)
     
     def ProcessEvents(self, events):
         pass

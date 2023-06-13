@@ -1,9 +1,7 @@
 from render.scene.basescene import BaseScene
-from render.barrerpart import BarrerPart
-from math import floor
 from utils import CheckJson
-from rich import inspect
 from render.buttons import Button
+from pygame import K_r as KEY_R
 import settings
 
 
@@ -14,33 +12,33 @@ class GameScene(BaseScene):
         self.__direction = False
         self.__quoridor = quoridor
         self.__display_surface = quoridor.GetDisplaySurface()
-        self.__background = background
-        super().__init__(quoridor, "configs/gamescene/custom.json")
-        self.LoadGameMapJson("configs/gamescene/custom.json")
-        self.LoadGameJson("configs/gamescene/custom.json")
-        self.LoadGameUpJson("configs/gamescene/custom.json")
-        self.LoadCustomPlayerJson("configs/gamescene/custom.json")
-        super().LoadBackground(self.__background)
+        json = CheckJson("configs/gamescene/custom.json")
+        super().__init__(quoridor, json, background)
+        self.__players_surfaces = []
+        self.LoadGameMapJson(json)
+        self.LoadGameJson(json)
+        self.LoadGameUpJson(json)
+        self.LoadCustomPlayerJson(json)
 
-    def Input(self, keys, K_R=None):
-        if K_R in keys:
-            pass
-            ...
+    def InputPressed(self, key):
+        if key == KEY_R:
+            self.__direction = not self.__direction
 
     def LoadCustomPlayerJson(self, json):
         """Load the custom player json"""
-        json = CheckJson(json)
         player = settings.NB_PLAYERS
         if player == 2:
-            self.LoadCustomJauneJson("configs/gamescene/custom.json")
-            self.LoadCustomRougeJson("configs/gamescene/custom.json")
+            self.__players_surfaces.append(self.LoadCustomJauneJson("configs/gamescene/custom.json"))
+            self.__players_surfaces.append(self.LoadCustomRougeJson("configs/gamescene/custom.json"))
         if player == 4:
-            self.LoadCustomJauneJson("configs/gamescene/custom.json")
-            self.LoadCustomRougeJson("configs/gamescene/custom.json")
-            self.LoadCustomOrangeJson("configs/gamescene/custom.json")
-            self.LoadCustomVertJson("configs/gamescene/custom.json")
+            self.__players_surfaces.append(self.LoadCustomJauneJson("configs/gamescene/custom.json"))
+            self.__players_surfaces.append(self.LoadCustomRougeJson("configs/gamescene/custom.json"))
+            self.__players_surfaces.append(self.LoadCustomOrangeJson("configs/gamescene/custom.json"))
+            self.__players_surfaces.append(self.LoadCustomVertJson("configs/gamescene/custom.json"))
 
-    def centerBoard(self):
+
+
+    def CenterBoard(self):
         #DISPLAY_SIZE = (1160,920)
         if settings.BOARD_SIZE == 5:
             return 450, 330
@@ -54,7 +52,7 @@ class GameScene(BaseScene):
     def LoadCustomJauneJson(self, json):
         """Load the custom yellow player json """
         json = CheckJson(json)
-        x, y = self.centerBoard()
+        x, y = self.CenterBoard()
         for id in range(0, 1, 1):
             pdata=json["playersjaune"][id]
             self.RegisterButton(Button, str(id),{
@@ -67,7 +65,7 @@ class GameScene(BaseScene):
     def LoadCustomRougeJson(self, json):
         """Load the custom red player json"""
         json = CheckJson(json)
-        x, y = self.centerBoard()
+        x, y = self.CenterBoard()
         for id in range(0, 1, 1):
             pdata=json["playersrouge"][id]
             self.RegisterButton(Button, str(id),{
@@ -81,7 +79,7 @@ class GameScene(BaseScene):
     def LoadCustomOrangeJson(self, json):
         """Load the custom orange player json"""
         json = CheckJson(json)
-        x, y = self.centerBoard()
+        x, y = self.CenterBoard()
         for id in range(0, 1, 1):
             pdata=json["playersorange"][id]
             self.RegisterButton(Button, str(id),{
@@ -95,7 +93,7 @@ class GameScene(BaseScene):
     def LoadCustomVertJson(self, json):
         """Load the custom green player json"""
         json = CheckJson(json)
-        x, y = self.centerBoard()
+        x, y = self.CenterBoard()
         for id in range(0, 1, 1):
             pdata=json["playersvert"][id]
             self.RegisterButton(Button, str(id),{
@@ -109,19 +107,20 @@ class GameScene(BaseScene):
     def PlayerCaseClick(self, button):
         """Player click on the board"""
         self.GetQuoridor().GetConsole().log("PlayerCaseClick " + str(button.GetId()))
+        if(not self.__game.ProcessMove(button.GetId())): return
+        button.ChangeSurface("ChangeSurface")
 
     def PlayerClick(self, button):
         self.GetQuoridor().GetConsole().log("PlayerClick " + str(button.GetId()))
 
     def PlayerBarrerClick(self, button):
-        self.GetQuoridor().GetConsole().log("PlayerBarrerClick " + str(button.GetId()))
         if(not self.__game.ProcessBarrer(button.GetId())): return
-        button.ChangeSurface()
+        print("PlayerBarrerClick " + str(button.GetId()))
 
     def LoadGameJson(self, json):
         """Load the custom game json --"""
         json = CheckJson(json)
-        x, y = self.centerBoard()
+        x, y = self.CenterBoard()
         k = 0
         for i in range(0, settings.BOARD_SIZE, 1):
             for j in range(1, settings.BOARD_SIZE, 1):
@@ -137,7 +136,7 @@ class GameScene(BaseScene):
     def LoadGameUpJson(self, json):
         """Load the custom game json || """
         json = CheckJson(json)
-        x, y = self.centerBoard()
+        x, y = self.CenterBoard()
         for i in range(1,settings.BOARD_SIZE,1):
             k = 0
             for j in range(0,settings.BOARD_SIZE,1):
@@ -153,11 +152,11 @@ class GameScene(BaseScene):
     def LoadGameMapJson(self, json):
         """Load the custom game json"""
         json = CheckJson(json)
-        x, y = self.centerBoard()
+        x, y = self.CenterBoard()
         for i in range(0, settings.BOARD_SIZE, 1):
             for j in range(0, settings.BOARD_SIZE, 1):
                 pdata = json["board_case"][0]
-                self.RegisterButton(Button, (i,j),{
+                self.RegisterButton(Button, (j,i),{
                     "path": pdata[1],
                     "size": [50, 50],
                     "pos": [60*i+x, 60*j+y],

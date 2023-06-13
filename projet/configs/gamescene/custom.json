@@ -1,8 +1,6 @@
 {
     "background": "./assets/page3/backgroundgame.jpg",
-
     "info": "Player IMG Size: 48px * 48px",
-
     "playersjaune": [
         [[255,255,0], "./assets/page3/jaune.png"]
     ],
