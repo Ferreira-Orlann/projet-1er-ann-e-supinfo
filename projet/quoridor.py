@@ -3,6 +3,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame, sys, settings as settings
 from render.scene.startscene import StartScene
 from network.client import NetClientManager
+from render.surfacemanager import SurfaceManager
 from console import Console
 
 class Quoridor():
@@ -13,8 +14,9 @@ class Quoridor():
         self.__console.log("Init PyGame", style="#af00ff")
         pygame.init()  # Init pygame
         self.__display_surface = pygame.display.set_mode(settings.DISPLAY_SIZE)  # Init display
+        self.__surface_manager = SurfaceManager()
         pygame.display.set_caption(settings.CAPTION)  # Set caption
-        pygame.display.set_icon(pygame.image.load(settings.ICON_PATH).convert_alpha())  # Set icon
+        pygame.display.set_icon(self.__surface_manager.GetSurface(settings.ICON_PATH).convert_alpha())  # Set icon
         pygame.event.set_allowed(pygame.QUIT)  # Allow to quit event
         self.__clock = pygame.time.Clock()
         self.__active_scene = StartScene(self)  # Init active scene
@@ -22,6 +24,9 @@ class Quoridor():
         self.__netclient = NetClientManager()
         
         self.Run()
+        
+    def GetSurfaceManager(self):
+        return self.__surface_manager
         
     def GetNetClient(self):
         """Return the net client"""
@@ -64,6 +69,7 @@ class Quoridor():
             if self.__active_scene.Next() != False:  # If next scene
                 self.__active_scene = self.__active_scene.Next()
                 self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
+            self.__surface_manager.Update()
 
     def GetConsole(self):
         """Return the console"""

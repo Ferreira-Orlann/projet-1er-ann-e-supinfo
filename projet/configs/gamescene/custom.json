@@ -2,33 +2,33 @@
     "background": "./assets/page3/backgroundgame.jpg",
     "info": "Player IMG Size: 48px * 48px",
     "playersjaune": [
-        [[255,255,0], "./assets/page3/jaune.png"]
+        [255,255,0], "./assets/page3/jaune.png"
     ],
     "playersrouge": [
-        [[255,0,0], "./assets/page3/rouge.png"]
+        [255,0,0], "./assets/page3/rouge.png"
     ],
     "playersorange": [
-        [[255,128,0], "./assets/page3/orange.png"]
+        [255,128,0], "./assets/page3/orange.png"
     ],
     "playersvert": [
-        [[0,153,0], "./assets/page3/vert.png"]
+        [0,153,0], "./assets/page3/vert.png"
     ],
     "barrer": [
-        [[255,255,0], "./assets/page3/barrer.png"]
+        [255,255,0], "./assets/page3/barrer.png"
     ],
     "barrer_posed": [
-        [[0,255,255], "./assets/page3/barrerposed.png"]
+        [0,255,255], "./assets/page3/barrerposed.png"
     ],
     "barrerup": [
-        [[255,255,0], "./assets/page3/barrerup.png"]
+        [255,255,0], "./assets/page3/barrerup.png"
     ],
     "barrerup_posed": [
-        [[0,255,255], "./assets/page3/barrerup.png"]
+        [0,255,255], "./assets/page3/barrerup.png"
     ],
     "board_case": [
-        [[255,255,0], "./assets/page3/caseplateau.png"]
+        [255,255,0], "./assets/page3/caseplateau.png"
     ],
     "board_case_possible": [
-        [[255,255,255], "./assets/page3/casepossible.png"]
+        [255,255,255], "./assets/page3/casepossible.png"
     ]
 }

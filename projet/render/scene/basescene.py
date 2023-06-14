@@ -7,26 +7,34 @@ from utils import CheckJson
 
 class BaseScene():
     def __init__(self,quoridor, json=None, background=None):
-            
         self.__sprites = pygame.sprite.LayeredDirty()
         self.__quoridor = quoridor
         self.__display_surface = quoridor.GetDisplaySurface()
         self.__background = None
-        self.__sprites.clear(self.__display_surface,self.__background)
         self.__next = False
         self.__cached_surfaces = {}
         self.__custom_groups = {}
         self.__custom_groups["default"] = self.__sprites
         
+        self.LoadBackground(background)
+        self.__sprites.clear(self.__display_surface,self.__background)
+        
         json = CheckJson(json)
         self.LoadBaseJson(json)
-        self.LoadBackground(background)
+
+    def SetJson(self,json):
+        self.__json = json
+
+    def GetJson(self):
+        return self.__json
 
     def AddSpriteGroup(self, name):
+        print(name)
         self.__custom_groups[name] = pygame.sprite.LayeredDirty()
+        self.__custom_groups[name].clear(self.__display_surface,self.__background)
         
     def GetSpriteGroup(self, name):
-        if name not in self.__custom_groups.keys: return False
+        if name not in self.__custom_groups.keys(): return False
         return self.__custom_groups[name]
 
     def GetQuoridor(self):
@@ -49,11 +57,13 @@ class BaseScene():
     def LoadBackground(self, background):
         """Load the background"""
         if isinstance(background, str):
-            self.__background = pygame.image.load(background).convert()
+            self.__background = self.__quoridor.GetSurfaceManager().GetSurface(background)
         elif self.__background is None:
             self.__background = pygame.surface.Surface(settings.DISPLAY_SIZE)
-            self.__background.fill(pygame.Color(255, 255, 255))
+            self.__background.fill(pygame.Color(0, 255, 255))
         self.__display_surface.blit(self.__background, (0, 0))
+        for group in self.__custom_groups.values():
+            group.clear(self.__display_surface,self.__background)
         
     def LoadBaseJson(self, json):
         """Load the base json"""
@@ -76,12 +86,13 @@ class BaseScene():
                 surface = pygame.transform.scale(self.GetSurface(data["path"]), (size[0], size[1]))
                 sprite = DirtySprite(name, surface, x, y)
                 self.RegisterSprite(sprite)  # Register the sprite
+        self.SetJson(json)
     
     def GetBackGroundSurface(self):
         """Return the background surface"""
         return self.__background
                 
-    def RegisterButton(self, clazz, id, data):
+    def RegisterButton(self, clazz, id, data, group=None):
         """Register a button"""
         action = None  # The action of the button
         pos = data["pos"]  # Get the position
@@ -91,15 +102,15 @@ class BaseScene():
         if "action" in data:  # Get the action
             action = data["action"]
         if clazz == Button:
-            surface = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
+            surface = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"]).convert_alpha(), (size[0], size[1]))
             button = Button(self, id, surface, x, y, action)
-            self.RegisterSprite(button)
+            self.RegisterSprite(button, group)
             return button
         elif clazz == ToggleButton:
-            surface_untoggled = pygame.transform.scale(pygame.image.load(data["path"]).convert_alpha(), (size[0], size[1]))
-            surface_toggled = pygame.transform.scale(pygame.image.load(data["path"].replace(".PNG", "ok.PNG")).convert_alpha(), (size[0], size[1]))
+            surface_untoggled = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"]).convert_alpha(), (size[0], size[1]))
+            surface_toggled = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"].replace(".PNG", "ok.PNG")).convert_alpha(), (size[0], size[1]))
             button = ToggleButton(self, id, surface_untoggled, surface_toggled, x, y, action)
-            self.RegisterSprite(button)
+            self.RegisterSprite(button,group)
             if "toggled" in data and data["toggled"] == True:
                 button.Action(button)
             return button
@@ -124,20 +135,19 @@ class BaseScene():
     def Render(self, display_surface):
         """Render the scene"""
         rects = []
-        for group in self.__custom_groups:
-            rects.append(group.draw(display_surface))
-        return 
+        for group in self.__custom_groups.values():
+            rects.extend(group.draw(display_surface))
+        return rects
         
     def SpriteHover(self, sprite):
         pass    
     
     def Update(self):
         """Update the scene"""
-        for group in self.__custom_groups:
-            group.update()
-        self.__sprites.update()
+        groups = self.__custom_groups.values()
         mouse_pos = pygame.mouse.get_pos()
-        for group in self.__custom_groups.values():
+        for group in groups:
+            group.update()
             for sprite in group:
                 if sprite.rect.collidepoint(mouse_pos):
                     self.SpriteHover(sprite)
