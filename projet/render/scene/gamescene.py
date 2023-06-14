@@ -12,6 +12,7 @@ class GameScene(BaseScene):
         self.__direction = False
         self.__quoridor = quoridor
         self.__display_surface = quoridor.GetDisplaySurface()
+        self.__last_possibles_moves  = []
         json = CheckJson("configs/gamescene/custom.json")
         super().__init__(quoridor, json, background)
         self.AddSpriteGroup("players")
@@ -22,6 +23,7 @@ class GameScene(BaseScene):
         self.LoadGameJson(json)
         self.LoadGameUpJson(json)
         self.LoadCustomPlayerJson(json)
+        self.ChangePossiblesSprites()
 
     def InputPressed(self, key):
         if key == KEY_R:
@@ -111,6 +113,20 @@ class GameScene(BaseScene):
         if(not self.__game.ProcessMove(button.GetId())): return
         sur_manager = self.__quoridor.GetSurfaceManager()
         button.ChangeSurface(sur_manager.GetSurface(self.GetJson()["board_case_possible"][1]))
+        self.ChangePossiblesSprites()
+
+    def GetSpriteById(self, id, group = "default"):
+        returnList = []
+        for sprite in self.GetSpriteGroup(group):
+            if (sprite.GetId() == id):
+                returnList.append(sprite)
+        return returnList
+    
+    def ChangePossiblesSprites(self):
+        pmove = self.__game.GetPossiblesMoves()
+        sprites = self.GetSpriteById(pmove)
+        for sprite in sprites:
+            if (sprite in self.__last_possibles_moves)
 
     def PlayerClick(self, button):
         self.GetQuoridor().GetConsole().log("PlayerClick " + str(button.GetId()))
@@ -119,6 +135,7 @@ class GameScene(BaseScene):
         if(not self.__game.ProcessBarrer(button.GetId())): return
         sur_manager = self.__quoridor.GetSurfaceManager()
         button.ChangeSurface(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]))
+        self.ChangePossiblesSprites()
 
     def LoadGameJson(self, json):
         """Load the custom game json --"""
