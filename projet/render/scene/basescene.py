@@ -7,7 +7,7 @@ from utils import CheckJson
 
 class BaseScene():
     def __init__(self,quoridor, json=None, background=None):
-        self.__sprites = pygame.sprite.LayeredDirty()
+        self.__sprites = pygame.sprite.LayeredDirty(layer=1)
         self.__quoridor = quoridor
         self.__display_surface = quoridor.GetDisplaySurface()
         self.__background = None
@@ -29,13 +29,12 @@ class BaseScene():
         return self.__json
 
     def AddSpriteGroup(self, name):
-        print(name)
-        self.__custom_groups[name] = pygame.sprite.LayeredDirty()
+        self.__custom_groups[name] = pygame.sprite.LayeredDirty(layer=len(self.__custom_groups)+1)
         self.__custom_groups[name].clear(self.__display_surface,self.__background)
         
     def GetSpriteGroup(self, name):
-        if name not in self.__custom_groups.keys(): return False
-        return self.__custom_groups[name]
+        print(self.__custom_groups)
+        return self.__custom_groups.get(name)
 
     def GetQuoridor(self):
         """Return the quoridor instance"""
@@ -110,7 +109,7 @@ class BaseScene():
             surface_untoggled = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"]).convert_alpha(), (size[0], size[1]))
             surface_toggled = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"].replace(".PNG", "ok.PNG")).convert_alpha(), (size[0], size[1]))
             button = ToggleButton(self, id, surface_untoggled, surface_toggled, x, y, action)
-            self.RegisterSprite(button,group)
+            self.RegisterSprite(button, group)
             if "toggled" in data and data["toggled"] == True:
                 button.Action(button)
             return button
@@ -124,11 +123,10 @@ class BaseScene():
         if isinstance(sprite.GetPos()[0], float):
             sprite.rect.x = ceil(self.__display_surface.get_width() / sprite.GetPos()[0])
             sprite.rect.y = ceil(self.__display_surface.get_height() / sprite.GetPos()[1])
-        if sprite is not None:
-            gr = self.GetSpriteGroup(group)
-            if gr:
-                gr.add(sprite)
-                return sprite
+        gr = self.GetSpriteGroup(group)
+        if gr is not None:
+            gr.add(sprite)
+            return sprite
         self.__sprites.add(sprite)
         return sprite
     
@@ -172,11 +170,13 @@ class BaseScene():
     
     def MouseUp(self):
         """Called when the mouse is up"""
-        buttons = filter(lambda sprite: isinstance(sprite, Button), self.__sprites)
+        buttons = []
         mouse_pos = pygame.mouse.get_pos()
-        for button in buttons:
-            if button.rect.collidepoint(mouse_pos) and button.Action:
-                button.Action(button)
+        for group in self.__custom_groups.values():
+            for sprite in group:
+                if (isinstance(sprite, Button)):
+                    if sprite.rect.collidepoint(mouse_pos) and sprite.Action:
+                        sprite.Action(sprite)
 
     def GetMainGroup(self):
         """Return the main group"""

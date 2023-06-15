@@ -16,7 +16,7 @@ class GameScene(BaseScene):
         json = CheckJson("configs/gamescene/custom.json")
         super().__init__(quoridor, json, background)
         self.AddSpriteGroup("players")
-        self.AddSpriteGroup("cases")
+        self.AddSpriteGroup("board_case")
         self.AddSpriteGroup("barrers")
         self.__players_surfaces = []
         self.LoadGameMapJson(json)
@@ -112,21 +112,35 @@ class GameScene(BaseScene):
         self.GetQuoridor().GetConsole().log("PlayerCaseClick " + str(button.GetId()))
         if(not self.__game.ProcessMove(button.GetId())): return
         sur_manager = self.__quoridor.GetSurfaceManager()
-        button.ChangeSurface(sur_manager.GetSurface(self.GetJson()["board_case_possible"][1]))
+        print(button.GetId())
         self.ChangePossiblesSprites()
 
-    def GetSpriteById(self, id, group = "default"):
+    def GetSpriteById(self, ids, group = "default"):
         returnList = []
-        for sprite in self.GetSpriteGroup(group):
-            if (sprite.GetId() == id):
+        g = self.GetSpriteGroup(group)
+        print(g)
+        for sprite in g:
+            print(sprite.GetId())
+            print("TEST")
+            if (sprite.GetId() in ids):
                 returnList.append(sprite)
         return returnList
     
     def ChangePossiblesSprites(self):
         pmove = self.__game.GetPossiblesMoves()
-        sprites = self.GetSpriteById(pmove)
+        print(pmove)
+        sprites = self.GetSpriteById(pmove, "board_case")
+        print(sprites)
+        sur_manager = self.__quoridor.GetSurfaceManager()
+        json = self.GetJson()
         for sprite in sprites:
-            if (sprite in self.__last_possibles_moves)
+            if (sprite in self.__last_possibles_moves):
+                continue
+            sprite.ChangeSurface(sur_manager.GetSurface(json["board_case_possible"][1]))
+        for sprite in self.__last_possibles_moves:
+            if (sprite in sprites):
+                continue
+            sprite.ChangeSurface(sur_manager.GetSurface(json["board_case"][1]))
 
     def PlayerClick(self, button):
         self.GetQuoridor().GetConsole().log("PlayerClick " + str(button.GetId()))
@@ -150,7 +164,7 @@ class GameScene(BaseScene):
                     "size": [50, 10],
                     "pos": [60*i+x, 60*j+y-10],
                     "action": "PlayerBarrerClick"
-                })
+                }, "barrers")
             k+=2
                     
     def LoadGameUpJson(self, json):
@@ -166,7 +180,7 @@ class GameScene(BaseScene):
                     "size": [10, 50],
                     "pos": [60*i+x-10, 60*j+y],
                     "action": "PlayerBarrerClick"
-                })
+                }, "barrers")
                 k+=2
 
     def LoadGameMapJson(self, json):
@@ -181,7 +195,7 @@ class GameScene(BaseScene):
                     "size": [50, 50],
                     "pos": [60*i+x, 60*j+y],
                     "action": "PlayerCaseClick"
-                })
+                }, "board_case")
 
     # def LoadCustomConfig(self, json):
     #     json = CheckJson(json)
