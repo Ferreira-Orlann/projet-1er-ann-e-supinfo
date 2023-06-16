@@ -142,9 +142,8 @@ class BaseScene():
     
     def Update(self):
         """Update the scene"""
-        groups = self.__custom_groups.values()
-        mouse_pos = pygame.mouse.get_pos()
-        for group in groups:
+        mouse_pos = pygame.mouse.get_pos ()
+        for group in self.__custom_groups.values():
             group.update()
             for sprite in group:
                 if sprite.rect.collidepoint(mouse_pos):
