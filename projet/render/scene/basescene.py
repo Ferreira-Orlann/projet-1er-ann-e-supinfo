@@ -126,15 +126,13 @@ class BaseScene():
         gr = self.GetSpriteGroup(group)
         if gr is not None:
             gr.add(sprite)
-            return sprite
         self.__sprites.add(sprite)
         return sprite
     
     def Render(self, display_surface):
         """Render the scene"""
         rects = []
-        for group in self.__custom_groups.values():
-            rects.extend(group.draw(display_surface))
+        rects.extend(self.__sprites.draw(display_surface))
         return rects
         
     def SpriteHover(self, sprite):
