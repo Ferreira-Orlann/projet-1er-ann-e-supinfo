@@ -39,7 +39,6 @@ class Game():
         player = self.GetCurrentPlayer()
         fpos = player.GetFinalPos()
         if fpos[0] and player.GetPos()[0] == fpos[1] or fpos[0] and player.GetPos()[1] == fpos[1]:
-            print("Player",player.GetId(), "WIN")
             self.__quoridor.GetConsole().Quit()
             return True
         return False

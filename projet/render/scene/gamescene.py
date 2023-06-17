@@ -58,7 +58,7 @@ class GameScene(BaseScene):
         x, y = self.CenterBoard()
         for id in range(0, 1, 1):
             pdata=json["playersjaune"]
-            self.RegisterButton(Button, str(id),{
+            self.RegisterButton(Button, 1,{
                 "path": pdata[1],
                 "size": [45,45],
                 "pos": [2+x+((settings.BOARD_SIZE//2)*60), 2+y+((settings.BOARD_SIZE-1)*60)],
@@ -71,7 +71,7 @@ class GameScene(BaseScene):
         x, y = self.CenterBoard()
         for id in range(0, 1, 1):
             pdata=json["playersrouge"]
-            self.RegisterButton(Button, str(id),{
+            self.RegisterButton(Button, 0,{
                 "path": pdata[1],
                 "size": [45,45],
                 "pos": [2+x+((settings.BOARD_SIZE//2)*60), y+2],
@@ -85,7 +85,7 @@ class GameScene(BaseScene):
         x, y = self.CenterBoard()
         for id in range(0, 1, 1):
             pdata=json["playersorange"]
-            self.RegisterButton(Button, str(id),{
+            self.RegisterButton(Button, 2,{
                 "path": pdata[1],
                 "size": [45, 45],
                 "pos": [2+x, 2+y+((settings.BOARD_SIZE//2)*60)],
@@ -99,7 +99,7 @@ class GameScene(BaseScene):
         x, y = self.CenterBoard()
         for id in range(0, 1, 1):
             pdata=json["playersvert"]
-            self.RegisterButton(Button, str(id),{
+            self.RegisterButton(Button, 3,{
                 "path": pdata[1],
                 "size": [45, 45],
                 "pos": [2+x+((settings.BOARD_SIZE-1)*60), 2+y+((settings.BOARD_SIZE//2)*60)],
@@ -110,10 +110,12 @@ class GameScene(BaseScene):
     def PlayerCaseClick(self, button):
         """Player click on the board"""
         self.GetQuoridor().GetConsole().log("PlayerCaseClick " + str(button.GetId()))
+        pid = self.__game.GetCurrentPlayer().GetId()
+        print(pid)
         if(not self.__game.ProcessMove(button.GetId())): return
         sur_manager = self.__quoridor.GetSurfaceManager()
-        sprite = self.GetSpriteById(self.__game.GetCurrentPlayer().GetId(), "players")
-        sprite
+        sprite = self.GetSpriteById(pid, "players")
+        sprite.SetPos(button.GetPos())
         self.ChangePossiblesSprites()
     
     def ChangePossiblesSprites(self):

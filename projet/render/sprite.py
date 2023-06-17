@@ -12,10 +12,10 @@ class DirtySprite(DirtySprite):
         """Return the position of the sprite"""
         return self.__pos
     
-    def SetPos(self, x, y):
-        self.__pos = (x,y)
-        self.rect.x = x
-        self.rect.y = y
+    def SetPos(self, pos):
+        self.__pos = pos
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
         self.dirty = 1
         # self.rect.update(self.rect.left, self.rect.top, self.rect.width + 10, self.rect.height + 10)
         self.rect.update(self.rect.left, self.rect.top, self.rect.width, self.rect.height)
@@ -29,7 +29,7 @@ class DirtySprite(DirtySprite):
             self.__scene.GetQuoridor().AddRedrawRect(self.rect.copy())
         self.image = surface
         self.rect = surface.get_rect()
-        self.SetPos(x,y)
+        self.SetPos((x,y))
         # self.__pos = (x,y)
         # self.rect.x = x
         # self.rect.y = y

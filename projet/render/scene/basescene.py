@@ -7,8 +7,10 @@ from utils import CheckJson
 
 class BaseScene():
     def __init__(self,quoridor, json=None, background=None):
-        self.__sprites = pygame.sprite.LayeredDirty(layer=1)
         self.__quoridor = quoridor
+        if (quoridor.GetActiveScene() is not None):
+            quoridor.GetSurfaceManager().Clear(quoridor.GetActiveScene().GetSpriteGroup("dafault"))
+        self.__sprites = pygame.sprite.LayeredDirty(layer=1)
         self.__display_surface = quoridor.GetDisplaySurface()
         self.__background = None
         self.__next = False
@@ -25,6 +27,7 @@ class BaseScene():
     def GetSpriteById(self, id, group = "default"):
         g = self.GetSpriteGroup(group)
         for sprite in g:
+            print(sprite.GetId())
             if (sprite.GetId() == id):
                 return sprite
         return None
@@ -115,13 +118,13 @@ class BaseScene():
         if "action" in data:  # Get the action
             action = data["action"]
         if clazz == Button:
-            surface = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"]).convert_alpha(), (size[0], size[1]))
+            surface = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"]), (size[0], size[1]))
             button = Button(self, id, surface, x, y, action)
             self.RegisterSprite(button, group)
             return button
         elif clazz == ToggleButton:
-            surface_untoggled = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"]).convert_alpha(), (size[0], size[1]))
-            surface_toggled = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"].replace(".PNG", "ok.PNG")).convert_alpha(), (size[0], size[1]))
+            surface_untoggled = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"]), (size[0], size[1]))
+            surface_toggled = pygame.transform.scale(self.__quoridor.GetSurfaceManager().GetSurface(data["path"].replace(".PNG", "ok.PNG")), (size[0], size[1]))
             button = ToggleButton(self, id, surface_untoggled, surface_toggled, x, y, action)
             self.RegisterSprite(button, group)
             if "toggled" in data and data["toggled"] == True:
@@ -171,9 +174,6 @@ class BaseScene():
         pass
     
     def InputReleased(self, key):
-        pass
-    
-    def Terminate(self):
         pass
     
     def MouseDown(self):

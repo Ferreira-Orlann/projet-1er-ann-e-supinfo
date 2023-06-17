@@ -16,9 +16,10 @@ class Quoridor():
         self.__display_surface = pygame.display.set_mode(settings.DISPLAY_SIZE)  # Init display
         self.__surface_manager = SurfaceManager()
         pygame.display.set_caption(settings.CAPTION)  # Set caption
-        pygame.display.set_icon(self.__surface_manager.GetSurface(settings.ICON_PATH).convert_alpha())  # Set icon
+        pygame.display.set_icon(self.__surface_manager.GetSurface(settings.ICON_PATH))  # Set icon
         pygame.event.set_allowed(pygame.QUIT)  # Allow to quit event
         self.__clock = pygame.time.Clock()
+        self.__active_scene = None
         self.__active_scene = StartScene(self)  # Init active scene
         self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
         self.__netclient = NetClientManager()
@@ -75,7 +76,6 @@ class Quoridor():
             if self.__active_scene.Next() != False:  # If next scene
                 self.__active_scene = self.__active_scene.Next()
                 self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
-            self.__surface_manager.Update()
 
     def GetConsole(self):
         """Return the console"""
@@ -87,6 +87,9 @@ class Quoridor():
     
     def AddRedrawRect(self, rect):
         self.__force_redraw_rects.append(rect)
+        
+    def GetActiveScene(self):
+        return self.__active_scene
 
 if __name__ == "__main__":
     """Main function"""
