@@ -21,6 +21,21 @@ class BaseScene():
         
         json = CheckJson(json)
         self.LoadBaseJson(json)
+        
+    def GetSpriteById(self, id, group = "default"):
+        g = self.GetSpriteGroup(group)
+        for sprite in g:
+            if (sprite.GetId() == id):
+                return sprite
+        return None
+
+    def GetSpritesById(self, ids, group = "default"):
+        returnList = []
+        g = self.GetSpriteGroup(group)
+        for sprite in g:
+            if (sprite.GetId() in ids):
+                returnList.append(sprite)
+        return returnList
 
     def SetJson(self,json):
         self.__json = json
@@ -33,7 +48,6 @@ class BaseScene():
         self.__custom_groups[name].clear(self.__display_surface,self.__background)
         
     def GetSpriteGroup(self, name):
-        print(self.__custom_groups)
         return self.__custom_groups.get(name)
 
     def GetQuoridor(self):
@@ -83,7 +97,7 @@ class BaseScene():
                 x = pos[0]
                 y = pos[1]
                 surface = pygame.transform.scale(self.GetSurface(data["path"]), (size[0], size[1]))
-                sprite = DirtySprite(name, surface, x, y)
+                sprite = DirtySprite(name, surface, x, y, self)
                 self.RegisterSprite(sprite)  # Register the sprite
         self.SetJson(json)
     

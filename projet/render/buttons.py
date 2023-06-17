@@ -2,7 +2,7 @@ from render.sprite import DirtySprite
 
 class Button(DirtySprite):
     def __init__(self, scene, id, surface, x, y, action=None):
-        super().__init__(id, surface, x, y)
+        super().__init__(id, surface, x, y, scene)
         if callable(action):
             self.Action = action
         elif (isinstance(id, str) and hasattr(scene, id)) or hasattr(scene, action):

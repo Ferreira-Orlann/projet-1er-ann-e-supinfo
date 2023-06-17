@@ -2,7 +2,6 @@ class Player():
     def __init__(self, id, startconfig):
         self.__pos = (startconfig[0], startconfig[1])
         self.__final_pos = (startconfig[2], startconfig[3])
-        print(id)
         self.__id = id  # id of the player
         pass
     

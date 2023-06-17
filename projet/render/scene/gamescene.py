@@ -112,25 +112,13 @@ class GameScene(BaseScene):
         self.GetQuoridor().GetConsole().log("PlayerCaseClick " + str(button.GetId()))
         if(not self.__game.ProcessMove(button.GetId())): return
         sur_manager = self.__quoridor.GetSurfaceManager()
-        print(button.GetId())
+        sprite = self.GetSpriteById(self.__game.GetCurrentPlayer().GetId(), "players")
+        sprite
         self.ChangePossiblesSprites()
-
-    def GetSpriteById(self, ids, group = "default"):
-        returnList = []
-        g = self.GetSpriteGroup(group)
-        print(g)
-        for sprite in g:
-            print(sprite.GetId())
-            print("TEST")
-            if (sprite.GetId() in ids):
-                returnList.append(sprite)
-        return returnList
     
     def ChangePossiblesSprites(self):
         pmove = self.__game.GetPossiblesMoves()
-        print(pmove)
-        sprites = self.GetSpriteById(pmove, "board_case")
-        print(sprites)
+        sprites = self.GetSpritesById(pmove, "board_case")
         sur_manager = self.__quoridor.GetSurfaceManager()
         json = self.GetJson()
         for sprite in sprites:
@@ -141,6 +129,7 @@ class GameScene(BaseScene):
             if (sprite in sprites):
                 continue
             sprite.ChangeSurface(sur_manager.GetSurface(json["board_case"][1]))
+        self.__last_possibles_moves = sprites
 
     def PlayerClick(self, button):
         self.GetQuoridor().GetConsole().log("PlayerClick " + str(button.GetId()))

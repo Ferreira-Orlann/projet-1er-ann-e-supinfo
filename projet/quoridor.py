@@ -22,6 +22,7 @@ class Quoridor():
         self.__active_scene = StartScene(self)  # Init active scene
         self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
         self.__netclient = NetClientManager()
+        self.__force_redraw_rects = []
         
         self.Run()
         
@@ -64,7 +65,12 @@ class Quoridor():
             self.__active_scene.Input(pygame.key.get_pressed())
             for rect in self.__active_scene.Render(self.__display_surface):
                 update_rects.append(rect)
-            pygame.display.update(update_rects)
+            if (self.__force_redraw_rects):
+                update_rects.extend(self.__force_redraw_rects)
+                pygame.display.update(update_rects)
+                self.__force_redraw_rects = []
+            else:
+                pygame.display.update(update_rects)
             self.__clock.tick(settings.MAX_TICKS)
             if self.__active_scene.Next() != False:  # If next scene
                 self.__active_scene = self.__active_scene.Next()
@@ -78,6 +84,9 @@ class Quoridor():
     def GetDisplaySurface(self):
         """Return the display surface"""
         return self.__display_surface
+    
+    def AddRedrawRect(self, rect):
+        self.__force_redraw_rects.append(rect)
 
 if __name__ == "__main__":
     """Main function"""
