@@ -3,6 +3,7 @@ from utils import CheckJson
 from render.buttons import Button
 from pygame import K_r as KEY_R
 import settings
+from pygame.transform import scale
 
 
 class GameScene(BaseScene):
@@ -139,25 +140,27 @@ class GameScene(BaseScene):
     def PlayerBarrerClick(self, button):
         if(not self.__game.ProcessBarrer(button.GetId())): return
         sur_manager = self.__quoridor.GetSurfaceManager()
-        button.ChangeSurface(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]))
+        print(button.GetId())
+        if (button.GetId()[1] % 2 == 0):
+            button.ChangeSurface(scale(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]), (10, 50)))
+        else:
+            button.ChangeSurface(scale(sur_manager.GetSurface(self.GetJson()["barrer_posed"][1]), (50, 10)))
         self.ChangePossiblesSprites()
 
     def LoadGameJson(self, json):
         """Load the custom game json --"""
         json = CheckJson(json)
         x, y = self.CenterBoard()
-        k = 0
         for i in range(0, settings.BOARD_SIZE, 1):
             for j in range(1, settings.BOARD_SIZE, 1):
                 pdata = json["barrer"]
-                self.RegisterButton(Button, (i,k), {
+                self.RegisterButton(Button, (j,i), {
                     "path": pdata[1],
                     "size": [50, 10],
                     "pos": [60*i+x, 60*j+y-10],
                     "action": "PlayerBarrerClick"
                 }, "barrers")
-            k+=2
-                    
+
     def LoadGameUpJson(self, json):
         """Load the custom game json || """
         json = CheckJson(json)
@@ -166,7 +169,7 @@ class GameScene(BaseScene):
             k = 0
             for j in range(0,settings.BOARD_SIZE,1):
                 pdata = json["barrerup"]
-                self.RegisterButton(Button, (i-1,k),{
+                self.RegisterButton(Button, (k,i-1),{
                     "path": pdata[1],
                     "size": [10, 50],
                     "pos": [60*i+x-10, 60*j+y],
