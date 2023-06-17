@@ -5,22 +5,26 @@ from render.scene.startscene import StartScene
 from network.client import NetClientManager
 from render.surfacemanager import SurfaceManager
 from console import Console
+from utils import CheckJson
+from render.fontsmanager import FontManager
 
 class Quoridor():
     def __init__(self):
-        self.__console = Console()  # Console de debug
+        self.__console = Console()
         self.__console.RegisterCommand("exit", lambda args: pygame.event.post(pygame.event.Event(pygame.QUIT)), "Permet de quiter le processus en cour")
         self.__console.log("[green]Starting[/green]")
         self.__console.log("Init PyGame", style="#af00ff")
+        self.__json = CheckJson("configs/global.json")
         pygame.init()  # Init pygame
-        self.__display_surface = pygame.display.set_mode(settings.DISPLAY_SIZE)  # Init display
+        self.__display_surface = pygame.display.set_mode(settings.DISPLAY_SIZE)
         self.__surface_manager = SurfaceManager()
-        pygame.display.set_caption(settings.CAPTION)  # Set caption
-        pygame.display.set_icon(self.__surface_manager.GetSurface(settings.ICON_PATH))  # Set icon
-        pygame.event.set_allowed(pygame.QUIT)  # Allow to quit event
+        self.__font_manager = FontManager(self.__json)
+        pygame.display.set_caption(settings.CAPTION)
+        pygame.display.set_icon(self.__surface_manager.GetSurface(settings.ICON_PATH))
+        pygame.event.set_allowed(pygame.QUIT)
         self.__clock = pygame.time.Clock()
         self.__active_scene = None
-        self.__active_scene = StartScene(self)  # Init active scene
+        self.__active_scene = StartScene(self)
         self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
         self.__netclient = NetClientManager()
         self.__force_redraw_rects = []
@@ -69,7 +73,7 @@ class Quoridor():
             if (self.__force_redraw_rects):
                 update_rects.extend(self.__force_redraw_rects)
                 pygame.display.update(update_rects)
-                self.__force_redraw_rects = []
+                self.__force_redraw_rects.clear()
             else:
                 pygame.display.update(update_rects)
             self.__clock.tick(settings.MAX_TICKS)
@@ -90,6 +94,12 @@ class Quoridor():
         
     def GetActiveScene(self):
         return self.__active_scene
+    
+    def GetGlobalJson(self):
+        return self.__json
+    
+    def GetFontManager(self):
+        return self.__font_manager
 
 if __name__ == "__main__":
     """Main function"""

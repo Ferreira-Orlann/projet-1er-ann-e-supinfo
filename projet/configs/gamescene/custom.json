@@ -30,5 +30,6 @@
     ],
     "board_case_possible": [
         [255,255,255], "./assets/page3/casepossible.png"
-    ]
+    ],
+    "barrer_count_label": [100,100]
 }

@@ -31,7 +31,14 @@ class Game():
         self.__MOVE_TYPE_RIGHT = (0,1)
         
         self.ProcessPossiblesMoves(self.__players[0])
-
+        
+    def IsPosed(self, barrer_pos):
+        try:
+            if self.__barrers[barrer_pos[0]][barrer_pos[1]] != None:
+                return False
+        except:
+            return False
+        return True
     def CheckSetting():
         pass
 
@@ -43,8 +50,7 @@ class Game():
             return True
         return False
         
-    def IsPathExist(self, ):
-        
+    def IsPathExist(self):
         pass
         
     def HasChanged(self):
@@ -61,13 +67,17 @@ class Game():
         self.CheckWin()
         self.SwitchPlayer(player)
         return True
-        
-    def ProcessBarrer(self, pos):
-        if (self.__barrers[pos[0]][pos[1]]):
+    
+    def ProcessBarrer(self, pos, pos2):
+        if (self.__barrers[pos[0]][pos[1]] or self.__barrers[pos2[0]][pos2[1]]):
             return False
         self.__barrers[pos[0]][pos[1]] = True
+        self.__barrers[pos2[0]][pos2[1]] = True
         self.SwitchPlayer(self.GetCurrentPlayer())
         return True
+    
+    def DestroyBarrer(self, pos):
+        self.__barrers[pos[0]][pos[1]] = None
     
     def SwitchPlayer(self, pplayer):
         previous_player = pplayer.GetId()
@@ -130,12 +140,7 @@ class Game():
             case self.__MOVE_TYPE_RIGHT:
                 check = (pos[0]*2, nextpos[1])
                 pass
-        try:
-            if self.__barrers[check[0]][check[1]] != None:
-                return False
-        except:
-            return False
-        return True
+        return self.IsPosed(check)
     
     def GetPlayers(self):
         return self.__players

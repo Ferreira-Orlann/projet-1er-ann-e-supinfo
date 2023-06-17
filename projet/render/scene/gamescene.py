@@ -4,7 +4,7 @@ from render.buttons import Button
 from pygame import K_r as KEY_R
 import settings
 from pygame.transform import scale
-
+from render.label import Label
 
 class GameScene(BaseScene):
     def __init__(self, quoridor, game, background=None):
@@ -14,11 +14,16 @@ class GameScene(BaseScene):
         self.__quoridor = quoridor
         self.__display_surface = quoridor.GetDisplaySurface()
         self.__last_possibles_moves  = []
+        self.__last_hovered_barrer = None
+        self.__barrers_count = settings.NB_BARRERS
         json = CheckJson("configs/gamescene/custom.json")
         super().__init__(quoridor, json, background)
         self.AddSpriteGroup("players")
         self.AddSpriteGroup("board_case")
         self.AddSpriteGroup("barrers")
+        data = json["barrer_count_label"]
+        self.__barrers_count_label = self.RegisterSprite(Label("barrer_count_label", data[0], data[1], self, self.__quoridor.GetFontManager().GetFont("barrer_count_label")))
+        self.__barrers_count_label.SetText(str(self.__barrers_count))
         self.__players_surfaces = []
         self.LoadGameMapJson(json)
         self.LoadGameJson(json)
@@ -28,8 +33,24 @@ class GameScene(BaseScene):
 
     def InputPressed(self, key):
         if key == KEY_R:
-            self.__direction = not self.__direction
-
+            self.ChangeDirection()
+            
+    def ChangeDirection(self):
+        sur_manager = self.__quoridor.GetSurfaceManager()
+        if (self.__last_hovered_barrer is not None):
+            next_barrer = self.GetBarrerByDirection(self.__last_hovered_barrer, self.__direction)
+            game = self.__game
+            if (game.IsPosed(self.__last_hovered_barrer.GetId()) or game.IsPosed(next_barrer.GetId())):
+                surface = None
+                if (self.__last_hovered_barrer.GetId()[0] % 2 == 0):
+                    surface = scale(sur_manager.GetSurface(self.GetJson()["barrerup"][1]), (10, 50))
+                else:
+                    surface = scale(sur_manager.GetSurface(self.GetJson()["barrer"][1]), (50, 10))
+                self.__last_hovered_barrer.ChangeSurface(surface)
+                next_barrer.ChangeSurface(surface)
+                self.__last_hovered_barrer = None
+        self.__direction = not self.__direction
+            
     def LoadCustomPlayerJson(self, json):
         """Load the custom player json"""
         player = settings.NB_PLAYERS
@@ -112,7 +133,6 @@ class GameScene(BaseScene):
         """Player click on the board"""
         self.GetQuoridor().GetConsole().log("PlayerCaseClick " + str(button.GetId()))
         pid = self.__game.GetCurrentPlayer().GetId()
-        print(pid)
         if(not self.__game.ProcessMove(button.GetId())): return
         sur_manager = self.__quoridor.GetSurfaceManager()
         sprite = self.GetSpriteById(pid, "players")
@@ -137,15 +157,61 @@ class GameScene(BaseScene):
     def PlayerClick(self, button):
         self.GetQuoridor().GetConsole().log("PlayerClick " + str(button.GetId()))
 
+    def SpriteHover(self, sprite):
+        group = self.GetSpriteGroup("barrers")
+        if (group is not None):
+            if (sprite == self.__last_hovered_barrer or sprite not in group): return
+            sur_manager = self.__quoridor.GetSurfaceManager()
+            game = self.__game
+            if (self.__last_hovered_barrer is not None):
+                next_barrer = self.GetBarrerByDirection(self.__last_hovered_barrer, self.__direction)
+                surface = None
+                if (self.__last_hovered_barrer.GetId()[0] % 2 == 0):
+                    surface = scale(sur_manager.GetSurface(self.GetJson()["barrerup"][1]), (10, 50))
+                else:
+                    surface = scale(sur_manager.GetSurface(self.GetJson()["barrer"][1]), (50, 10))
+                if (game.IsPosed(self.__last_hovered_barrer.GetId())):
+                    self.__last_hovered_barrer.ChangeSurface(surface)
+                if (game.IsPosed(next_barrer.GetId())):
+                    next_barrer.ChangeSurface(surface)
+            next_barrer = self.GetBarrerByDirection(sprite, self.__direction)
+            if (next_barrer is None):
+                self.ChangeDirection()
+                return
+            if (game.IsPosed(sprite.GetId()) and game.IsPosed(next_barrer.GetId())):
+                if (sprite.GetId()[0] % 2 == 0):
+                    surface = scale(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]), (10, 50))
+                else:
+                    surface = scale(sur_manager.GetSurface(self.GetJson()["barrer_posed"][1]), (50, 10))
+                sprite.ChangeSurface(surface)
+                next_barrer.ChangeSurface(surface)
+                self.__last_hovered_barrer = sprite
+
+    def GetBarrerByDirection(self, start_barrer, direction):
+        next_barrer = None
+        if (start_barrer.GetId()[0] % 2 != 0):
+            if (direction): # Gauche
+                id = start_barrer.GetId()
+                next_barrer = self.GetSpriteById((id[0], id[1] + 1), "barrers")
+            else: # Droite
+                id = start_barrer.GetId()
+                next_barrer = self.GetSpriteById((id[0], id[1] - 1), "barrers")
+        else: 
+            if (direction): # Haut
+                id = start_barrer.GetId()
+                next_barrer = self.GetSpriteById((id[0] - 2, id[1]), "barrers")
+            else: # Bas
+                id = start_barrer.GetId()
+                next_barrer = self.GetSpriteById((id[0] + 2, id[1]), "barrers")
+        return next_barrer
+            
     def PlayerBarrerClick(self, button):
-        if(not self.__game.ProcessBarrer(button.GetId())): return
-        sur_manager = self.__quoridor.GetSurfaceManager()
-        print(button.GetId())
-        if (button.GetId()[1] % 2 == 0):
-            button.ChangeSurface(scale(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]), (10, 50)))
-        else:
-            button.ChangeSurface(scale(sur_manager.GetSurface(self.GetJson()["barrer_posed"][1]), (50, 10)))
+        if (self.__barrers_count <= 0 or self.__last_hovered_barrer != button): return
+        next_barrer = self.GetBarrerByDirection(self.__last_hovered_barrer, self.__direction)
+        if (not self.__game.ProcessBarrer(self.__last_hovered_barrer.GetId(), next_barrer.GetId())): return
         self.ChangePossiblesSprites()
+        self.__barrers_count -= 1
+        self.__barrers_count_label.SetText(str(self.__barrers_count))
 
     def LoadGameJson(self, json):
         """Load the custom game json --"""
@@ -154,7 +220,7 @@ class GameScene(BaseScene):
         for i in range(0, settings.BOARD_SIZE, 1):
             for j in range(1, settings.BOARD_SIZE, 1):
                 pdata = json["barrer"]
-                self.RegisterButton(Button, (j,i), {
+                self.RegisterButton(Button, (j*2-1,i), {
                     "path": pdata[1],
                     "size": [50, 10],
                     "pos": [60*i+x, 60*j+y-10],
@@ -190,106 +256,3 @@ class GameScene(BaseScene):
                     "pos": [60*i+x, 60*j+y],
                     "action": "PlayerCaseClick"
                 }, "board_case")
-
-    # def LoadCustomConfig(self, json):
-    #     json = CheckJson(json)
-        
-    
-    # def ProcessInput(self, events):
-    #     for event in events:
-    #         game = self.__game
-    #         if event.type == pygame.MOUSEBUTTONDOWN:
-    #             barrer = self.__crbarrer
-    #             guipos = event.pos
-    #             if barrer != None and barrer.collidepoint(guipos) and not barrer.IsPosed():
-    #                 game.ProcessBarrer(barrer.GetPos())
-    #                 barrer.SetPosed(True)
-    #                 return
-    #             gridpos = (floor(guipos[1]/50),floor(guipos[0]/50))
-    #             if gridpos[0] == 9 or gridpos[1] == 9:
-    #                 return
-    #             game.ProcessMove(gridpos)
-                
-    # def PostGameInit(self):
-    #     game = self.__game
-    #     rectangles = []
-    #     barrers = game.GetBarrers()
-    #     lenfirst = len(barrers[0])
-    #     a = 0
-    #     b = 0
-    #     for i in range(0,len(barrers)):
-    #         if (i % 2 == 0):
-    #             for y in range(0,lenfirst):
-    #             # Vertical Barriers
-    #                 rectangles.append(BarrerPart(y * 50 + 50, a * 50 + 10 ,10,50).SetVertical(True).SetPos((i,y)))
-    #             a = a + 1
-    #         else:
-    #             # Barriers
-    #             # pygame.Rect(0,0,25,100)
-    #             for y in range(0,lenfirst+1):
-    #                 # pygame.draw.rect(screen, (0,0,0), pygame.Rect(i * 70 + 5, 10 + i * 50,70,10))
-    #                 rectangles.append(BarrerPart(y * 50 + 10 , b * 50 + 10 + 50,50,10).SetPos((i,y)))
-    #             b = b + 1
-    #     self.__barrers_rectangles = rectangles
-    #     pass         
-    # def SetGame(self, game):
-    #     self.__game = game
-    #     self.PostGameInit()
-    #     self.Update()
-    #     del self.__configscene
-
-    # def Update(self):
-    #     self.ProcessBarrersRectangles()
-    #     pos = pygame.mouse.get_pos()
-    #     for i in range(0, len(self.__barrers_rectangles)):
-    #         rect = self.__barrers_rectangles[i]
-    #         if rect.collidepoint(pos):
-    #             self.__crbarrer = rect
-    #             self.FullRender()
-    #             return
-    #     self.__crbarrer = None
-    #     pass
-    
-    # def Render(self, screen):
-    #     self.FirstRender(screen)
-    #     pass
-
-    # def FirstRender(self, screen):
-    #     screen.fill((255,255,255))
-    #     if not self.__game: 
-    #         self.__configscene.Render(screen)
-    #         return
-    #     game = self.__game
-        
-    #     # Affichage des Position
-    #     possibles_moves = game.GetPossiblesMoves()
-    #     for i in range(0,9):
-    #         for y in range(0,9):
-    #             if (i, y) in possibles_moves:
-    #                 pygame.draw.rect(screen, (255,0,255), pygame.Rect(y * 50 + 10 , i * 50 + 10,50,50))
-    #             else:
-    #                 pygame.draw.rect(screen, (0,255,0), pygame.Rect(y * 50 + 10 , i * 50 + 10,50,50))
-        
-    #     # Affichage des barrières
-    #     for i in range(0,len(self.__barrers_rectangles)):
-    #         barrer = self.__barrers_rectangles[i]
-    #         color = (0,0,255)
-    #         print(barrer.IsPosed())
-    #         if barrer.IsPosed():
-    #             color = (0,0,0)
-    #         pygame.draw.rect(screen, color, barrer)
-    #     if self.__crbarrer != None:
-    #         pygame.draw.rect(screen, (100,100,100), self.__crbarrer)
-            
-    #     # Affichage positions des joueurs
-    #     list_players_pos = list(map(lambda player: player.GetPos(), game.GetPlayers()))
-    #     for i in range(len(list_players_pos)):
-    #         i = list_players_pos[i]
-    #         pygame.draw.circle(screen, (255,0,0), (i[1] * 50 + 10 + 25, i[0] * 50 + 10 + 25), 5)
-        
-    # def ProcessBarrersRectangles(self):
-    #     game = self.__game
-    #     if not game.HasChanged():
-    #         return
-    #     self.FullRender()
-    #     game.SetChanged(False)

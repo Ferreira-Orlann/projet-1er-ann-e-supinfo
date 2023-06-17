@@ -22,7 +22,7 @@ class SurfaceManager():
                 paths.append(path)
         return paths
     
-    def Clear(self, sprites):
+    def Clear(self):
         self.__data = {}
         
     def GetSurface(self, path):

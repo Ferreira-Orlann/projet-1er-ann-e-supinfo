@@ -9,7 +9,7 @@ class BaseScene():
     def __init__(self,quoridor, json=None, background=None):
         self.__quoridor = quoridor
         if (quoridor.GetActiveScene() is not None):
-            quoridor.GetSurfaceManager().Clear(quoridor.GetActiveScene().GetSpriteGroup("dafault"))
+            quoridor.GetSurfaceManager().Clear()
         self.__sprites = pygame.sprite.LayeredDirty(layer=1)
         self.__display_surface = quoridor.GetDisplaySurface()
         self.__background = None
