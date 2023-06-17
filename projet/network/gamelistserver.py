@@ -5,42 +5,26 @@ from network.server import Server
 from time import sleep
 
 class GameListServer(Server):
-    
     def __init__(self):
         super().__init__(Console(), '127.0.0.1', 50000)
         
         self.__servers = []  # List of servers connected to the master server
+        self.AddAction("retreive_servers", self.RetreiveServers)
+        self.AddAction("register", self.Register)
         
-        self.__conn_handler_thread = threading.Thread(self.ReadHandler)
-        self.__conn_handler_thread.daemon = True
-        self.__conn_handler_thread.start()
+    def RetreiveServers(self, data, stock):
+        stock.write(json.dumps({
+            "action": "retreive_servers",
+            "servers": [self.AddrToString(server.addr) for server in self.__servers]
+        }))
         
-        self.__conn_handler_thread.join()
-        
-    def ReadHandler(self):
-        """Read the data from the server"""
-        while 1:
-            for stock in self.GetStockings():
-                if not stock.handshakeComplete:
-                    continue
-                string = self.ReadStock(stock)
-                if string == None: continue
-                data = json.loads(string)
-                match (data.get("action")):
-                    case "retreive_servers":
-                        stock.write(json.dumps({
-                            "action": "retreive_servers",
-                            "servers": [self.AddrToString(server.addr) for server in self.__servers]
-                        }))
-                        pass
-                    case "register":
-                        self.__servers.append(stock)
-                        stock.write(json.dumps({
-                            "action": "register",
-                            "result": "OK"
-                        }))
-                        self.GetConsole().log("[blue]Client " + str(stock.GetId()) + " détecté comme GameServer")
-            sleep(0.5)
+    def Register(self, data, stock):
+        self.__servers.append(stock)
+        stock.write(json.dumps({
+            "action": "register",
+            "result": "OK"
+        }))
+        self.GetConsole().log("[blue]Client " + str(stock.GetId()) + " détecté comme GameServer")
                         
     def RemoveStocking(self, stock):
         """Remove a stocking from the server"""

@@ -1,7 +1,7 @@
 from network.quoridorstoking import QuoridorStocking
 import libs.richthread as threading
 import socket
-from json import dumps
+import json
 from time import sleep
 from rich.table import Table
 
@@ -11,18 +11,39 @@ class Server():
         lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         lsock.bind((host, port))
         lsock.listen()
+        self.__actions = {}
         self.__lsock = lsock
         self.__accept_thread = threading.Thread(target=self.RunAcceptConnection)
-        self.__accept_thread.daemon = True
         self.__accept_thread.start()
         
         self.__console = console
         self.__console.RegisterCommand("clients", self.ClientsList, "Voir la liste de tout les clients/joueurs")
-        self.__console.RegisterCommand("kick", self.Kick, "Permet d'expulser un client/joueur par son id")
+        self.__console.RegisterCommand("kick", self.KickClient, "Permet d'expulser un client/joueur par son id")
         self.__stockings = []
         self.GetConsole().log("[green]Server initialisé")
         
-        self.__quit = False
+        self.__thread = threading.Thread(target=self.ReadHandler)
+        self.__thread.start()
+        
+    def GetStocks(self):
+        return self.__stockings
+        
+    def AddAction(self, name, func):
+        self.__actions[name] = func
+        
+    def ReadHandler(self):
+        """Read the data from the server"""
+        while 1:
+            for stock in self.GetStockings():
+                if not stock.handshakeComplete:
+                    continue
+                string = self.ReadStock(stock)
+                if string == None: continue
+                data = json.loads(string)
+                action = data.get("action")
+                if (action is not None):
+                    self.__actions.get(action)(data, stock)
+                    
         
     def RemoveStocking(self, stock):
         """Remove a stocking from the list"""
@@ -78,7 +99,7 @@ class Server():
             table.add_row(str(stock.GetId()), self.AddrToString(stock.addr))
         self.__console.print(table)
     
-    def Kick(self, args):
+    def KickClient(self, args):
         """Kick a client by his id"""
         if len(args) < 1 or not args[0].isnumeric():
             self.GetConsole().log("[red]Erreur: kick {id}")
@@ -87,7 +108,7 @@ class Server():
         if stock is None:   
             return
         del args[0]
-        stock.write(dumps({
+        stock.write(json.dumps({
             "action": "kick",
             "message": " ".join(args)
         }))

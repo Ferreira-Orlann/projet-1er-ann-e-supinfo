@@ -15,13 +15,12 @@ class GameServer(Server):
     
     def __init__(self):
         super().__init__(Console(), '127.0.0.1', 50001)
-        self.ProcessArgs(sys.argv)
+        if (not self.ProcessArgs(sys.argv)):
+            sys.exit()
         self.__game = Game(self)
         self.__players = []
         
-        self.__conn_handler_thread = threading.Thread(target=self.ReadHandler)
-        self.__conn_handler_thread.daemon = True
-        self.__conn_handler_thread.start()
+        self.AddAction("register", self.Register)
         
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
@@ -37,32 +36,17 @@ class GameServer(Server):
             "action": "register"
         }))
         
-        self.__conn_handler_thread.join()
+    def Register(self, data, stock):
+        if (data["result"] == "OK"):
+            self.GetConsole().log("[green]Serveur enregistrès après du GameListServer: " + self.AddrToString(stock.addr))
         
-    def ReadHandler(self):
-        """Read the data from the server"""
-        while 1:
-            for stock in self.GetStockings():
-                if self.__serverlist_stocking.handshakeComplete is not True:
-                    continue
-                string = self.ReadStock(stock)
-                if string == None: continue
-                data = json.loads(string)
-                match (data.get("action")):
-                    case "register-client":
-                        if len(self.__players) == settings.NB_BARRERS:
-                            self.Kick(stock)
-                        # Send game data
-                    case "kick":
-                        self.GetConsole().log("[red]Vous avez été kick de: " + self.AddrToString(stock.addr) + "\nMessage: " + data.get("message"))
-                        if stock == self.__serverlist_stocking:
-                            self.GetConsole().Quit()
-                    case "move":
-                        if self.__players[self.__game.GetCurrentPlayer()[1]] == stock:
-                            pass
-                        pass
-            sleep(0.1)
-            
+    def Kick(self, data, stock):
+        self.GetConsole().log("[red]Vous avez été kick de: " + self.AddrToString(stock.addr) + "\nMessage: " + data.get("message"))
+                
+    def RegisterClient(self, data, stock):
+        if len(self.__players) == settings.NB_BARRERS:
+            self.KickClient(stock)
+                            
     def CheckClient(self, stock):
         """Check if the client is a valid client"""
         if stock not in self.__players:
@@ -76,7 +60,7 @@ class GameServer(Server):
         while (len(args) > 0):
             if len(args) == 1:
                 self.PrintArgsHelp()
-                break
+                return False
             match(args[0]):
                 case "-b":
                     settings.NB_BARRERS = int(args[1])
@@ -84,6 +68,9 @@ class GameServer(Server):
                     settings.NB_PLAYERS = int(args[1])
                 case "-s":
                     settings.BOARD_SIZE = int(args[1])
+                case _:
+                    self.PrintArgsHelp()
+                    return False
             del args[0]
             del args[0]
             

@@ -32,6 +32,12 @@ class Game():
         
         self.ProcessPossiblesMoves(self.__players[0])
         
+    def SetBarrerData(self, data):
+        self.__barrers = data
+        
+    def GetBarrerData(self):
+        return self.__barrers
+        
     def IsPosed(self, barrer_pos):
         try:
             if self.__barrers[barrer_pos[0]][barrer_pos[1]] != None:
