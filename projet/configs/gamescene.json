@@ -31,5 +31,12 @@
     "board_case_possible": [
         [255,255,255], "./assets/page3/casepossible.png"
     ],
-    "barrer_count_label": [100,100]
+    "barrer_count_label": [100,100],
+    "buttons": {
+        "BackToMenu": {
+            "path": "./assets/page1/play.PNG",
+            "size": [235,90],
+            "pos": [10, 10]
+        }
+    }
 }

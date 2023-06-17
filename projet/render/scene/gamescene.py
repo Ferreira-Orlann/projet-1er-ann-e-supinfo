@@ -16,7 +16,7 @@ class GameScene(BaseScene):
         self.__last_possibles_moves  = []
         self.__last_hovered_barrer = None
         self.__barrers_count = settings.NB_BARRERS
-        json = CheckJson("configs/gamescene/custom.json")
+        json = CheckJson("configs/gamescene.json")
         super().__init__(quoridor, json, background)
         self.AddSpriteGroup("players")
         self.AddSpriteGroup("board_case")
@@ -30,6 +30,10 @@ class GameScene(BaseScene):
         self.LoadGameUpJson(json)
         self.LoadCustomPlayerJson(json)
         self.ChangePossiblesSprites()
+        
+    def BackToMenu(self, button):
+        from render.scene.startscene import StartScene
+        self.Next(StartScene(self.GetQuoridor()))
 
     def InputPressed(self, key):
         if key == KEY_R:

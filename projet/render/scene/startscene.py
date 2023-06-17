@@ -1,6 +1,5 @@
 from render.scene.basescene import BaseScene
 from render.scene.configscene import ConfigScene
-from json import load as json_load
 
 class StartScene(BaseScene):
     def __init__(self, quoridor):
