@@ -23,7 +23,7 @@
         [255,255,0], "./assets/page3/barrerup.png"
     ],
     "barrerup_posed": [
-        [0,255,255], "./assets/page3/barrerup.png"
+        [0,255,255], "./assets/page3/barrerupposed.png"
     ],
     "board_case": [
         [255,255,0], "./assets/page3/caseplateau.png"
