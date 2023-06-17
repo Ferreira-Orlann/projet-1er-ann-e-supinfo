@@ -2,7 +2,6 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame, sys, settings as settings
 from render.scene.startscene import StartScene
-from network.client import NetClientManager
 from render.surfacemanager import SurfaceManager
 from console import Console
 from utils import CheckJson
@@ -15,6 +14,7 @@ class Quoridor():
         self.__console.log("[green]Starting[/green]")
         self.__console.log("Init PyGame", style="#af00ff")
         self.__json = CheckJson("configs/global.json")
+        self.__netclient = None
         pygame.init()  # Init pygame
         self.__display_surface = pygame.display.set_mode(settings.DISPLAY_SIZE)
         self.__surface_manager = SurfaceManager()
@@ -26,13 +26,15 @@ class Quoridor():
         self.__active_scene = None
         self.__active_scene = StartScene(self)
         self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
-        self.__netclient = NetClientManager()
         self.__force_redraw_rects = []
         
         self.Run()
         
     def GetSurfaceManager(self):
         return self.__surface_manager
+    
+    def SetNetClient(self, net_client):
+        self.__netclient = net_client
         
     def GetNetClient(self):
         """Return the net client"""
