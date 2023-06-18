@@ -97,6 +97,7 @@ class GameScene(BaseScene):
                 "action": "PlayerClick"
             }, "players")
             x = x + 1
+
     def LoadCustomRougeJson(self, json):
         """Load the custom red player json"""
         json = CheckJson(json)
