@@ -71,7 +71,6 @@ class GameScene(BaseScene):
         self.__direction = not self.__direction
             
     def LoadCustomPlayerJson(self, json):
-        """Load the custom player json"""
         player = settings.NB_PLAYERS
         if player == 2:
             x, y = self.CenterBoard()
@@ -115,7 +114,6 @@ class GameScene(BaseScene):
             }, "players")
 
     def CenterBoard(self):
-        #DISPLAY_SIZE = (1160,920)
         if settings.BOARD_SIZE == 5:
             return 450, 330
         if settings.BOARD_SIZE == 7:
@@ -126,8 +124,6 @@ class GameScene(BaseScene):
             return 291, 171
         
     def PlayerCaseClick(self, button):
-        """Player click on the board"""
-        self.GetQuoridor().GetConsole().log("PlayerCaseClick " + str(button.GetId()))
         game = self.GetGame()
         pid = game.GetCurrentPlayer().GetId()
         if(not game.ProcessMove(button.GetId())): return False
@@ -166,7 +162,7 @@ class GameScene(BaseScene):
         self.__last_possibles_moves_sprites = sprites
 
     def PlayerClick(self, button):
-        self.GetQuoridor().GetConsole().log("PlayerClick " + str(button.GetId()))
+        ...
 
     def SpriteHover(self, sprite):
         group = self.GetSpriteGroup("barrers")
@@ -201,17 +197,17 @@ class GameScene(BaseScene):
     def GetBarrerByDirection(self, start_barrer, direction):
         next_barrer = None
         if (start_barrer.GetId()[0] % 2 != 0):
-            if (direction): # Gauche
+            if (direction):
                 id = start_barrer.GetId()
                 next_barrer = self.GetSpriteById((id[0], id[1] + 1), "barrers")
-            else: # Droite
+            else:
                 id = start_barrer.GetId()
                 next_barrer = self.GetSpriteById((id[0], id[1] - 1), "barrers")
         else: 
-            if (direction): # Haut
+            if (direction):
                 id = start_barrer.GetId()
                 next_barrer = self.GetSpriteById((id[0] - 2, id[1]), "barrers")
-            else: # Bas
+            else:
                 id = start_barrer.GetId()
                 next_barrer = self.GetSpriteById((id[0] + 2, id[1]), "barrers")
         return next_barrer
@@ -233,7 +229,6 @@ class GameScene(BaseScene):
         return True
 
     def LoadGameJson(self, json):
-        """Load the custom game json --"""
         json = CheckJson(json)
         x, y = self.CenterBoard()
         for i in range(0, settings.BOARD_SIZE, 1):
@@ -247,7 +242,6 @@ class GameScene(BaseScene):
                 }, "barrers")
 
     def LoadGameUpJson(self, json):
-        """Load the custom game json || """
         json = CheckJson(json)
         x, y = self.CenterBoard()
         for i in range(1,settings.BOARD_SIZE,1):
@@ -263,7 +257,6 @@ class GameScene(BaseScene):
                 k+=2
 
     def LoadGameMapJson(self, json):
-        """Load the custom game json"""
         json = CheckJson(json)
         x, y = self.CenterBoard()
         for i in range(0, settings.BOARD_SIZE, 1):

@@ -33,7 +33,6 @@ class NetClient():
         return self.__stock_error
 
     def ReadHandler(self):
-        """Read the data from the server"""
         while 1:
             if self .__stocking is not None:
                 if not self.__stocking.handshakeComplete or self.__stock_error:
@@ -54,19 +53,8 @@ class NetClient():
                         else:
                             print("Error: " + string)
             sleep(0.05)
-        
-    # def RequestServerList(self, gamelistserver_ip, gamelistserver_port, callback):
-    #     """Request the server list from the master server"""
-    #     self.Connect(gamelistserver_ip, gamelistserver_port)
-    #     while self.__stocking.handshakeComplete is not True:
-    #         time.sleep(0.1)
-    #     self.__stocking.write(json.dumps({
-    #         "action": "retreive_servers"
-    #     }))
-    #     self.__rserver_receiver = callback
     
     def Connect(self, host, port):
-        """Connect to the server"""
         lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         lsock.connect((host, port))
         self.__lsock = lsock

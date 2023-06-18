@@ -7,11 +7,7 @@ from threading import Thread
 
 class Game():
     def __init__(self, quoridor):
-        # self.__START_CONFIGS = [(0,4,True,8), (8,4,True,0), (4,0,False,8), (4,8,False,0)]
         self.__quoridor = quoridor
-    
-        # Création des barrières, dans une grille 2d
-        # Chaque entrée sera un int => BarrerID
         self.__barrers = []
         
         lenboard = settings.BOARD_SIZE
@@ -21,11 +17,7 @@ class Game():
             else:
                 self.__barrers.append([None]*(lenboard-1))
 
-        # Ajout des joueurs
         self.__players = []
-        # for id in range(settings.NB_PLAYERS):
-            # self.__players.append(HumanPlayer(id,self.__START_CONFIGS[id]))
-            # self.__players.append(HumanPlayer(id,())
         minus_one = settings.BOARD_SIZE-1
         middle = int(minus_one/2)
         self.__barrer_count = [settings.NB_BARRERS // settings.NB_PLAYERS]*settings.NB_PLAYERS

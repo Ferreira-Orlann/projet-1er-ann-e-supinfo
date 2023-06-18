@@ -22,11 +22,9 @@ class Console(RConsole):
         return self.__quit
 
     def RegisterCommand(self,command, func, desc):
-        """Register a command"""
         self.__commands[command] = [func, desc]
         
     def Call(self, args):
-        """Call a command"""
         args = args.split(" ")
         data = self.__commands.get(args[0], None)
         if data is not None:
@@ -37,7 +35,6 @@ class Console(RConsole):
             self.log("[red]Erreur: Commande inconnue")
             
     def Run(self):
-        """Run the console"""
         while 1:
             try:
                 self.Call(str(self.input()))
@@ -49,7 +46,6 @@ class Console(RConsole):
                 self.Quit()
             
     def Quit(self, args=None):
-            """Quit the console"""
             self.__quit = True
             for thread in threading.enumerate():
                 if isinstance(thread, Stockings.Stocking):
@@ -58,7 +54,6 @@ class Console(RConsole):
             os.kill(os.getpid(), SIGTERM)
             
     def HelpCommand(self, args):
-        """Display the help"""
         table = Table()
         table.add_column("Commande", justify="right", style="cyan", no_wrap=True)
         table.add_column("Desciption", style="magenta")

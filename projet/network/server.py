@@ -41,7 +41,6 @@ class Server():
     def StockError(self, stock): ...
         
     def ReadHandler(self):
-        """Read the data from the server"""
         while 1:
             for stock in self.GetStockings():
                 if not stock.handshakeComplete:
@@ -57,7 +56,6 @@ class Server():
             sleep(0.05)
         
     def RemoveStocking(self, stock):
-        """Remove a stocking from the list"""
         if stock in self.__stockings:
             self.__stockings.remove(stock)
         if not stock.IsDisconnected():
@@ -68,15 +66,12 @@ class Server():
             self.GetConsole().Quit()
             
     def GetStockings(self):
-        """Return the list of stockings"""
         return self.__stockings
     
     def GetSocket(self):
-        """Return the main stocking"""
         return self.__lsock
     
     def RunAcceptConnection(self):
-        """Accept the connection from the client"""
         while 1:
             conn, addr = self.__lsock.accept()
             self.__console.log("[blue]Client connecté: " + addr[0] + ":" + str(addr[1]))
@@ -86,11 +81,9 @@ class Server():
                 self.__stockings.append(QuoridorStocking(self, conn, self.__stockings[-1].GetId() + 1))
 
     def GetConsole(self):
-        """Return the console"""
         return self.__console
     
     def ReadStock(self, stock):
-        """Read the stocking"""
         try:
             return stock.read()
         except:
@@ -99,7 +92,6 @@ class Server():
         return None
         
     def ClientsList(self, args):
-        """Show the list of clients"""
         table = Table()
         table.add_column("Id", justify="right", style="cyan", no_wrap=True)
         table.add_column("Addresse", style="magenta")
@@ -109,7 +101,6 @@ class Server():
         self.__console.print(table)
     
     def KickClient(self, args):
-        """Kick a client by his id"""
         stock = None
         if (isinstance(args, int)):
             stock = self.GetStockingById(args)
@@ -134,7 +125,6 @@ class Server():
         self.RemoveStocking(stock)
     
     def GetStockingById(self, id):
-        """Return the stocking by his id"""
         if id == 0:
             return None
         for stock in self.__stockings:
@@ -143,5 +133,4 @@ class Server():
         return None
     
     def AddrToString(self, addr):
-        """Return the address in string"""
         return addr[0] + ":" + str(addr[1])

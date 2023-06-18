@@ -16,7 +16,7 @@ class Quoridor():
         self.__force_redraw_rects = []
         self.__json = CheckJson("configs/global.json")
         self.__netclient = None
-        pygame.init()  # Init pygame
+        pygame.init()
         pygame.mixer.init()
         self.__display_surface = pygame.display.set_mode(settings.DISPLAY_SIZE)
         self.__surface_manager = SurfaceManager()
@@ -38,22 +38,20 @@ class Quoridor():
         self.__netclient = net_client
         
     def GetNetClient(self):
-        """Return the net client"""
         return self.__netclient
     
     def Run(self):
-        """Run the game"""
-        while 1:  # Main loop
+        while 1:
             update_rects = []
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:  # If quit event
+                if event.type == pygame.QUIT:
                     pygame.quit()
                     self.__console.log("[red]EXIT[/red]")
                     sys.exit(0)
-                if event.type == pygame.MOUSEBUTTONDOWN:  # If mouse down event
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     self.__active_scene.MouseDown()
                     continue
-                if event.type == pygame.MOUSEBUTTONUP:  # If mouse up event
+                if event.type == pygame.MOUSEBUTTONUP:
                     self.__active_scene.MouseUp()
                     continue
                 if event.type == pygame.VIDEOEXPOSE or event.type == pygame.VIDEORESIZE:
@@ -82,16 +80,14 @@ class Quoridor():
             else:
                 pygame.display.update(update_rects)
             self.__clock.tick(settings.MAX_TICKS)
-            if self.__active_scene.Next() != False:  # If next scene
+            if self.__active_scene.Next() != False:
                 self.__active_scene = self.__active_scene.Next()
                 self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
 
     def GetConsole(self):
-        """Return the console"""
         return self.__console
     
     def GetDisplaySurface(self):
-        """Return the display surface"""
         return self.__display_surface
     
     def AddRedrawRect(self, rect):
@@ -107,5 +103,4 @@ class Quoridor():
         return self.__font_manager
 
 if __name__ == "__main__":
-    """Main function"""
     QUORIDOR = Quoridor()

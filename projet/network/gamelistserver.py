@@ -27,7 +27,6 @@ class GameListServer(Server):
         self.GetConsole().log("[blue]Client " + str(stock.GetId()) + " détecté comme GameServer")
                         
     def RemoveStocking(self, stock):
-        """Remove a stocking from the server"""
         if stock in self.__servers:
             self.__servers.remove(stock)
         super().RemoveStocking(stock)

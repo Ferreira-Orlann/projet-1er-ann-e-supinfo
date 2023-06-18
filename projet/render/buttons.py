@@ -28,7 +28,6 @@ class ToggleButton(Button):
         self.__toggled = False
         
     def Toggle(self, this=None):
-        """Toggle the button"""
         if self.__toggled:
             self.ChangeSurface(self.__surfaceone)
         else:
@@ -36,5 +35,4 @@ class ToggleButton(Button):
         self.__toggled = not self.__toggled
         
     def IsToggled(self):
-        """Return if the button is toggled"""
         return self.__toggled

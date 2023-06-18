@@ -74,7 +74,6 @@ class GameListScene(BaseScene):
         idx = idx.split("_")
 
     def Render(self, display_surface):
-        """Render the scene"""
         rects = []
         rects.extend(self.GetMainGroup().draw(display_surface))
         rects.extend(self.__current_group.draw(display_surface))
