@@ -92,10 +92,10 @@ class Game():
             print(f"* Le joueur {player} a gagné la partie ! *")
             print("*" * 40)
             print("\n")
-            return True
+
         print("Player Not Win")
         return False
-        
+
     def IsPathsExist(self):
         for player in self.GetPlayers():
             if (not self.PathRecursive(player)):
