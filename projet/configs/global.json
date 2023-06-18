@@ -1,5 +1,5 @@
 {
     "fonts": {
-        "barrer_count_label": ["assets/fonts/arial_narrow.ttf", 48]
+        "default": ["assets/fonts/arial_narrow.ttf", 48]
     }
 }

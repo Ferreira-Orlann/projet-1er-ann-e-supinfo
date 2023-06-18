@@ -10,9 +10,10 @@ from render.fontsmanager import FontManager
 class Quoridor():
     def __init__(self):
         self.__console = Console()
-        self.__console.RegisterCommand("exit", lambda args: pygame.event.post(pygame.event.Event(pygame.QUIT)), "Permet de quiter le processus en cour")
+        self.__console.RegisterCommand("exit", self.__console.Quit, "Permet de quiter le processus en cour")
         self.__console.log("[green]Starting[/green]")
         self.__console.log("Init PyGame", style="#af00ff")
+        self.__force_redraw_rects = []
         self.__json = CheckJson("configs/global.json")
         self.__netclient = None
         pygame.init()  # Init pygame
@@ -26,7 +27,6 @@ class Quoridor():
         self.__active_scene = None
         self.__active_scene = StartScene(self)
         self.__console.log("Changement de scène: " + str(self.__active_scene), style="#af00ff")
-        self.__force_redraw_rects = []
         
         self.Run()
         

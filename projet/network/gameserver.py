@@ -49,8 +49,9 @@ class GameServer(Server):
         return False
     
     def PlaceBarrer(self, data, stock):
+        print("PlaceBarrer")
         pid = self.GetPlayerId(stock)
-        if (pid != False and self.__game.GetCPlayer() == pid):
+        if (self.__game.GetCPlayer() == pid):
             if (self.__game.ProcessBarrer(tuple(data["pos_one"]), tuple(data["pos_two"]))):
                 for player in self.__players:
                     if (player == stock): continue
@@ -60,15 +61,22 @@ class GameServer(Server):
                         "pos_two": data["pos_two"]
                     }))
     def PlayerMove(self, data, stock):
+        print("PlayerMove")
+        print(self.__players    )
+        print(stock)
         pid = self.GetPlayerId(stock)
-        if (pid != False and self.__game.GetCPlayer() == pid):
+        print(pid)
+        print(self.__game.GetCPlayer())
+        if (self.__game.GetCPlayer() == pid):
+            print(tuple(data["pos"]))
             if (self.__game.ProcessMove(tuple(data["pos"]))):
                 for player in self.__players:
-                    if (player == stock): continue
+                    if (player == stock or player == None): continue
                     player.write(json.dumps({
                         "action": "player_move",
                         "pos": data["pos"]
                     }))
+                print("Ok")
 
     def Register(self, data, stock):
         if (stock == self.__serverlist_stocking):
@@ -81,7 +89,9 @@ class GameServer(Server):
         self.GetConsole().log("[red]Vous avez été kick de: " + self.AddrToString(stock.addr) + "\nMessage: " + data.get("message"))
         
     def AddClient(self, stock):
+        print(self.__players)
         for i in range(len(self.__players)):
+            print(self.__players[i])
             if (self.__players[i] == None):
                 self.__players[i] = stock
                 return True
@@ -89,13 +99,6 @@ class GameServer(Server):
     
     def RegisterClient(self, data, stock):
         if (not self.AddClient(stock)):
-            self.KickClient(stock.GetId())
-        lply = None
-        for i in range(len(self.__players)):
-            if (self.__players[i] !=  None):
-                lply = i
-                self.__players[i] = stock
-        if (lply == None):
             self.KickClient(stock.GetId())
         game = self.__game
         ppos = [None]*settings.NB_PLAYERS
@@ -105,7 +108,7 @@ class GameServer(Server):
             "action": "init_data",
             "barrers": game.GetBarrerData(),
             "cplayer": game.GetCPlayer(),
-            "local_player": lply,
+            "local_player": self.GetPlayerId(stock),
             "barrer_count": game.GetBarrerCount(),
             "players_pos": ppos
         }))

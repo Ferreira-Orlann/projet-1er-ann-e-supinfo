@@ -20,7 +20,7 @@ class GameScene(BaseScene):
         self.AddSpriteGroup("board_case")
         self.AddSpriteGroup("barrers")
         data = json["barrer_count_label"]
-        self.__barrers_count_label = self.RegisterSprite(Label("barrer_count_label", data[0], data[1], self, self.__quoridor.GetFontManager().GetFont("barrer_count_label")))
+        self.__barrers_count_label = self.RegisterSprite(Label("barrer_count_label", data[0], data[1], self, self.__quoridor.GetFontManager().GetFont("default")))
         self.__barrers_count_label.SetText(str(self.__barrers_count))
         self.__players_surfaces = []
         self.LoadGameMapJson(json)
@@ -94,7 +94,7 @@ class GameScene(BaseScene):
             pdata=json["playersjaune"]
             self.RegisterButton(Button, 1,{
                 "path": pdata[1],
-                "size": [45,45],
+                "size": [48,48],
                 "pos": [2+x+((settings.BOARD_SIZE//2)*60), 2+y+((settings.BOARD_SIZE-1)*60)],
                 "action": "PlayerClick"
             }, "players")
@@ -107,7 +107,7 @@ class GameScene(BaseScene):
             pdata=json["playersrouge"]
             self.RegisterButton(Button, 0,{
                 "path": pdata[1],
-                "size": [45,45],
+                "size": [48,48],
                 "pos": [2+x+((settings.BOARD_SIZE//2)*60), y+2],
                 "action": "PlayerClick"
             }, "players")
@@ -121,7 +121,7 @@ class GameScene(BaseScene):
             pdata=json["playersorange"]
             self.RegisterButton(Button, 2,{
                 "path": pdata[1],
-                "size": [45, 45],
+                "size": [48,48],
                 "pos": [2+x, 2+y+((settings.BOARD_SIZE//2)*60)],
                 "action": "PlayerClick"
             }, "players")
@@ -135,7 +135,7 @@ class GameScene(BaseScene):
             pdata=json["playersvert"]
             self.RegisterButton(Button, 3,{
                 "path": pdata[1],
-                "size": [45, 45],
+                "size": [48,48],
                 "pos": [2+x+((settings.BOARD_SIZE-1)*60), 2+y+((settings.BOARD_SIZE//2)*60)],
                 "action": "PlayerClick"
             }, "players")

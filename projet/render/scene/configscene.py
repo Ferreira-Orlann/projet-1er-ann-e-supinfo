@@ -4,6 +4,7 @@ from render.scene.gamescene import GameScene
 from game.game import Game
 import settings as settings
 from render.scene.networkedgamescene import NetworkedGameScene
+from render.scene.gamelistscene import GameListScene
 from render.buttons import ToggleButton
 
 class ConfigScene(BaseScene):
@@ -27,9 +28,9 @@ class ConfigScene(BaseScene):
 
     def ServerList(self, button):
         """Go to the server list"""
-        # self.Next(GameListScene(self.GetQuoridor()))
-        q = self.GetQuoridor()
-        self.Next(NetworkedGameScene(q, Game(q), ("127.0.0.1", 50001)))
+        self.Next(GameListScene(self.GetQuoridor()))
+        # q = self.GetQuoridor()
+        # self.Next(NetworkedGameScene(q, Game(q), ("127.0.0.1", 50001)))
 
     def Start(self, button):
         """Start the game"""

@@ -19,6 +19,7 @@ class DirtySprite(DirtySprite):
         self.dirty = 1
         # self.rect.update(self.rect.left, self.rect.top, self.rect.width + 10, self.rect.height + 10)
         self.rect.update(self.rect.left, self.rect.top, self.rect.width, self.rect.height)
+        self.__scene.GetQuoridor().AddRedrawRect(self.rect.copy())
         
     def ChangeSurface(self, surface, x=None, y=None):
         """Change the surface of the sprite"""

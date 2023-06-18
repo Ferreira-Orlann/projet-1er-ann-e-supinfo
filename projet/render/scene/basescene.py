@@ -78,6 +78,7 @@ class BaseScene():
         elif self.__background is None:
             self.__background = pygame.surface.Surface(settings.DISPLAY_SIZE)
             self.__background.fill(pygame.Color(0, 255, 255))
+        self.__background = pygame.transform.scale(self.__background, settings.DISPLAY_SIZE)
         self.__display_surface.blit(self.__background, (0, 0))
         for group in self.__custom_groups.values():
             group.clear(self.__display_surface,self.__background)
@@ -102,7 +103,14 @@ class BaseScene():
                 y = pos[1]
                 surface = pygame.transform.scale(self.GetSurface(data["path"]), (size[0], size[1]))
                 sprite = DirtySprite(name, surface, x, y, self)
-                self.RegisterSprite(sprite)  # Register the sprite
+                self.RegisterSprite(sprite)
+        if "textentries" in json:
+            for name, data in json["textentries"].items():
+                pos = data["pos"]
+                tentry = TextEntry(name, pos[0], pos[1], self, self.__quoridor.GetFontManager().GetFont("default"))
+                tentry.SetText(data["text"])
+                tentry.SetMaxSize(data["maxchar"])
+                self.RegisterSprite(tentry)
         self.SetJson(json)
     
     def GetBackGroundSurface(self):

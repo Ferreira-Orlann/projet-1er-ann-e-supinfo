@@ -23,18 +23,33 @@ class NetworkedGameScene(GameScene):
     def Update(self):
         if (self.__client.IsStockError()):
             self.BackToMenu(None)
+            
+    def BackToMenu(self, button):
+        self.__client.Disconnect()
+        super().BackToMenu(button)
         
     def PlaceBarrer(self, data):
-        self.__game.ProcessBarrer(tuple(data["pos_one"]), tuple(data["pos_two"]))
+        id_one = tuple(data["pos_one"])
+        id_two = tuple(data["pos_two"])
+        self.GetGame().ProcessBarrer(id_one, id_two)
+        sprites = self.GetSpritesById([id_one, id_two], "barrers")
+        sur_manager = self.GetQuoridor().GetSurfaceManager()
+        surface_up = scale(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]), (10, 50))
+        surface = scale(sur_manager.GetSurface(self.GetJson()["barrer_posed"][1]), (50, 10))
+        for sprite in sprites:
+            if (sprite.GetId()[0] % 2 == 0):
+                sprite.ChangeSurface(surface_up)
+            else:
+                sprite.ChangeSurface(surface)
         self.SetBarrerCount(self.GetBarrerCount() - 1)
         self.ChangePossiblesSprites()
         return True
     
     def PlayerMove(self, data):
-        pid = self.__game.GetCurrentPlayer().GetId()
+        pid = self.GetGame().GetCurrentPlayer().GetId()
         pos = tuple(data["pos"])
-        self.__game.ProcessMove(pos)
-        button = self.GetSpriteById(pos, "players")
+        self.GetGame().ProcessMove(pos)
+        button = self.GetSpriteById(pos, "board_case")
         sprite = self.GetSpriteById(pid, "players")
         sprite.SetPos(button.GetPos())
         self.ChangePossiblesSprites()
@@ -45,18 +60,19 @@ class NetworkedGameScene(GameScene):
         game.SetCPlayer(data["cplayer"])
         self.__local_player = data["local_player"]
         game.SetBarrerCount(data["barrer_count"])
-        self.ChangePossiblesSprites()
         sur_manager = self.GetQuoridor().GetSurfaceManager()
         sid = None
         surface_up = scale(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]), (10, 50))
         surface = scale(sur_manager.GetSurface(self.GetJson()["barrer_posed"][1]), (50, 10))
         for sprite in self.GetSpriteGroup("barrers"):
             sid = sprite.GetId()
-            if (game.IsPosed(sid)):
+            print(sid)
+            if (not game.IsPosed(sid)):
                 if (sid[0] % 2 == 0):
                     sprite.ChangeSurface(surface_up)
                 else:
                     sprite.ChangeSurface(surface)
+                print("Changed surface")
         players = self.GetSpriteGroup("players")
         for player in players:
             pid = player.GetId()
@@ -65,6 +81,7 @@ class NetworkedGameScene(GameScene):
             gplayer.SetPos(pos)
             sprite = self.GetSpriteById(pos, "board_case")
             player.SetPos(sprite.GetPos())
+        self.ChangePossiblesSprites()
         self.__initalized = True
         print(data)
         
@@ -88,7 +105,7 @@ class NetworkedGameScene(GameScene):
         if(super().PlayerCaseClick(button)):
             self.__client.GetStocking().write(json.dumps({
                 "action": "player_move",
-                "pos": button.GetPos()
+                "pos": button.GetId()
             }))
         
     def PlayerBarrerClick(self, button):

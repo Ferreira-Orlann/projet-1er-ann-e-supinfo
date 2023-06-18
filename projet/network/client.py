@@ -67,4 +67,7 @@ class NetClient():
         lsock.connect((host, port))
         self.__lsock = lsock
         self.__stocking = Stockings.Stocking(self.__lsock)
+        
+    def Disconnect(self):
+        self.__stocking.close()
 

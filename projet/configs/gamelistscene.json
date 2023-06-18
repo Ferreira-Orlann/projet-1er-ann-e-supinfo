@@ -1,13 +1,9 @@
 {
+    "background": "assets/page4/background_server.png",
     "toggle-buttons": {
     },
     "buttons": {
     },
     "sprites": {
-        "Titre": {
-            "path": "./assets/page2/titre.PNG",
-            "size": [700,200],
-            "pos": [4.7,65]
-        }
     }
 }
