@@ -204,6 +204,3 @@ class Game():
     
     def GetCurrentPlayer(self):
         return self.__players[self.__cplayer]
-    
-    def GetConfig(self):
-        return self.__config
