@@ -28,6 +28,9 @@ class GameScene(BaseScene):
         self.LoadCustomPlayerJson(json)
         self.ChangePossiblesSprites()
         
+    def GetBarrerLabel(self):
+        return self.__barrers_count_label
+        
     def GetBarrerCount(self):
         return self.__barrers_count
         

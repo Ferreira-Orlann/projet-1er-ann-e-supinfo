@@ -31,7 +31,9 @@ class NetworkedGameScene(GameScene):
     def PlaceBarrer(self, data):
         id_one = tuple(data["pos_one"])
         id_two = tuple(data["pos_two"])
+        game = self.GetGame()
         self.GetGame().ProcessBarrer(id_one, id_two)
+        self.GetBarrerLabel().SetText("Barrières: " + str(game.GetBarrerCount()[game.GetCPlayer()]))
         sprites = self.GetSpritesById([id_one, id_two], "barrers")
         sur_manager = self.GetQuoridor().GetSurfaceManager()
         surface_up = scale(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]), (10, 50))
@@ -41,7 +43,6 @@ class NetworkedGameScene(GameScene):
                 sprite.ChangeSurface(surface_up)
             else:
                 sprite.ChangeSurface(surface)
-        self.SetBarrerCount(self.GetBarrerCount() - 1)
         self.ChangePossiblesSprites()
         return True
     
@@ -60,6 +61,7 @@ class NetworkedGameScene(GameScene):
         game.SetCPlayer(data["cplayer"])
         self.__local_player = data["local_player"]
         game.SetBarrerCount(data["barrer_count"])
+        self.GetBarrerLabel().SetText("Barrières: " + str(game.GetBarrerCount()[game.GetCPlayer()]))
         sur_manager = self.GetQuoridor().GetSurfaceManager()
         sid = None
         surface_up = scale(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]), (10, 50))

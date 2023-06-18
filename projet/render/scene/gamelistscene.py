@@ -35,25 +35,25 @@ class GameListScene(BaseScene):
         addr = self.__area.GetText().split(":")
         addr[1] = int(addr[1])
         client = NetClient(self.GetQuoridor())
-        def PrivatePing(data):
-            settings.NB_BARRERS = data["nb_barrer"]
-            settings.BOARD_SIZE = data["board_size"]
-            settings.NB_PLAYERS = data["max_player"]
-            q = self.GetQuoridor()
-            g = Game(q)
-            try:
-                scene = NetworkedGameScene(q, g, tuple(addr))
-                self.Next(scene)
-            except:
-                from render.scene.startscene import StartScene
-                self.Next(StartScene(self.GetQuoridor()))
-        client.AddAction("ping", PrivatePing)
-        client.Connect(addr[0], addr[1])
-        while client.GetStocking().handshakeComplete is not True:
-            sleep(0.1)
-        client.GetStocking().write(json.dumps({
-            "action": "ping"
-        }))
+        try:
+            def PrivatePing(data):
+                    settings.NB_BARRERS = data["nb_barrer"]
+                    settings.BOARD_SIZE = data["board_size"]
+                    settings.NB_PLAYERS = data["max_player"]
+                    q = self.GetQuoridor()
+                    g = Game(q)
+                    scene = NetworkedGameScene(q, g, tuple(addr))
+                    self.Next(scene)
+            client.AddAction("ping", PrivatePing)
+            client.Connect(addr[0], addr[1])
+            while client.GetStocking().handshakeComplete is not True:
+                sleep(0.1)
+            client.GetStocking().write(json.dumps({
+                "action": "ping"
+            }))
+        except:
+            from render.scene.startscene import StartScene
+            self.Next(StartScene(self.GetQuoridor()))
             
     def RetreiveServers(self, data):
         self.__resfesh = data["servers"]
