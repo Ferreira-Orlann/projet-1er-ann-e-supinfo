@@ -9,11 +9,9 @@ from render.label import Label
 class GameScene(BaseScene):
     def __init__(self, quoridor, game, background=None):
         self.__game = game
-        self.__hovered_barrers = (None, None)
         self.__direction = False
         self.__quoridor = quoridor
-        self.__display_surface = quoridor.GetDisplaySurface()
-        self.__last_possibles_moves  = []
+        self.__last_possibles_moves_sprites  = []
         self.__last_hovered_barrer = None
         self.__barrers_count = settings.NB_BARRERS
         json = CheckJson("configs/gamescene.json")
@@ -30,6 +28,16 @@ class GameScene(BaseScene):
         self.LoadGameUpJson(json)
         self.LoadCustomPlayerJson(json)
         self.ChangePossiblesSprites()
+        
+    def GetBarrerCount(self):
+        return self.__barrers_count
+    
+    def SetBarrerCount(self, value):
+        self.__barrers_count = value
+        self.__barrers_count_label.SetText(str(self.__barrers_count))
+        
+    def GetGame(self):
+        return self.__game
         
     def BackToMenu(self, button):
         from render.scene.startscene import StartScene
@@ -137,11 +145,18 @@ class GameScene(BaseScene):
         """Player click on the board"""
         self.GetQuoridor().GetConsole().log("PlayerCaseClick " + str(button.GetId()))
         pid = self.__game.GetCurrentPlayer().GetId()
-        if(not self.__game.ProcessMove(button.GetId())): return
+        if(not self.__game.ProcessMove(button.GetId())): return False
         sur_manager = self.__quoridor.GetSurfaceManager()
         sprite = self.GetSpriteById(pid, "players")
         sprite.SetPos(button.GetPos())
         self.ChangePossiblesSprites()
+        return True
+        
+    def GetLastPossiblesMovesSprites(self):
+        return self.__last_possibles_moves_sprites
+    
+    def ClearLastPossiblesMovesSprites(self):
+        self.__last_possibles_moves_sprites.clear()
     
     def ChangePossiblesSprites(self):
         pmove = self.__game.GetPossiblesMoves()
@@ -149,14 +164,14 @@ class GameScene(BaseScene):
         sur_manager = self.__quoridor.GetSurfaceManager()
         json = self.GetJson()
         for sprite in sprites:
-            if (sprite in self.__last_possibles_moves):
+            if (sprite in self.__last_possibles_moves_sprites):
                 continue
             sprite.ChangeSurface(sur_manager.GetSurface(json["board_case_possible"][1]))
-        for sprite in self.__last_possibles_moves:
+        for sprite in self.__last_possibles_moves_sprites:
             if (sprite in sprites):
                 continue
             sprite.ChangeSurface(sur_manager.GetSurface(json["board_case"][1]))
-        self.__last_possibles_moves = sprites
+        self.__last_possibles_moves_sprites = sprites
 
     def PlayerClick(self, button):
         self.GetQuoridor().GetConsole().log("PlayerClick " + str(button.GetId()))
@@ -208,14 +223,21 @@ class GameScene(BaseScene):
                 id = start_barrer.GetId()
                 next_barrer = self.GetSpriteById((id[0] + 2, id[1]), "barrers")
         return next_barrer
+    
+    def GetLastHoveredBarrer(self):
+        return self.__last_hovered_barrer
+    
+    def GetDirection(self):
+        return self.__direction
             
     def PlayerBarrerClick(self, button):
-        if (self.__barrers_count <= 0 or self.__last_hovered_barrer != button): return
+        if (self.__barrers_count <= 0 or self.__last_hovered_barrer != button): return False
         next_barrer = self.GetBarrerByDirection(self.__last_hovered_barrer, self.__direction)
-        if (not self.__game.ProcessBarrer(self.__last_hovered_barrer.GetId(), next_barrer.GetId())): return
+        if (not self.__game.ProcessBarrer(self.__last_hovered_barrer.GetId(), next_barrer.GetId())): return False
         self.ChangePossiblesSprites()
         self.__barrers_count -= 1
         self.__barrers_count_label.SetText(str(self.__barrers_count))
+        return True
 
     def LoadGameJson(self, json):
         """Load the custom game json --"""

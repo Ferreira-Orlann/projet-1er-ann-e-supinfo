@@ -30,7 +30,20 @@ class Game():
         self.__MOVE_TYPE_LEFT = (0,-1)
         self.__MOVE_TYPE_RIGHT = (0,1)
         
+        self.__barrer_count = settings.NB_BARRERS
+        
         self.ProcessPossiblesMoves(self.__players[0])
+        
+    def GetBarrerCount(self):
+        return self.__barrer_count
+    
+    def SetCPlayer(self, id):
+        self.__cplayer = id
+        self.ProcessPossiblesMoves(self.__players[self.__cplayer])
+        self.__has_changed = True
+        
+    def SetPlayers(self, players):
+        self.__players = players
         
     def SetBarrerData(self, data):
         self.__barrers = data
@@ -79,6 +92,7 @@ class Game():
             return False
         self.__barrers[pos[0]][pos[1]] = True
         self.__barrers[pos2[0]][pos2[1]] = True
+        self.__barrer_count -= 2
         self.SwitchPlayer(self.GetCurrentPlayer())
         return True
     
@@ -95,9 +109,6 @@ class Game():
             self.__cplayer = previous_player + 1
         self.ProcessPossiblesMoves(self.__players[self.__cplayer])
         self.__has_changed = True
-    
-    def GetBarrers(self):
-        return self.__barrers
     
     def CheckPath(self, player):
         pass
@@ -150,6 +161,9 @@ class Game():
     
     def GetPlayers(self):
         return self.__players
+    
+    def GetPlayer(self, pid):
+        return self.__players[pid]
     
     def GetCurrentPlayer(self):
         return self.__players[self.__cplayer]

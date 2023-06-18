@@ -15,6 +15,9 @@ class NetClient():
         self.__thread.start()
         self.__thread.join()
         
+    def GetStocking(self):
+        return self.__stocking
+        
     def AddAction(self, name, func):
         self.__actions[name] = func
         
