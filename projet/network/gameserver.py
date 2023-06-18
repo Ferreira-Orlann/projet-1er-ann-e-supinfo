@@ -11,17 +11,18 @@ from rich.table import Table
 import copy
 
 class GameServer(Server):
-    def __init__(self):
+    def __init__(self, port = 50001):
         print("Register")
-        super().__init__(Console(), '127.0.0.1', 50001)
+        self.__port = port
         self.ProcessArgs(sys.argv)
-        print("Register")
+        super().__init__(Console(), '127.0.0.1', self.__port)
         self.__game = Game(self)
         self.__players = [None]*settings.NB_PLAYERS
         
         self.AddAction("register", self.Register)
         self.AddAction("place_barrer", self.PlaceBarrer)
         self.AddAction("player_move", self.PlayerMove)
+        self.AddAction("ping", self.Ping)
         
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
@@ -33,8 +34,22 @@ class GameServer(Server):
         self.GetStockings().append(self.__serverlist_stocking)
         while self.__serverlist_stocking.handshakeComplete is not True:
             sleep(0.1)
-        self.__serverlist_stocking.write(json.dumps({
+        self.Write(self.__serverlist_stocking,json.dumps({
             "action": "register"
+        }))
+        
+    def Ping(self, data, stock):
+        nb_player = 0
+        for i in range(len(self.__players)):
+            if (self.__players[i] != None): 
+                nb_player += 1
+        self.Write(stock,json.dumps({
+            "action": "ping",
+            "nb_players": nb_player,
+            "max_player": settings.NB_PLAYERS,
+            "nb_barrer": settings.NB_BARRERS,
+            "board_size": settings.BOARD_SIZE,
+            "addr": self.AddrToString(stock.addr)
         }))
         
     def StockError(self, stock, err):
@@ -55,7 +70,7 @@ class GameServer(Server):
             if (self.__game.ProcessBarrer(tuple(data["pos_one"]), tuple(data["pos_two"]))):
                 for player in self.__players:
                     if (player == stock): continue
-                    player.write(json.dumps({
+                    self.Write(player,json.dumps({
                         "action": "place_barrer",
                         "pos_one": data["pos_one"],
                         "pos_two": data["pos_two"]
@@ -72,7 +87,7 @@ class GameServer(Server):
             if (self.__game.ProcessMove(tuple(data["pos"]))):
                 for player in self.__players:
                     if (player == stock or player == None): continue
-                    player.write(json.dumps({
+                    self.Write(player, json.dumps({
                         "action": "player_move",
                         "pos": data["pos"]
                     }))
@@ -104,7 +119,7 @@ class GameServer(Server):
         ppos = [None]*settings.NB_PLAYERS
         for player in game.GetPlayers():
             ppos[player.GetId()] = player.GetPos()
-        stock.write(json.dumps({
+        self.Write(stock,json.dumps({
             "action": "init_data",
             "barrers": game.GetBarrerData(),
             "cplayer": game.GetCPlayer(),
@@ -139,6 +154,8 @@ class GameServer(Server):
                     settings.BOARD_SIZE = int(args[1])
                     if (settings.BOARD_SIZE not in [5,7,9,11]):
                         self.PrintArgsHelp()
+                case "-port":
+                    self.__port = int(args[1])
             del args[0]
             del args[0]
             
@@ -150,5 +167,6 @@ class GameServer(Server):
         table.add_row("-p","-p 'nombre de joueurs' | [2,4]")
         table.add_row("-b","-b 'nombre de barrières' | [4,8,12,16,20,24,28,32,36,40]")
         table.add_row("-s","-s 'taille du plateau' | [5,7,9,11]")
+        table.add_row("-port","-p 'port de connexion' | Défaut: 50001")
         self.GetConsole().print(table)
         self.GetConsole().Quit()

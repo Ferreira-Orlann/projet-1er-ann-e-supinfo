@@ -1,7 +1,6 @@
 import libs.richthread as richthread
 import threading
-from os import kill
-from os import getpid
+import os
 from signal import SIGTERM
 from rich.console import Console as RConsole
 from rich.table import Table
@@ -56,7 +55,7 @@ class Console(RConsole):
                 if isinstance(thread, Stockings.Stocking):
                     thread.close()
             self.log("[red]EXIT[/red]")
-            kill(getpid(), SIGTERM)
+            os.kill(os.getpid(), SIGTERM)
             
     def HelpCommand(self, args):
         """Display the help"""

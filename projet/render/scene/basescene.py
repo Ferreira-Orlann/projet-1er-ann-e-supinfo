@@ -46,10 +46,17 @@ class BaseScene():
 
     def GetJson(self):
         return self.__json
+    
+    def GetNameByGroup(self,search_group):
+        for name, group in self.__custom_groups.items():
+            if (group == search_group):
+                return name
+        return None
 
     def AddSpriteGroup(self, name):
         self.__custom_groups[name] = pygame.sprite.LayeredDirty(layer=len(self.__custom_groups)+1)
         self.__custom_groups[name].clear(self.__display_surface,self.__background)
+        return self.__custom_groups[name]
         
     def GetSpriteGroup(self, name):
         return self.__custom_groups.get(name)
@@ -144,7 +151,7 @@ class BaseScene():
         """Return the display surface"""
         return self.__display_surface
     
-    def RegisterSprite(self, sprite, group = None):
+    def RegisterSprite(self, sprite, group = None, bypass = False):
         """Register a sprite"""
         if isinstance(sprite.GetPos()[0], float):
             sprite.rect.x = ceil(self.__display_surface.get_width() / sprite.GetPos()[0])
@@ -154,7 +161,8 @@ class BaseScene():
         gr = self.GetSpriteGroup(group)
         if gr is not None:
             gr.add(sprite)
-        self.__sprites.add(sprite)
+        if (not bypass):
+            self.__sprites.add(sprite)
         return sprite
     
     def Render(self, display_surface):
@@ -187,11 +195,15 @@ class BaseScene():
         for textentry in self.GetSpriteGroup("text_entries"):
             if (textentry.IsSelected()):
                 text = textentry.GetText()
-                if event.key == pygame.K_BACKSPACE:
+                if (event.key == pygame.K_BACKSPACE):
                     text = text[:-1]
+                elif (event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN) :
+                    textentry.SetSelected(False)
+                    continue
                 else:
-                    text.concat(event.unicode)
+                    text += event.unicode
                 textentry.SetText(text)
+                
     def InputPressed(self, event):
         pass
     
@@ -211,7 +223,8 @@ class BaseScene():
                     if sprite.rect.collidepoint(mouse_pos) and sprite.Action:
                         sprite.Action(sprite)
                 if (isinstance(sprite, TextEntry)):
-                    sprite.SetSelected(True)
+                    if sprite.rect.collidepoint(mouse_pos) and sprite.Action:
+                        sprite.SetSelected(True)
                 
 
     def GetMainGroup(self):

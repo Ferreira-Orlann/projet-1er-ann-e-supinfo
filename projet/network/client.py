@@ -11,6 +11,7 @@ class NetClient():
         self__quoridor = quoridor
         self.__stock_error = False
         self.__thread = threading.Thread(target=self.ReadHandler)
+        self.__thread.daemon = True
         self.__thread.start()
         
     def GetStocking(self):
@@ -18,6 +19,9 @@ class NetClient():
         
     def AddAction(self, name, func):
         self.__actions[name] = func
+        
+    def DeleteAction(self, name):
+        self.__actions[name] = None
     
     def Kick(self, data):
         addr = self.__stocking.addr

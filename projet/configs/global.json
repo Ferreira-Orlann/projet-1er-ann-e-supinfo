@@ -1,5 +1,6 @@
 {
     "fonts": {
-        "default": ["assets/fonts/arial_narrow.ttf", 48]
+        "default": ["assets/fonts/arial_narrow.ttf", 48],
+        "server_info": ["assets/fonts/arial_narrow.ttf", 22]
     }
 }

@@ -3,6 +3,12 @@
     "toggle-buttons": {
     },
     "buttons": {
+        "ConnectPrivate": {
+            "path": "./assets/page4/connexion.png",
+            "size": [449,134],
+            "pos": [100,720],
+            "action": "ConnectPrivate"
+        }
     },
     "sprites": {
     }

@@ -27,7 +27,18 @@ class Server():
         
     def GetStocks(self):
         return self.__stockings
-        
+    
+    def Write(self, stock, data):
+        try:
+            return stock.write(data)
+        except BrokenPipeError as err:
+            self.StockError(stock, err)
+            self.RemoveStocking(stock)
+        except ConnectionResetError as err:
+            self.StockError(stock, err)
+            self.RemoveStocking(stock)
+        return None
+
     def AddAction(self, name, func):
         self.__actions[name] = func
     
@@ -39,13 +50,14 @@ class Server():
             for stock in self.GetStockings():
                 if not stock.handshakeComplete:
                     continue
-
                 string = self.ReadStock(stock)
                 if string == None: continue
                 data = json.loads(string)
                 action = data.get("action")
                 if (action is not None):
-                    self.__actions.get(action)(data, stock)
+                    func = self.__actions.get(action)
+                    if (func is not None):
+                        func(data, stock)
             sleep(0.05)
         
     def RemoveStocking(self, stock):
@@ -91,7 +103,7 @@ class Server():
         except ConnectionResetError as err:
             self.StockError(stock, err)
             self.RemoveStocking(stock)
-            return None
+        return None
         
     def ClientsList(self, args):
         """Show the list of clients"""
