@@ -86,7 +86,7 @@ class Game():
     def CheckWin(self, player, pos):
         fpos = player.GetFinalPos()
         if fpos[0] and pos[0] == fpos[1] or (not fpos[0]) and pos[1] == fpos[1]:
-            self.__quoridor.GetConsole().print("[green]Player " + str(player.GetId()) + " Win")
+            return True
         return False
 
     def IsPathsExist(self):
@@ -121,37 +121,6 @@ class Game():
     def SetChanged(self,val):
         self.__has_changed = val
 
-    def sound(self):
-        """Fonction qui lance un son (pose de pion)"""
-        # Initialise Pygame mixer
-        pygame.mixer.init()
-
-        # Charge le fichier mp3
-        pygame.mixer.music.load('assets/songs/pion.mp3')
-
-        # Joue le fichier mp3
-        pygame.mixer.music.play()
-
-        # Attends que la musique finisse
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)
-
-    def sound2(self):
-        """Fonction qui lance un son (pose de pion)"""
-        # Initialise Pygame mixer
-        pygame.mixer.init()
-
-        # Charge le fichier mp3
-        pygame.mixer.music.load('assets/songs/Barriere.mp3')
-
-        # Joue le fichier mp3
-        pygame.mixer.music.play()
-
-        # Attends que la musique finisse
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)
-
-
     def ProcessMove(self,pos):
         player = self.GetCurrentPlayer()
         if not pos in self.__possibles_moves:
@@ -159,8 +128,6 @@ class Game():
         player.SetPos(pos)
         self.CheckWin(player, pos)
         self.SwitchPlayer(player)
-        self.__threadsound = Thread(target=self.sound)
-        self.__threadsound.start()
         return True
     
     def ProcessBarrer(self, pos, pos2):
@@ -174,8 +141,6 @@ class Game():
             return False
         self.__barrer_count[self.__cplayer] -= 1
         self.SwitchPlayer(self.GetCurrentPlayer())
-        self.__threadsound = Thread(target=self.sound2)
-        self.__threadsound.start()
         return True
     
     def DestroyBarrer(self, pos):

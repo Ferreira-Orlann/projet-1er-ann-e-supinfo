@@ -5,6 +5,7 @@ from pygame import K_r as KEY_R
 import settings
 from pygame.transform import scale
 from render.label import Label
+from pygame import mixer as mixer
 
 class GameScene(BaseScene):
     def __init__(self, quoridor, game, background=None):
@@ -27,6 +28,14 @@ class GameScene(BaseScene):
         self.LoadGameUpJson(json)
         self.LoadCustomPlayerJson(json)
         self.ChangePossiblesSprites()
+
+    def CaseSound(self):
+        mixer.music.load('assets/songs/pion.mp3')
+        mixer.music.play()
+
+    def BarrerSound(self):
+        mixer.music.load('assets/songs/Barriere.mp3')
+        mixer.music.play()
         
     def GetBarrerLabel(self):
         return self.__barrers_count_label
@@ -65,13 +74,45 @@ class GameScene(BaseScene):
         """Load the custom player json"""
         player = settings.NB_PLAYERS
         if player == 2:
-            self.LoadCustomJauneJson(json)
-            self.LoadCustomRougeJson(json)
+            x, y = self.CenterBoard()
+            self.RegisterButton(Button, 1,{
+                "path": json["playersjaune"][1],
+                "size": [48,48],
+                "pos": [2+x+((settings.BOARD_SIZE//2)*60), 2+y+((settings.BOARD_SIZE-1)*60)],
+                "action": "PlayerClick"
+            }, "players")
+            self.RegisterButton(Button, 0,{
+                "path": json["playersrouge"][1],
+                "size": [48,48],
+                "pos": [2+x+((settings.BOARD_SIZE//2)*60), y+2],
+                "action": "PlayerClick"
+            }, "players")
         if player == 4:
-            self.LoadCustomJauneJson(json)
-            self.LoadCustomRougeJson(json)
-            self.LoadCustomOrangeJson(json)
-            self.LoadCustomVertJson(json)
+            x, y = self.CenterBoard()
+            self.RegisterButton(Button, 1,{
+                "path": json["playersjaune"][1],
+                "size": [48,48],
+                "pos": [2+x+((settings.BOARD_SIZE//2)*60), 2+y+((settings.BOARD_SIZE-1)*60)],
+                "action": "PlayerClick"
+            }, "players")
+            self.RegisterButton(Button, 0,{
+                "path": json["playersrouge"][1],
+                "size": [48,48],
+                "pos": [2+x+((settings.BOARD_SIZE//2)*60), y+2],
+                "action": "PlayerClick"
+            }, "players")
+            self.RegisterButton(Button, 2,{
+                "path": json["playersorange"][1],
+                "size": [48,48],
+                "pos": [2+x, 2+y+((settings.BOARD_SIZE//2)*60)],
+                "action": "PlayerClick"
+            }, "players")
+            self.RegisterButton(Button, 3,{
+                "path": json["playersvert"][1],
+                "size": [48,48],
+                "pos": [2+x+((settings.BOARD_SIZE-1)*60), 2+y+((settings.BOARD_SIZE//2)*60)],
+                "action": "PlayerClick"
+            }, "players")
 
     def CenterBoard(self):
         #DISPLAY_SIZE = (1160,920)
@@ -84,71 +125,28 @@ class GameScene(BaseScene):
         if settings.BOARD_SIZE == 11:
             return 291, 171
 
-    def LoadCustomJauneJson(self, json):
-        """Load the custom yellow player json """
-        json = CheckJson(json)
-        x, y = self.CenterBoard()
-        for id in range(0, 1, 1):
-            pdata=json["playersjaune"]
-            self.RegisterButton(Button, 1,{
-                "path": pdata[1],
-                "size": [48,48],
-                "pos": [2+x+((settings.BOARD_SIZE//2)*60), 2+y+((settings.BOARD_SIZE-1)*60)],
-                "action": "PlayerClick"
-            }, "players")
-            x = x + 1
-
-    def LoadCustomRougeJson(self, json):
-        """Load the custom red player json"""
-        json = CheckJson(json)
-        x, y = self.CenterBoard()
-        for id in range(0, 1, 1):
-            pdata=json["playersrouge"]
-            self.RegisterButton(Button, 0,{
-                "path": pdata[1],
-                "size": [48,48],
-                "pos": [2+x+((settings.BOARD_SIZE//2)*60), y+2],
-                "action": "PlayerClick"
-            }, "players")
-            x = x + 1
-
-    def LoadCustomOrangeJson(self, json):
-        """Load the custom orange player json"""
-        json = CheckJson(json)
-        x, y = self.CenterBoard()
-        for id in range(0, 1, 1):
-            pdata=json["playersorange"]
-            self.RegisterButton(Button, 2,{
-                "path": pdata[1],
-                "size": [48,48],
-                "pos": [2+x, 2+y+((settings.BOARD_SIZE//2)*60)],
-                "action": "PlayerClick"
-            }, "players")
-            x = x + 1
-
-    def LoadCustomVertJson(self, json):
-        """Load the custom green player json"""
-        json = CheckJson(json)
-        x, y = self.CenterBoard()
-        for id in range(0, 1, 1):
-            pdata=json["playersvert"]
-            self.RegisterButton(Button, 3,{
-                "path": pdata[1],
-                "size": [48,48],
-                "pos": [2+x+((settings.BOARD_SIZE-1)*60), 2+y+((settings.BOARD_SIZE//2)*60)],
-                "action": "PlayerClick"
-            }, "players")
-            x = x + 1
+    def Update(self):
+        game = self.GetGame()
+        player = game.GetCurrentPlayer()
+        if (game.CheckWin(player,player.GetPos())):
+            self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId()) + " Win")
+            self.BackToMenu(None)
         
     def PlayerCaseClick(self, button):
         """Player click on the board"""
         self.GetQuoridor().GetConsole().log("PlayerCaseClick " + str(button.GetId()))
-        pid = self.__game.GetCurrentPlayer().GetId()
-        if(not self.__game.ProcessMove(button.GetId())): return False
+        game = self.GetGame()
+        pid = game.GetCurrentPlayer().GetId()
+        if(not game.ProcessMove(button.GetId())): return False
         sur_manager = self.__quoridor.GetSurfaceManager()
         sprite = self.GetSpriteById(pid, "players")
         sprite.SetPos(button.GetPos())
         self.ChangePossiblesSprites()
+        self.CaseSound()
+        player = game.GetCurrentPlayer()
+        if (game.CheckWin(player,player.GetPos())):
+            self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId()) + " Win")
+            self.BackToMenu(None)
         return True
         
     def GetLastPossiblesMovesSprites(self):
@@ -236,6 +234,7 @@ class GameScene(BaseScene):
         if (not game.ProcessBarrer(self.__last_hovered_barrer.GetId(), next_barrer.GetId())): return False
         self.ChangePossiblesSprites()
         self.__barrers_count_label.SetText("Barrières: " + str(game.GetBarrerCount()[game.GetCPlayer()]))
+        self.BarrerSound()
         return True
 
     def LoadGameJson(self, json):

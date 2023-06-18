@@ -44,7 +44,7 @@ class NetworkedGameScene(GameScene):
             else:
                 sprite.ChangeSurface(surface)
         self.ChangePossiblesSprites()
-        return True
+        self.BarrerSound()
     
     def PlayerMove(self, data):
         pid = self.GetGame().GetCurrentPlayer().GetId()
@@ -54,6 +54,7 @@ class NetworkedGameScene(GameScene):
         sprite = self.GetSpriteById(pid, "players")
         sprite.SetPos(button.GetPos())
         self.ChangePossiblesSprites()
+        self.CaseSound()
     
     def InitData(self, data):
         game = self.GetGame()
@@ -85,7 +86,6 @@ class NetworkedGameScene(GameScene):
             player.SetPos(sprite.GetPos())
         self.ChangePossiblesSprites()
         self.__initalized = True
-        print(data)
         
     def ChangePossiblesSprites(self):
         sur_manager = self.GetQuoridor().GetSurfaceManager()

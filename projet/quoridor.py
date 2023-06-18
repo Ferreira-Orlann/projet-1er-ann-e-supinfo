@@ -17,6 +17,7 @@ class Quoridor():
         self.__json = CheckJson("configs/global.json")
         self.__netclient = None
         pygame.init()  # Init pygame
+        pygame.mixer.init()
         self.__display_surface = pygame.display.set_mode(settings.DISPLAY_SIZE)
         self.__surface_manager = SurfaceManager()
         self.__font_manager = FontManager(self.__json)
