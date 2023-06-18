@@ -25,6 +25,7 @@ class Game():
             # self.__players.append(HumanPlayer(id,())
         minus_one = settings.BOARD_SIZE-1
         middle = int(minus_one/2)
+        self.__barrer_count = [settings.NB_BARRERS // settings.NB_PLAYERS]*settings.NB_PLAYERS
         if (settings.NB_PLAYERS == 2):
             self.__players.append(HumanPlayer(0,(0, middle, True, minus_one)))
             self.__players.append(HumanPlayer(1,(minus_one, middle, True, 0)))
@@ -34,7 +35,6 @@ class Game():
             self.__players.append(HumanPlayer(2,(middle, 0, False, minus_one)))
             self.__players.append(HumanPlayer(3,(middle, minus_one, False, minus_one)))
             
-            
         self.__cplayer = 0
         
         self.__has_changed = True
@@ -42,8 +42,6 @@ class Game():
         self.__MOVE_TYPE_DOWN = (1,0)
         self.__MOVE_TYPE_LEFT = (0,-1)
         self.__MOVE_TYPE_RIGHT = (0,1)
-        
-        self.__barrer_count = settings.NB_BARRERS
         
         player = self.__players[0]
         self.__possibles_moves = self.ProcessPossiblesMoves(player.GetPos())
@@ -136,7 +134,7 @@ class Game():
         return True
     
     def ProcessBarrer(self, pos, pos2):
-        if (self.__barrers[pos[0]][pos[1]] or self.__barrers[pos2[0]][pos2[1]]):
+        if (self.__barrers[pos[0]][pos[1]] or self.__barrers[pos2[0]][pos2[1]] or self.__barrer_count[self.__cplayer] <= 0):
             return False
         self.__barrers[pos[0]][pos[1]] = True
         self.__barrers[pos2[0]][pos2[1]] = True
@@ -144,7 +142,7 @@ class Game():
             self.__barrers[pos[0]][pos[1]] = None
             self.__barrers[pos2[0]][pos2[1]] = None
             return False
-        self.__barrer_count -= 2
+        self.__barrer_count[self.__cplayer] -= 1
         self.SwitchPlayer(self.GetCurrentPlayer())
         return True
     

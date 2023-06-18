@@ -7,6 +7,7 @@ from game.game import Game
 import json
 import settings
 from time import sleep
+from network.client import NetClient
 
 class GameListScene(BaseScene):
     def __init__(self, quoridor):
@@ -33,14 +34,26 @@ class GameListScene(BaseScene):
     def ConnectPrivate(self, button):
         addr = self.__area.GetText().split(":")
         addr[1] = int(addr[1])
-        q = self.GetQuoridor()
-        g = Game(q)
-        try:
-            scene = NetworkedGameScene(q, g, tuple(addr))
-            self.Next(scene)
-        except:
-            from render.scene.startscene import StartScene
-            self.Next(StartScene(self.GetQuoridor()))
+        client = NetClient(self.GetQuoridor())
+        def PrivatePing(data):
+            settings.NB_BARRERS = data["nb_barrer"]
+            settings.BOARD_SIZE = data["board_size"]
+            settings.NB_PLAYERS = data["max_player"]
+            q = self.GetQuoridor()
+            g = Game(q)
+            try:
+                scene = NetworkedGameScene(q, g, tuple(addr))
+                self.Next(scene)
+            except:
+                from render.scene.startscene import StartScene
+                self.Next(StartScene(self.GetQuoridor()))
+        client.AddAction("ping", PrivatePing)
+        client.Connect(addr[0], addr[1])
+        while client.GetStocking().handshakeComplete is not True:
+            sleep(0.1)
+        client.GetStocking().write(json.dumps({
+            "action": "ping"
+        }))
             
     def RetreiveServers(self, data):
         self.__resfesh = data["servers"]

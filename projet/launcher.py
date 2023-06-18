@@ -38,7 +38,7 @@ match(sys.argv[1]):
         gameserver.GameServer()
     case _:
         print("""
-        game => Jeux
-        serverlist => GameListServer
-        gameserver => GameServer
+-game => Jeux
+-serverlist => GameListServer
+-gameserver => GameServer
         """)

@@ -21,8 +21,7 @@ class GameScene(BaseScene):
         self.AddSpriteGroup("barrers")
         data = json["barrer_count_label"]
         self.__barrers_count_label = self.RegisterSprite(Label("barrer_count_label", data[0], data[1], self, self.__quoridor.GetFontManager().GetFont("default")))
-        self.__barrers_count_label.SetText(str(self.__barrers_count))
-        self.__players_surfaces = []
+        self.__barrers_count_label.SetText("Barrières: " + str(game.GetBarrerCount()[game.GetCPlayer()]))
         self.LoadGameMapJson(json)
         self.LoadGameJson(json)
         self.LoadGameUpJson(json)
@@ -31,10 +30,6 @@ class GameScene(BaseScene):
         
     def GetBarrerCount(self):
         return self.__barrers_count
-    
-    def SetBarrerCount(self, value):
-        self.__barrers_count = value
-        self.__barrers_count_label.SetText(str(self.__barrers_count))
         
     def GetGame(self):
         return self.__game
@@ -232,11 +227,11 @@ class GameScene(BaseScene):
             
     def PlayerBarrerClick(self, button):
         if (self.__barrers_count <= 0 or self.__last_hovered_barrer != button): return False
+        game = self.GetGame()
         next_barrer = self.GetBarrerByDirection(self.__last_hovered_barrer, self.__direction)
-        if (not self.__game.ProcessBarrer(self.__last_hovered_barrer.GetId(), next_barrer.GetId())): return False
+        if (not game.ProcessBarrer(self.__last_hovered_barrer.GetId(), next_barrer.GetId())): return False
         self.ChangePossiblesSprites()
-        self.__barrers_count -= 1
-        self.__barrers_count_label.SetText(str(self.__barrers_count))
+        self.__barrers_count_label.SetText("Barrières: " + str(game.GetBarrerCount()[game.GetCPlayer()]))
         return True
 
     def LoadGameJson(self, json):
