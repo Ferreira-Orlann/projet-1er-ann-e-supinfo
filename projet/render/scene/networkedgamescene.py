@@ -47,7 +47,7 @@ class NetworkedGameScene(GameScene):
         game.SetBarrerCount(data["barrer_count"])
         self.ChangePossiblesSprites()
         sur_manager = self.GetQuoridor().GetSurfaceManager()
-        sid
+        sid = None
         surface_up = scale(sur_manager.GetSurface(self.GetJson()["barrerup_posed"][1]), (10, 50))
         surface = scale(sur_manager.GetSurface(self.GetJson()["barrer_posed"][1]), (50, 10))
         for sprite in self.GetSpriteGroup("barrers"):
@@ -66,6 +66,7 @@ class NetworkedGameScene(GameScene):
             sprite = self.GetSpriteById(pos, "board_case")
             player.SetPos(sprite.GetPos())
         self.__initalized = True
+        print(data)
         
     def ChangePossiblesSprites(self):
         sur_manager = self.GetQuoridor().GetSurfaceManager()

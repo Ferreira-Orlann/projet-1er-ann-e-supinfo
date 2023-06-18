@@ -44,7 +44,11 @@ class NetClient():
                     data = json.loads(string)
                     action = data.get("action")
                     if (action is not None):
-                        self.__actions.get(action)(data)
+                        func = self.__actions.get(action)
+                        if (func is not None):
+                            func(data)
+                        else:
+                            print("Error: " + string)
             sleep(0.05)
         
     # def RequestServerList(self, gamelistserver_ip, gamelistserver_port, callback):

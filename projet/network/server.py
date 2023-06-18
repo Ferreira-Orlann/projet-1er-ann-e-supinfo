@@ -105,7 +105,7 @@ class Server():
     
     def KickClient(self, args):
         """Kick a client by his id"""
-        stock
+        stock = None
         if (isinstance(args, int)):
             stock = self.GetStockingById(args)
             stock.write(json.dumps({

@@ -1,10 +1,10 @@
 from json import load as json_load
 from render.scene.basescene import BaseScene
 from render.scene.gamescene import GameScene
-from render.scene.gamelistscene import GameListScene
 from game.game import Game
 import settings as settings
 from render.scene.networkedgamescene import NetworkedGameScene
+from render.buttons import ToggleButton
 
 class ConfigScene(BaseScene):
     def __init__(self, quoridor):
@@ -22,6 +22,7 @@ class ConfigScene(BaseScene):
     
     def Reset(self, button):
         """Reset the config"""
+        [b.Toggle() for b in filter(lambda b: isinstance(b, ToggleButton), self.GetMainGroup().sprites()) if b.IsToggled()]
         [b.Toggle() for b in filter(lambda b: (b.GetId() in self.__reset_data), self.GetMainGroup().sprites()) if not b.IsToggled()]
 
     def ServerList(self, button):

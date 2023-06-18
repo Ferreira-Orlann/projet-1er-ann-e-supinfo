@@ -51,11 +51,17 @@ class Game():
     def GetBarrerCount(self):
         return self.__barrer_count
     
+    def SetBarrerCount(self, val):
+        self.__barrer_count = val
+    
     def SetCPlayer(self, id):
         self.__cplayer = id
         player = self.__players[self.__cplayer]
         self.__possibles_moves = self.ProcessPossiblesMoves(player.GetPos())
         self.__has_changed = True
+    
+    def GetCPlayer(self):
+        return self.__cplayer
         
     def SetPlayers(self, players):
         self.__players = players

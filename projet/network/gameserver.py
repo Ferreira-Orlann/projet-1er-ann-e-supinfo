@@ -103,7 +103,7 @@ class GameServer(Server):
             ppos[player.GetId()] = player.GetPos()
         stock.write(json.dumps({
             "action": "init_data",
-            "board": game.GetBarrerData(),
+            "barrers": game.GetBarrerData(),
             "cplayer": game.GetCPlayer(),
             "local_player": lply,
             "barrer_count": game.GetBarrerCount(),
