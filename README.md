@@ -1,4 +1,4 @@
-# Quroridor
+# Quoridor
 
 
 Pour lancer le jeu
