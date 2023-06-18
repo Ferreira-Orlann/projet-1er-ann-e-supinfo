@@ -115,7 +115,7 @@
         "ServerList": {
             "path": "./assets/page2/reseau.PNG",
             "size": [380,130],
-            "pos": [510,770]
+            "pos": [600,770]
         }
     },
     "sprites": {
