@@ -30,6 +30,8 @@ class Server():
         
     def AddAction(self, name, func):
         self.__actions[name] = func
+    
+    def StockError(self, stock, err): ...
         
     def ReadHandler(self):
         """Read the data from the server"""
@@ -37,13 +39,14 @@ class Server():
             for stock in self.GetStockings():
                 if not stock.handshakeComplete:
                     continue
+
                 string = self.ReadStock(stock)
                 if string == None: continue
                 data = json.loads(string)
                 action = data.get("action")
                 if (action is not None):
                     self.__actions.get(action)(data, stock)
-                    
+            sleep(0.05)
         
     def RemoveStocking(self, stock):
         """Remove a stocking from the list"""
@@ -52,8 +55,7 @@ class Server():
         if not stock.IsDisconnected():
             self.GetConsole().log("Client disconnect \n    Id: " + str(stock.GetId()) + " \n    Addresse: " + self.AddrToString(stock.addr), style="light_salmon3", markup=False)
             stock.Disconnect()
-        if stock.IsFatal() and self.__quit == False:
-            self.__quit = True
+        if stock.IsFatal() and not self.GetConsole().IsQuiting():
             self.GetConsole().log("[red]Fatal Client Disconnect")
             self.GetConsole().Quit()
             
@@ -61,7 +63,7 @@ class Server():
         """Return the list of stockings"""
         return self.__stockings
     
-    def GetMainStock(self):
+    def GetSocket(self):
         """Return the main stocking"""
         return self.__lsock
     
@@ -84,8 +86,10 @@ class Server():
         try:
             return stock.read()
         except BrokenPipeError as err:
+            self.StockError(stock, err)
             self.RemoveStocking(stock)
         except ConnectionResetError as err:
+            self.StockError(stock, err)
             self.RemoveStocking(stock)
             return None
         
@@ -101,17 +105,25 @@ class Server():
     
     def KickClient(self, args):
         """Kick a client by his id"""
-        if len(args) < 1 or not args[0].isnumeric():
-            self.GetConsole().log("[red]Erreur: kick {id}")
-            return
-        stock = self.GetStockingById(int(args[0]))
-        if stock is None:   
-            return
-        del args[0]
-        stock.write(json.dumps({
-            "action": "kick",
-            "message": " ".join(args)
-        }))
+        stock
+        if (isinstance(args, int)):
+            stock = self.GetStockingById(args)
+            stock.write(json.dumps({
+                "action": "kick",
+                "message": ""
+            }))
+        else:
+            if len(args) < 1 or not args[0].isnumeric():
+                self.GetConsole().log("[red]Erreur: kick {id}")
+                return
+            stock = self.GetStockingById(int(args[0]))
+            if stock is None:   
+                return
+            del args[0]
+            stock.write(json.dumps({
+                "action": "kick",
+                "message": " ".join(args)
+            }))
         while stock.writeDataQueued() == True:
             sleep(0.1)
         stock.close()

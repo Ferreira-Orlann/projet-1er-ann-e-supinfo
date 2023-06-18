@@ -2,6 +2,7 @@ from render.scene.gamescene import GameScene
 from network.client import NetClient
 from pygame.transform import scale
 import json
+from time import sleep
 
 class NetworkedGameScene(GameScene):
     def __init__(self, quoridor, game, addr, background=None):
@@ -12,7 +13,16 @@ class NetworkedGameScene(GameScene):
         self.__client.AddAction("player_move", self.PlayerMove)
         self.__initalized = False
         self.__local_player = None
-        self.__client.Connect
+        self.__client.Connect(addr[0], addr[1])
+        while self.__client.GetStocking().handshakeComplete is not True:
+            sleep(0.1)
+        self.__client.GetStocking().write(json.dumps({
+            "action": "register"
+        }))
+        
+    def Update(self):
+        if (self.__client.IsStockError()):
+            self.BackToMenu(None)
         
     def PlaceBarrer(self, data):
         self.__game.ProcessBarrer(tuple(data["pos_one"]), tuple(data["pos_two"]))
@@ -58,7 +68,7 @@ class NetworkedGameScene(GameScene):
         self.__initalized = True
         
     def ChangePossiblesSprites(self):
-        sur_manager = self.__quoridor.GetSurfaceManager()
+        sur_manager = self.GetQuoridor().GetSurfaceManager()
         json = self.GetJson()
         if (not self.CheckLocalPlayer):
             for sprite in self.GetLastPossiblesMovesSprites():

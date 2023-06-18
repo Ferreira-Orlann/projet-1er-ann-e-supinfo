@@ -12,9 +12,10 @@ import copy
 
 class GameServer(Server):
     def __init__(self):
+        print("Register")
         super().__init__(Console(), '127.0.0.1', 50001)
-        if (not self.ProcessArgs(sys.argv)):
-            sys.exit()
+        self.ProcessArgs(sys.argv)
+        print("Register")
         self.__game = Game(self)
         self.__players = [None]*settings.NB_PLAYERS
         
@@ -35,6 +36,11 @@ class GameServer(Server):
         self.__serverlist_stocking.write(json.dumps({
             "action": "register"
         }))
+        
+    def StockError(self, stock, err):
+        pid = self.GetPlayerId(stock)
+        if (pid != False):
+            self.__players[pid] = None
         
     def GetPlayerId(self, stock):
         for i in range(len(self.__players)):
@@ -65,22 +71,32 @@ class GameServer(Server):
                     }))
 
     def Register(self, data, stock):
-        if (data["result"] == "OK"):
-            self.GetConsole().log("[green]Serveur enregistrès après du GameListServer: " + self.AddrToString(stock.addr))
+        if (stock == self.__serverlist_stocking):
+            if (data["result"] == "OK"):
+                self.GetConsole().log("[green]Serveur enregistrès après du GameListServer: " + self.AddrToString(stock.addr))
+        else:
+            self.RegisterClient(data, stock)
         
     def Kick(self, data, stock):
         self.GetConsole().log("[red]Vous avez été kick de: " + self.AddrToString(stock.addr) + "\nMessage: " + data.get("message"))
-                
+        
+    def AddClient(self, stock):
+        for i in range(len(self.__players)):
+            if (self.__players[i] == None):
+                self.__players[i] = stock
+                return True
+        return False
+    
     def RegisterClient(self, data, stock):
-        if (not self.AddClient()):
-            self.KickClient(stock)
+        if (not self.AddClient(stock)):
+            self.KickClient(stock.GetId())
         lply = None
         for i in range(len(self.__players)):
             if (self.__players[i] !=  None):
                 lply = i
                 self.__players[i] = stock
         if (lply == None):
-            self.KickClient(stock)
+            self.KickClient(stock.GetId())
         game = self.__game
         ppos = [None]*settings.NB_PLAYERS
         for player in game.GetPlayers():
@@ -107,17 +123,19 @@ class GameServer(Server):
         while (len(args) > 0):
             if len(args) == 1:
                 self.PrintArgsHelp()
-                return False
             match(args[0]):
                 case "-b":
                     settings.NB_BARRERS = int(args[1])
+                    if (settings.NB_BARRERS not in [4,8,12,16,20,24,28,32,36,40]):
+                        self.PrintArgsHelp()
                 case "-p":
                     settings.NB_PLAYERS = int(args[1])
+                    if (settings.NB_PLAYERS not in [2,4]):
+                        self.PrintArgsHelp()
                 case "-s":
                     settings.BOARD_SIZE = int(args[1])
-                case _:
-                    self.PrintArgsHelp()
-                    return False
+                    if (settings.BOARD_SIZE not in [5,7,9,11]):
+                        self.PrintArgsHelp()
             del args[0]
             del args[0]
             
@@ -126,7 +144,8 @@ class GameServer(Server):
         table = Table()
         table.add_column("Argument", justify="right", style="cyan", no_wrap=True)
         table.add_column("Usage", style="magenta")
-        table.add_row("","-p 'nombre de joueurs'")
-        table.add_row("","-b 'nombre de barrières'")
-        table.add_row("","-s 'taille du plateau'")
+        table.add_row("-p","-p 'nombre de joueurs' | [2,4]")
+        table.add_row("-b","-b 'nombre de barrières' | [4,8,12,16,20,24,28,32,36,40]")
+        table.add_row("-s","-s 'taille du plateau' | [5,7,9,11]")
         self.GetConsole().print(table)
+        self.GetConsole().Quit()

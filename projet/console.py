@@ -14,9 +14,13 @@ class Console(RConsole):
         self.__thread = richthread.Thread(target=self.Run)
         self.__thread.daemon = True
         self.__thread.start()
+        self.__quit = False
         self.RegisterCommand("help", self.HelpCommand, "Afficher la liste des commandes disponibles")
         self.RegisterCommand("exit", self.Quit, "Permet de quiter le processus en cour")
         self.log("[green3][link=https://github.com/Ferreira-Orlann/projet-1er-ann-e-supinfo]Lien Github du projet[/link]")
+
+    def IsQuiting(self):
+        return self.__quit
 
     def RegisterCommand(self,command, func, desc):
         """Register a command"""
@@ -47,6 +51,7 @@ class Console(RConsole):
             
     def Quit(self, args=None):
             """Quit the console"""
+            self.__quit = True
             for thread in threading.enumerate():
                 if isinstance(thread, Stockings.Stocking):
                     thread.close()

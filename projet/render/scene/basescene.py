@@ -158,7 +158,7 @@ class BaseScene():
     def SpriteHover(self, sprite):
         pass    
     
-    def Update(self):
+    def InternalUpdate(self):
         """Update the scene"""
         mouse_pos = pygame.mouse.get_pos ()
         for group in self.__custom_groups.values():
@@ -166,6 +166,8 @@ class BaseScene():
             for sprite in group:
                 if sprite.rect.collidepoint(mouse_pos):
                     self.SpriteHover(sprite)
+                    
+    def Update(self): ...
     
     def ProcessEvents(self, events):
         pass

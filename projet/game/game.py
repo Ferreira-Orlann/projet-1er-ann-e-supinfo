@@ -88,13 +88,16 @@ class Game():
         for player in self.GetPlayers():
             if (not self.PathRecursive(player)):
                 return False
-            print("Path Exists")
+            print("Path Exists") 
         return True
     
-    def PathRecursive(self, player, tested_moves={}, pos=None):
+    def PathRecursive(self, player, tested_moves=None, pos=None):
         if (pos == None):
             pos = player.GetPos()
+        if (tested_moves == None):
+            tested_moves = {}
         ppos = self.ProcessPossiblesMoves(pos)
+        print("xxxx")
         print(tested_moves)
         for pos in ppos:
             print(pos)

@@ -69,6 +69,7 @@ class Quoridor():
                     self.__active_scene.InputReleased(event)
                     continue
             self.__display_surface.blit(self.__active_scene.GetBackGroundSurface(), (0, 0))
+            self.__active_scene.InternalUpdate()
             self.__active_scene.Update()
             self.__active_scene.Inputs(pygame.key.get_pressed())
             for rect in self.__active_scene.Render(self.__display_surface):
