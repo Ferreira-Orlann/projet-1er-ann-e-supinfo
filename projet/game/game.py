@@ -78,7 +78,7 @@ class Game():
 
     def CheckWin(self, player, pos):
         fpos = player.GetFinalPos()
-        if fpos[0] and player.GetPos()[0] == fpos[1] or (not fpos[0]) and player.GetPos()[1] == fpos[1]:
+        if fpos[0] and pos[0] == fpos[1] or (not fpos[0]) and pos[1] == fpos[1]:
             print("Player Win")
             return True
         print("Player Not Win")
@@ -88,21 +88,23 @@ class Game():
         for player in self.GetPlayers():
             if (not self.PathRecursive(player)):
                 return False
+            print("Path Exists")
         return True
     
     def PathRecursive(self, player, tested_moves={}, pos=None):
-        if (pos is None):
+        if (pos == None):
             pos = player.GetPos()
         ppos = self.ProcessPossiblesMoves(pos)
+        print(tested_moves)
         for pos in ppos:
             print(pos)
-            if (self.CheckWin(player, pos)):
-                return True
             posstr = self.PosToString(pos)
             if (tested_moves.get(posstr) != None):
                 continue
+            if (self.CheckWin(player, pos)):
+                return True
             tested_moves[posstr] = True
-            if (self.PathRecursive(player, tested_moves)):
+            if (self.PathRecursive(player, tested_moves, pos)):
                 return True
         return False
     
