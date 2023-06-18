@@ -3,6 +3,7 @@ from network.client import NetClient
 from pygame.transform import scale
 import json
 from time import sleep
+from pygame import mixer
 
 class NetworkedGameScene(GameScene):
     def __init__(self, quoridor, game, addr, background=None):
@@ -55,6 +56,13 @@ class NetworkedGameScene(GameScene):
         sprite.SetPos(button.GetPos())
         self.ChangePossiblesSprites()
         self.CaseSound()
+        game = self.GetGame()
+        for player in game.GetPlayers():
+            if (game.CheckWin(player,player.GetPos())):
+                self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId() + 1) + " Win")
+                mixer.music.load('assets/songs/pion.mp3')
+                mixer.music.play()
+                self.BackToMenu(None)
     
     def InitData(self, data):
         game = self.GetGame()

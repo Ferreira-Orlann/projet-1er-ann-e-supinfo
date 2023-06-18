@@ -137,9 +137,10 @@ class GameScene(BaseScene):
         self.ChangePossiblesSprites()
         self.CaseSound()
         for player in game.GetPlayers():
-
             if (game.CheckWin(player,player.GetPos())):
                 self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId() + 1) + " Win")
+                mixer.music.load('assets/songs/victory.wav')
+                mixer.music.play()
                 self.BackToMenu(None)
         return True
         
