@@ -139,7 +139,7 @@ class GameScene(BaseScene):
         for player in game.GetPlayers():
 
             if (game.CheckWin(player,player.GetPos())):
-                self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId()) + " Win")
+                self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId() + 1) + " Win")
                 self.BackToMenu(None)
         return True
         
