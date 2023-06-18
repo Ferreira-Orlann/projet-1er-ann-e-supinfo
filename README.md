@@ -3,17 +3,17 @@
 
 Pour lancer le jeu
 ```bash
-    python launcher.py
+    python launcher.py -game
 ```
 
 Démarer un GameListServer
 ```bash
-    python launcher.py serverlist
+    python launcher.py -gamelistserver
 ```
 
 Démarer un serveur de jeu
 ```bash
-    python launcher.py gameserver
+    python launcher.py -gameserver
 ```
 ## Commandes
 
