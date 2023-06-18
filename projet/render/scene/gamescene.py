@@ -124,13 +124,6 @@ class GameScene(BaseScene):
             return 344, 224
         if settings.BOARD_SIZE == 11:
             return 291, 171
-
-    def Update(self):
-        game = self.GetGame()
-        player = game.GetCurrentPlayer()
-        if (game.CheckWin(player,player.GetPos())):
-            self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId()) + " Win")
-            self.BackToMenu(None)
         
     def PlayerCaseClick(self, button):
         """Player click on the board"""
@@ -143,10 +136,11 @@ class GameScene(BaseScene):
         sprite.SetPos(button.GetPos())
         self.ChangePossiblesSprites()
         self.CaseSound()
-        player = game.GetCurrentPlayer()
-        if (game.CheckWin(player,player.GetPos())):
-            self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId()) + " Win")
-            self.BackToMenu(None)
+        for player in game.GetPlayers():
+
+            if (game.CheckWin(player,player.GetPos())):
+                self.GetQuoridor().GetConsole().print("[green]Player " + str(player.GetId()) + " Win")
+                self.BackToMenu(None)
         return True
         
     def GetLastPossiblesMovesSprites(self):

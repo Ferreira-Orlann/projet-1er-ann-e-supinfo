@@ -126,7 +126,6 @@ class Game():
         if not pos in self.__possibles_moves:
             return False
         player.SetPos(pos)
-        self.CheckWin(player, pos)
         self.SwitchPlayer(player)
         return True
     
