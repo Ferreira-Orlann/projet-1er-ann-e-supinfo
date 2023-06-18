@@ -43,8 +43,8 @@ class GameScene(BaseScene):
         from render.scene.startscene import StartScene
         self.Next(StartScene(self.GetQuoridor()))
 
-    def InputPressed(self, key):
-        if key == KEY_R:
+    def InputPressed(self, event):
+        if event.key == KEY_R:
             self.ChangeDirection()
             
     def ChangeDirection(self):

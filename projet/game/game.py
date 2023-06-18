@@ -4,7 +4,7 @@ import settings
 
 class Game():
     def __init__(self, quoridor):
-        self.__START_CONFIGS = [(0,4,True,8), (8,4,True,0), (4,0,False,8), (4,8,False,0)]
+        # self.__START_CONFIGS = [(0,4,True,8), (8,4,True,0), (4,0,False,8), (4,8,False,0)]
         self.__quoridor = quoridor
     
         # Création des barrières, dans une grille 2d
@@ -20,8 +20,21 @@ class Game():
         
         # Ajout des joueurs
         self.__players = []
-        for id in range(settings.NB_PLAYERS):
-            self.__players.append(HumanPlayer(id,self.__START_CONFIGS[id]))
+        # for id in range(settings.NB_PLAYERS):
+            # self.__players.append(HumanPlayer(id,self.__START_CONFIGS[id]))
+            # self.__players.append(HumanPlayer(id,())
+        minus_one = settings.BOARD_SIZE-1
+        middle = int(minus_one/2)
+        if (settings.NB_PLAYERS == 2):
+            self.__players.append(HumanPlayer(0,(0, middle, True, minus_one)))
+            self.__players.append(HumanPlayer(1,(minus_one, middle, True, 0)))
+        else:
+            self.__players.append(HumanPlayer(0,(0, middle, True, minus_one)))
+            self.__players.append(HumanPlayer(1,(minus_one, middle, True, 0)))
+            self.__players.append(HumanPlayer(2,(middle, 0, False, minus_one)))
+            self.__players.append(HumanPlayer(3,(middle, minus_one, False, minus_one)))
+            
+            
         self.__cplayer = 0
         
         self.__has_changed = True
@@ -32,14 +45,16 @@ class Game():
         
         self.__barrer_count = settings.NB_BARRERS
         
-        self.ProcessPossiblesMoves(self.__players[0])
+        player = self.__players[0]
+        self.__possibles_moves = self.ProcessPossiblesMoves(player.GetPos())
         
     def GetBarrerCount(self):
         return self.__barrer_count
     
     def SetCPlayer(self, id):
         self.__cplayer = id
-        self.ProcessPossiblesMoves(self.__players[self.__cplayer])
+        player = self.__players[self.__cplayer]
+        self.__possibles_moves = self.ProcessPossiblesMoves(player.GetPos())
         self.__has_changed = True
         
     def SetPlayers(self, players):
@@ -61,16 +76,38 @@ class Game():
     def CheckSetting():
         pass
 
-    def CheckWin(self):
-        player = self.GetCurrentPlayer()
+    def CheckWin(self, player, pos):
         fpos = player.GetFinalPos()
-        if fpos[0] and player.GetPos()[0] == fpos[1] or fpos[0] and player.GetPos()[1] == fpos[1]:
-            self.__quoridor.GetConsole().Quit()
+        if fpos[0] and player.GetPos()[0] == fpos[1] or (not fpos[0]) and player.GetPos()[1] == fpos[1]:
+            print("Player Win")
             return True
+        print("Player Not Win")
         return False
         
-    def IsPathExist(self):
-        pass
+    def IsPathsExist(self):
+        for player in self.GetPlayers():
+            if (not self.PathRecursive(player)):
+                return False
+        return True
+    
+    def PathRecursive(self, player, tested_moves={}, pos=None):
+        if (pos is None):
+            pos = player.GetPos()
+        ppos = self.ProcessPossiblesMoves(pos)
+        for pos in ppos:
+            print(pos)
+            if (self.CheckWin(player, pos)):
+                return True
+            posstr = self.PosToString(pos)
+            if (tested_moves.get(posstr) != None):
+                continue
+            tested_moves[posstr] = True
+            if (self.PathRecursive(player, tested_moves)):
+                return True
+        return False
+    
+    def PosToString(self, pos):
+        return str(pos[0]) + "-" + str(pos[1])
         
     def HasChanged(self):
         return self.__has_changed
@@ -83,7 +120,7 @@ class Game():
         if not pos in self.__possibles_moves:
             return False
         player.SetPos(pos)
-        self.CheckWin()
+        self.CheckWin(player, pos)
         self.SwitchPlayer(player)
         return True
     
@@ -92,6 +129,10 @@ class Game():
             return False
         self.__barrers[pos[0]][pos[1]] = True
         self.__barrers[pos2[0]][pos2[1]] = True
+        if (not self.IsPathsExist()):
+            self.__barrers[pos[0]][pos[1]] = None
+            self.__barrers[pos2[0]][pos2[1]] = None
+            return False
         self.__barrer_count -= 2
         self.SwitchPlayer(self.GetCurrentPlayer())
         return True
@@ -107,33 +148,27 @@ class Game():
             self.__cplayer = 0
         else:
             self.__cplayer = previous_player + 1
-        self.ProcessPossiblesMoves(self.__players[self.__cplayer])
+        player = self.__players[self.__cplayer]
+        self.__possibles_moves = self.ProcessPossiblesMoves(player.GetPos())
         self.__has_changed = True
-    
-    def CheckPath(self, player):
-        pass
     
     def GetPossiblesMoves(self):
         return self.__possibles_moves
     
-    def ProcessPossiblesMoves(self, player, recursifcall=False):
-        ppos = player.GetPos()
+    def ProcessPossiblesMoves(self, pos, recursifcall=False):
         possibles_moves = []
         for i in [self.__MOVE_TYPE_UP, self.__MOVE_TYPE_DOWN, self.__MOVE_TYPE_LEFT, self.__MOVE_TYPE_RIGHT]:
-            nextpos = tuple(map(operator.sub, player.GetPos(), i))
+            nextpos = tuple(map(operator.sub, pos, i))
             if nextpos[0] < 0 or nextpos[1] < 0:
                 continue
-            if self.CanMove(ppos, i, nextpos):
+            if self.CanMove(pos, i, nextpos):
                 isplayerpos, playercheck = self.IsPlayerPos(nextpos)
                 if isplayerpos:
                     if not recursifcall:
-                        possibles_moves.extend(self.ProcessPossiblesMoves(playercheck, True))
+                        possibles_moves.extend(self.ProcessPossiblesMoves(playercheck.GetPos(), True))
                     continue
                 possibles_moves.append(nextpos)
-        if not recursifcall:
-            self.__possibles_moves = possibles_moves
-        else:
-            return possibles_moves
+        return possibles_moves
         
     def IsPlayerPos(self, pos):
         for i in range(0, len(self.__players)):

@@ -1,14 +1,12 @@
 from render.label import Label
 
 class TextEntry(Label):
-    def __init__(self, id, surface, x, y, scene, font, action):
+    def __init__(self, id, surface, x, y, scene, font):
         super().__init__(id, surface, x, y, scene, font)
-        if callable(action):
-            self.Action = action
-        elif (isinstance(id, str) and hasattr(scene, id)) or hasattr(scene, action):
-            if action == None:
-                self.Action = getattr(scene, id)
-            else:
-                self.Action = getattr(scene,action)
-        else:
-            self.Action = getattr(scene,action)
+        self.__is_selected
+    
+    def SetSelected(self, val):
+        self.__is_selected = val
+        
+    def IsSelected(self):
+        return self.__is_selected

@@ -4,6 +4,7 @@ from render.sprite import DirtySprite
 from math import ceil
 import settings
 from utils import CheckJson
+from render.textentry import TextEntry
 
 class BaseScene():
     def __init__(self,quoridor, json=None, background=None):
@@ -17,6 +18,7 @@ class BaseScene():
         self.__cached_surfaces = {}
         self.__custom_groups = {}
         self.__custom_groups["default"] = self.__sprites
+        self.AddSpriteGroup("text_entries")
         
         self.LoadBackground(background)
         self.__sprites.clear(self.__display_surface,self.__background)
@@ -27,7 +29,6 @@ class BaseScene():
     def GetSpriteById(self, id, group = "default"):
         g = self.GetSpriteGroup(group)
         for sprite in g:
-            print(sprite.GetId())
             if (sprite.GetId() == id):
                 return sprite
         return None
@@ -140,6 +141,8 @@ class BaseScene():
         if isinstance(sprite.GetPos()[0], float):
             sprite.rect.x = ceil(self.__display_surface.get_width() / sprite.GetPos()[0])
             sprite.rect.y = ceil(self.__display_surface.get_height() / sprite.GetPos()[1])
+        if (isinstance(sprite, TextEntry)):
+            self.GetSpriteGroup("text_entries").add(sprite)
         gr = self.GetSpriteGroup(group)
         if gr is not None:
             gr.add(sprite)
@@ -167,13 +170,22 @@ class BaseScene():
     def ProcessEvents(self, events):
         pass
     
-    def Input(self, keys):
+    def Inputs(self, keys):
         pass
     
-    def InputPressed(self, key):
+    def InternalInputPressed(self, event):
+        for textentry in self.GetSpriteGroup("text_entries"):
+            if (textentry.IsSelected()):
+                text = textentry.GetText()
+                if event.key == pygame.K_BACKSPACE:
+                    text = text[:-1]
+                else:
+                    text.concat(event.unicode)
+                textentry.SetText(text)
+    def InputPressed(self, event):
         pass
     
-    def InputReleased(self, key):
+    def InputReleased(self, event):
         pass
     
     def MouseDown(self):
@@ -188,6 +200,9 @@ class BaseScene():
                 if (isinstance(sprite, Button)):
                     if sprite.rect.collidepoint(mouse_pos) and sprite.Action:
                         sprite.Action(sprite)
+                if (isinstance(sprite, TextEntry)):
+                    sprite.SetSelected(True)
+                
 
     def GetMainGroup(self):
         """Return the main group"""
