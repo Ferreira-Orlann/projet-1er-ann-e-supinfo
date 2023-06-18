@@ -34,9 +34,9 @@
     "barrer_count_label": [100,100],
     "buttons": {
         "BackToMenu": {
-            "path": "./assets/page1/play.PNG",
-            "size": [235,90],
-            "pos": [10, 10]
+            "path": "./assets/page3/back.png",
+            "size": [224,90],
+            "pos": [90, 10]
         }
     }
 }
