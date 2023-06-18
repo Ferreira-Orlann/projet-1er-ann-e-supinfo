@@ -27,7 +27,7 @@ class GameServer(Server):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect(("127.0.0.1", 50000))
-        except ConnectionRefusedError as err:
+        except:
             self.GetConsole().log("[red]Fatal Erreur: Le serveur n'a pas réussi à se connecter au GameListServer")
             self.GetConsole().Quit()
         self.__serverlist_stocking = QuoridorStocking(self, sock, 0, True)
@@ -37,6 +37,12 @@ class GameServer(Server):
         self.Write(self.__serverlist_stocking,json.dumps({
             "action": "register"
         }))
+        
+    def RemoveStocking(self, stock):
+        """Remove a stocking from the server"""
+        if stock in self.__players:
+            self.__players.remove(stock)
+        super().RemoveStocking(stock)
         
     def Ping(self, data, stock):
         nb_player = 0
@@ -52,7 +58,7 @@ class GameServer(Server):
             "addr": self.AddrToString(stock.addr)
         }))
         
-    def StockError(self, stock, err):
+    def StockError(self, stock):
         pid = self.GetPlayerId(stock)
         if (pid != False):
             self.__players[pid] = None

@@ -40,6 +40,7 @@ class GameListScene(BaseScene):
                     settings.NB_BARRERS = data["nb_barrer"]
                     settings.BOARD_SIZE = data["board_size"]
                     settings.NB_PLAYERS = data["max_player"]
+                    client.Disconnect()
                     q = self.GetQuoridor()
                     g = Game(q)
                     scene = NetworkedGameScene(q, g, tuple(addr))

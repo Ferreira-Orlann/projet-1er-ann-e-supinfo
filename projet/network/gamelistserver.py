@@ -13,14 +13,14 @@ class GameListServer(Server):
         self.AddAction("register", self.Register)
         
     def RetreiveServers(self, data, stock):
-        stock.write(json.dumps({
+        self.Write(stock,json.dumps({
             "action": "retreive_servers",
             "servers": [self.AddrToString(server.addr) for server in self.__servers]
         }))
         
     def Register(self, data, stock):
         self.__servers.append(stock)
-        stock.write(json.dumps({
+        self.Write(stock, json.dumps({
             "action": "register",
             "result": "OK"
         }))

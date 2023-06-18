@@ -30,19 +30,15 @@ class Server():
     
     def Write(self, stock, data):
         try:
-            return stock.write(data)
-        except BrokenPipeError as err:
-            self.StockError(stock, err)
+            stock.write(data)
+        except:
+            self.StockError(stock)
             self.RemoveStocking(stock)
-        except ConnectionResetError as err:
-            self.StockError(stock, err)
-            self.RemoveStocking(stock)
-        return None
 
     def AddAction(self, name, func):
         self.__actions[name] = func
     
-    def StockError(self, stock, err): ...
+    def StockError(self, stock): ...
         
     def ReadHandler(self):
         """Read the data from the server"""
@@ -97,11 +93,8 @@ class Server():
         """Read the stocking"""
         try:
             return stock.read()
-        except BrokenPipeError as err:
-            self.StockError(stock, err)
-            self.RemoveStocking(stock)
-        except ConnectionResetError as err:
-            self.StockError(stock, err)
+        except:
+            self.StockError(stock)
             self.RemoveStocking(stock)
         return None
         
@@ -120,7 +113,7 @@ class Server():
         stock = None
         if (isinstance(args, int)):
             stock = self.GetStockingById(args)
-            stock.write(json.dumps({
+            self.Write(stock, json.dumps({
                 "action": "kick",
                 "message": ""
             }))
@@ -132,13 +125,13 @@ class Server():
             if stock is None:   
                 return
             del args[0]
-            stock.write(json.dumps({
+            self.Write(stock, json.dumps({
                 "action": "kick",
                 "message": " ".join(args)
             }))
         while stock.writeDataQueued() == True:
             sleep(0.1)
-        stock.close()
+        self.RemoveStocking(stock)
     
     def GetStockingById(self, id):
         """Return the stocking by his id"""

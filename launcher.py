@@ -31,6 +31,3 @@ match(sys.argv[1]):
         gamelist.GameListServer()
     case "gameserver":
         gameserver.GameServer()
-
-def test():
-    print("Testing")
