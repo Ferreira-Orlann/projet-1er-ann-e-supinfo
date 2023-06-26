@@ -210,7 +210,7 @@ class BaseScene():
                     if sprite.rect.collidepoint(mouse_pos) and sprite.Action:
                         sprite.Action(sprite)
                 if (isinstance(sprite, TextEntry)):
-                    if sprite.rect.collidepoint(mouse_pos) and sprite.Action:
+                    if sprite.rect.collidepoint(mouse_pos):
                         sprite.SetSelected(True)
                 
 
